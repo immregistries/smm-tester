@@ -74,7 +74,7 @@ public abstract class CDCWSDLServer {
     return out;
   }
 
-  public abstract void authorize(SubmitSingleMessage ssm) throws SecurityFault;
+  public abstract void authorize(SubmitSingleMessage ssm) throws Fault;
 
   public abstract void process(SubmitSingleMessage ssm, PrintWriter out) throws Fault;
 
