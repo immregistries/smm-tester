@@ -27,7 +27,7 @@ public class FaultDetail {
   public static final FaultDetail UNKNOWN = new FaultDetail();
   static {
     UNKNOWN.setCode("54353");
-    UNKNOWN.setReason("My Reason");
+    UNKNOWN.setReason("UnknownFault");
     UNKNOWN.setDetail("An unexpected problem occured");
   }
 
