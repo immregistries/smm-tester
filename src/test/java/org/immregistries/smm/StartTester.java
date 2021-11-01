@@ -89,7 +89,7 @@ public class StartTester
       SslContextFactory factory = new SslContextFactory();
       factory.setKeyStoreResource(keystore);
       factory.setKeyStorePassword("wicket");
-      factory.setTrustStore(keystore);
+      //factory.setTrustStore(keystore);
       factory.setKeyManagerPassword("wicket");
       SslSocketConnector sslConnector = new SslSocketConnector(factory);
       sslConnector.setMaxIdleTime(timeout);
