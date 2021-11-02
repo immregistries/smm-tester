@@ -65,7 +65,7 @@
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-request</artifactId>
-            <version>7.17.0</version>
+            <version>9.5.0</version>
         </dependency>
 
         <dependency>
