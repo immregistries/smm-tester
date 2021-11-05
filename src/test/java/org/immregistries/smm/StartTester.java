@@ -10,7 +10,6 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.wicket.util.time.Duration;
 import org.eclipse.jetty.http.ssl.SslContextFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.bio.SocketConnector;
@@ -63,7 +62,8 @@ public class StartTester
       HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
     }
 
-    int timeout = (int) Duration.ONE_HOUR.getMilliseconds();
+    // One hour in millis
+    int timeout = 3600000;
 
     Server server = new Server();
     SocketConnector connector = new SocketConnector();
