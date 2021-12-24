@@ -11,9 +11,11 @@ public class ConnectorFactory {
   public static final String TYPE_FL_SOAP = "FL SOAP";
   public static final String TYPE_CO_SOAP = "CO SOAP";
   public static final String TYPE_KS_SOAP = "KS SOAP";
+  public static final String TYPE_KY_KHIE = "KY KHIE";
   public static final String TYPE_IL_WS = "IL WS";
   public static final String TYPE_IL_SOAP = "IL SOAP";
   public static final String TYPE_MA_SOAP = "MA SOAP";
+  public static final String TYPE_MA_SOAP_2020 = "MA SOAP 2020";
   public static final String TYPE_MO_SOAP = "MO SOAP";
   public static final String TYPE_NM_SOAP = "NM SOAP";
   public static final String TYPE_NJ_SOAP = "NJ SOAP";
@@ -25,15 +27,17 @@ public class ConnectorFactory {
   public static final String TYPE_SC_SOAP = "SC SOAP";
   public static final String TYPE_ND_SOAP = "ND SOAP";
   public static final String TYPE_WI_SOAP = "WI SOAP";
+  public static final String TYPE_IZ_GATEWAY = "IZ Gateway";
 
   public static final String[][] TYPES = {{TYPE_SOAP, "SOAP"}, {TYPE_POST, "POST"},
-      {TYPE_MLLP, "MLLP"}, {TYPE_AL_SOAP, "AL SOAP"}, {TYPE_AZ_SOAP, "AZ SOAP"},
+      {TYPE_RAW, "Raw"}, {TYPE_MLLP, "MLLP"}, {TYPE_AL_SOAP, "AL SOAP"}, {TYPE_AZ_SOAP, "AZ SOAP"},
       {TYPE_CA_SOAP, "CA SOAP"}, {TYPE_CO_SOAP, "CO SOAP"}, {TYPE_KS_SOAP, "KS SOAP"},
-      {TYPE_FL_SOAP, "FL SOAP"}, {TYPE_MA_SOAP, "MA SOAP"}, {TYPE_MO_SOAP, "MO SOAP"},
-      {TYPE_ND_SOAP, "ND SOAP"}, {TYPE_NJ_SOAP, "NJ SOAP"}, {TYPE_NM_SOAP, "NM SOAP"},
-      {TYPE_ENVISION_SOAP, "Envision SOAP"}, {TYPE_ENVISION_SOAP, "Envision SOAP 1.1"},
-      {TYPE_HI_SOAP, "HI SOAP (same standard as SOAP)"}, {TYPE_IL_WS, "IL WS"},
-      {TYPE_WI_SOAP, "WS SOAP"}, {TYPE_SC_SOAP, "SC SOAP"}};
+      {TYPE_KY_KHIE, "KY KHIE"}, {TYPE_FL_SOAP, "FL SOAP"}, {TYPE_MA_SOAP, "MA SOAP"},
+      {TYPE_MA_SOAP_2020, "MA SOAP 2020"}, {TYPE_MO_SOAP, "MO SOAP"}, {TYPE_ND_SOAP, "ND SOAP"},
+      {TYPE_NJ_SOAP, "NJ SOAP"}, {TYPE_NM_SOAP, "NM SOAP"}, {TYPE_ENVISION_SOAP, "Envision SOAP"},
+      {TYPE_ENVISION_SOAP, "Envision SOAP 1.1"}, {TYPE_HI_SOAP, "HI SOAP"}, {TYPE_IL_WS, "IL WS"},
+      {TYPE_IL_SOAP, "IL SOAP"}, {TYPE_WI_SOAP, "WS SOAP"}, {TYPE_SC_SOAP, "SC SOAP"},
+      {TYPE_IZ_GATEWAY, "IZ Gateway"}};
 
   public static Connector getConnector(String type, String label, String url) throws Exception {
     Connector connector = null;
@@ -65,6 +69,8 @@ public class ConnectorFactory {
       connector = new ILSoapConnector(label, url);
     } else if (type.equals(TYPE_MA_SOAP)) {
       connector = new MAConnector(label, url);
+    } else if (type.equals(TYPE_MA_SOAP_2020)) {
+      connector = new MAConnector2020(label, url);
     } else if (type.equals(TYPE_MO_SOAP)) {
       connector = new MOConnector(label, url);
     } else if (type.equals(TYPE_CA_SOAP)) {
@@ -79,10 +85,14 @@ public class ConnectorFactory {
       connector = new FLSoapConnector(label, url);
     } else if (type.equals(TYPE_KS_SOAP)) {
       connector = new KSSoapConnector(label, url);
+    } else if (type.equals(TYPE_KY_KHIE)) {
+      connector = new KYKHIEConnector(label, url);
     } else if (type.equals(TYPE_AZ_SOAP)) {
       connector = new AZSoapConnector(label, url);
     } else if (type.equals(TYPE_ND_SOAP)) {
       connector = new NDSoapConnector(label, url);
+    } else if (type.equals(TYPE_IZ_GATEWAY)) {
+      connector = new IZGatewayConnector(label, url);
     }
     return connector;
   }
