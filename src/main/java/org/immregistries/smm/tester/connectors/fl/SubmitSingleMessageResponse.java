@@ -8,6 +8,7 @@
 
 
 package org.immregistries.smm.tester.connectors.fl;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -415,6 +416,9 @@ public class SubmitSingleMessageResponse implements org.apache.axis2.databinding
 
 
             java.lang.String content = reader.getElementText();
+            if(StringUtils.isEmpty(content)){
+                content = reader.getText();
+            }
 
             object.set_return(
                 org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
