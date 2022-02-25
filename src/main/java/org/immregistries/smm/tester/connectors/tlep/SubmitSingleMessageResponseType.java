@@ -6,7 +6,7 @@
  */
 
 package org.immregistries.smm.tester.connectors.tlep;
-
+import org.apache.commons.lang3.StringUtils;
 /**
  * SubmitSingleMessageResponseType bean class
  */
@@ -371,6 +371,9 @@ public class SubmitSingleMessageResponseType implements org.apache.axis2.databin
               reader.getAttributeValue("http://www.w3.org/2001/XMLSchema-instance", "nil");
           if (!"true".equals(nillableValue) && !"1".equals(nillableValue)) {
             java.lang.String content = reader.getElementText();
+            if(StringUtils.isEmpty(content)){
+                content = reader.getText();
+            }
             object.set_return(
                 org.apache.axis2.databinding.utils.ConverterUtil.convertToString(content));
           } else {
