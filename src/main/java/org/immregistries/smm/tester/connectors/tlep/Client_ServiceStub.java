@@ -5,6 +5,7 @@
  * (05:33:49 IST)
  */
 package org.immregistries.smm.tester.connectors.tlep;
+import java.security.cert.CertificateException;
 
 /*
  * Client_ServiceStub java implementation
@@ -142,11 +143,16 @@ public class Client_ServiceStub extends org.apache.axis2.client.Stub implements 
     this(configurationContext, targetEndpoint, false);
   }
 
+  public Client_ServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext,
+      java.lang.String targetEndpoint, boolean useSeparateListener)
+      throws org.apache.axis2.AxisFault {
+    this(configurationContext, targetEndpoint, useSeparateListener, null);
+    }
   /**
    * Constructor that takes in a configContext and useseperate listner
    */
   public Client_ServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext,
-      java.lang.String targetEndpoint, boolean useSeparateListener)
+      java.lang.String targetEndpoint, boolean useSeparateListener, javax.net.ssl.SSLContext sslContext)
       throws org.apache.axis2.AxisFault {
     // To populate AxisService
     populateAxisService();
@@ -165,6 +171,22 @@ public class Client_ServiceStub extends org.apache.axis2.client.Stub implements 
         .setSoapVersionURI(org.apache.axiom.soap.SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
 
     _serviceClient.getOptions().setTimeOutInMilliSeconds(2 * 60 * 1000);
+
+    if(sslContext != null){
+      //set SSLContext for SOAP calls
+      try {
+        org.apache.http.conn.ssl.SSLSocketFactory sf = new org.apache.http.conn.ssl.SSLSocketFactory(sslContext);
+        org.apache.http.conn.scheme.Scheme httpsScheme = new org.apache.http.conn.scheme.Scheme("https", 443, sf);
+        org.apache.http.conn.scheme.SchemeRegistry schemeRegistry = new org.apache.http.conn.scheme.SchemeRegistry();
+        schemeRegistry.register(httpsScheme);
+        org.apache.http.conn.ClientConnectionManager cm =  new org.apache.http.impl.conn.SingleClientConnManager(schemeRegistry);
+        org.apache.http.client.HttpClient httpClient = new org.apache.http.impl.client.DefaultHttpClient(cm);
+
+        _serviceClient.getOptions().setProperty(org.apache.axis2.transport.http.HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
+      }catch(Exception e){
+        //womp womp, couldn't set the offered context
+      }
+    }
 
   }
 
@@ -194,6 +216,9 @@ public class Client_ServiceStub extends org.apache.axis2.client.Stub implements 
     this(null, targetEndpoint);
   }
 
+  public Client_ServiceStub(java.lang.String targetEndpoint, javax.net.ssl.SSLContext sslContext) throws org.apache.axis2.AxisFault {
+    this(null, targetEndpoint, false, sslContext);
+  }
 
   /**
    * Auto generated method signature submit single message

@@ -1,4 +1,5 @@
 package org.immregistries.smm.tester.connectors;
+import javax.net.ssl.SSLContext;
 
 public class ConnectorFactory {
 
@@ -40,9 +41,13 @@ public class ConnectorFactory {
       {TYPE_IZ_GATEWAY, "IZ Gateway"}};
 
   public static Connector getConnector(String type, String label, String url) throws Exception {
+      return getConnector(type, label, url, null);
+  }
+
+  public static Connector getConnector(String type, String label, String url, SSLContext sslContext) throws Exception {
     Connector connector = null;
     if (type.equals(TYPE_SOAP)) {
-      connector = new SoapConnector(label, url);
+      connector = new SoapConnector(label, url, sslContext);
     } else if (type.equals(TYPE_MLLP)) {
       connector = new MLLPConnector(label, url);
     } else if (type.equals(TYPE_NM_SOAP)) {
