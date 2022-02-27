@@ -24,8 +24,11 @@ public class SoapConnector extends HttpConnector {
   private Client_Service clientService = null;
 
   public SoapConnector(String label, String url) throws Exception {
+      this(label, url, null);
+  }
+  public SoapConnector(String label, String url, javax.net.ssl.SSLContext sslContext) throws Exception {
     super(label, url, ConnectorFactory.TYPE_SOAP);
-    clientService = new Client_ServiceStub(this.url);
+    clientService = new Client_ServiceStub(this.url, sslContext);
   }
   
   @Override
