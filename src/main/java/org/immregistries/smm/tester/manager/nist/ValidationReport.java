@@ -24,6 +24,11 @@ public class ValidationReport {
     return assertionList;
   }
 
+  public ValidationReport() {
+    super();
+    headerReport = new HeaderReport();
+  }
+
   public ValidationReport(String xml) {
     headerReport = new HeaderReport();
     if (xml.startsWith("{")) {
