@@ -1,13 +1,13 @@
-# smm-tester 
-*The American Immunization Registry Association (AIRA) supports the Simple Message Mover / Tester (SMM/Tester) to support connections and testing with Immunization Information Systems (IIS).* 
+# smm-tester
+*The American Immunization Registry Association (AIRA) supports the Simple Message Mover / Tester (SMM/Tester) to support connections and testing with Immunization Information Systems (IIS).*
 
-## Installation Instructions for Windows Environments: 
+## Installation Instructions for Windows Environments
 - Create the following folders:
   + `C:\smm`
   + `C:\smm\[YOUR IIS NAME]`
 - Inside the `[YOUR ISS NAME]` folder we will place the `smm.config.txt` file that will be configured later
 
-### Software Needed:
+### Software Needed
 
 #### 1. Java JDK
 
@@ -28,12 +28,12 @@ Ensure that you have Java SE version 6.0 (also displayed as 1.6) or later instal
   + Setup instructions: [available here](http://tomcat.apache.org/tomcat-7.0-doc/setup.html)
   + Follow environment variable section here: [link](https://www.ntu.edu.sg/home/ehchua/programming/howto/JDK_HowTo.html#Set-JAVA_HOME)
 
-##### To start Tomcat:
-###### Method 1:
+##### To start Tomcat
+###### Method 1
 - Open `cmd` prompt
   + `cd` to `C:\*tomcat installation location*\bin`, type `startup` and press Enter
 
-###### Method 2:
+###### Method 2
 - Run .bat file:
   + `C:\*tomcat installation location*\bin>startup.bat`
 
@@ -58,5 +58,5 @@ Link to `smm.config.txt` configuration tool: [https://app.immregistries.org/test
 ##### Accessing SMM
 - If Tomcat has been installed on the default port `8080` then you can login by going to: [http://localhost:8080/smm/](http://localhost:8080/smm/)
 
-##### Access Credentials:
+##### Access Credentials
 `//todo`
