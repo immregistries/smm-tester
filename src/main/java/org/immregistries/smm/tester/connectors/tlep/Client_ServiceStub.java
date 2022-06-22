@@ -182,7 +182,7 @@ public class Client_ServiceStub extends org.apache.axis2.client.Stub implements 
         org.apache.http.conn.ClientConnectionManager cm =  new org.apache.http.impl.conn.SingleClientConnManager(schemeRegistry);
         org.apache.http.client.HttpClient httpClient = new org.apache.http.impl.client.DefaultHttpClient(cm);
 
-        _serviceClient.getOptions().setProperty(org.apache.axis2.transport.http.HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
+        _serviceClient.getOptions().setProperty(org.apache.axis2.kernel.http.HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
       }catch(Exception e){
         //womp womp, couldn't set the offered context
       }
