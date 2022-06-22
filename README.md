@@ -1,7 +1,7 @@
 # smm-tester 
 *The American Immunization Registry Association (AIRA) supports the Simple Message Mover / Tester (SMM/Tester) to support connections and testing with Immunization Information Systems (IIS).* 
 
-## Installation Instructions for Windows Environments:
+## Installation Instructions for Windows Environments: 
 - Create the following folders:
   + `C:\smm`
   + `C:\smm\[YOUR IIS NAME]`
