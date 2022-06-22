@@ -182,7 +182,7 @@ public abstract class CDCWSDLServer {
           if (value.startsWith(CDATA_START) && value.endsWith(CDATA_END)) {
             value = value.substring(CDATA_START.length(), value.length() - CDATA_END.length());
           } else {
-            value = value.replaceAll("\\Q&amp;\\E", "&").replaceAll("\\Q&#xd;\\E", "\r");
+            value = value.replaceAll("\\Q&amp;\\E", "&").replaceAll("\\Q&#13;\\E", "\r").replaceAll("\\Q&#xd;\\E", "\r");
           }
         }
       }
