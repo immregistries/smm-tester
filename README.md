@@ -15,7 +15,7 @@ Ensure that you have Java SE version 6.0 (also displayed as 1.6) or later instal
 
 - To confirm the version of Java installed on your system, follow these steps:
   + Open a command window (in Windows click Start >> Run and type `cmd`, press enter)
-  + Type `java -version` on the command line
+  + Type `java -version` on the command-line
   + Verify the version number displayed (remember that 1.6 indicates Java version 6.0, and 1.7 is Java 7.0)
 
 **If Java is not currently installed:**
