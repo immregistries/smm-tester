@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.immregistries.smm.tester.transform.Patient;
 import org.immregistries.smm.transform.PatientType;
 import org.immregistries.smm.transform.TransformRequest;
@@ -90,8 +89,27 @@ public class AnonymizeAndUpdateRecord implements ProcedureInterface {
           update(fields, 11, 3, patient.getCity());
           update(fields, 11, 4, patient.getState());
           update(fields, 11, 5, patient.getZip());
-          update(fields, 13, 6, patient.getPhoneArea());
-          update(fields, 13, 7, patient.getPhoneLocal());
+          {
+            String[] repeatFields = readRepeats(fields, 13);
+            String fieldFinal = "";
+            for (int i = 0; i < repeatFields.length; i++) {
+              String contactMethod = readRepeatValue(repeatFields[i], 2);
+              String contactType = readRepeatValue(repeatFields[i], 3);
+              if (contactType.equalsIgnoreCase("PH")) {
+                updateRepeatValue(patient.getPhoneArea(), repeatFields, i, 6);
+                updateRepeatValue(patient.getPhoneLocal(), repeatFields, i, 7);
+              } else if (contactType.equalsIgnoreCase("Internet")
+                  || contactMethod.equalsIgnoreCase("NET")) {
+                updateRepeatValue(patient.getEmail(), repeatFields, i, 4);
+              }
+              if (i > 0) {
+                fieldFinal += "~";
+              }
+              fieldFinal += repeatFields[i];
+            }
+            updateContent(fieldFinal, fields, 13);
+          }
+
         } else if (segmentName.equals("PD1")) {
           shiftDate(fields, 13);
           shiftDate(fields, 17);
@@ -201,6 +219,14 @@ public class AnonymizeAndUpdateRecord implements ProcedureInterface {
     daysToAdd = 0;
   }
 
+  private void updateRepeatValue(String updateValue, String[] repeatFields, int repeatPos,
+      int subPo) {
+    String value = readRepeatValue(repeatFields[repeatPos], subPo);
+    if (!value.equals("")) {
+      updateRepeat(updateValue, repeatFields, repeatPos, subPo);
+    }
+  }
+
   private void updateValue(String updateValue, String[] fields, int fieldPos) {
     updateValue(updateValue, fields, fieldPos, 1);
   }
@@ -244,6 +270,78 @@ public class AnonymizeAndUpdateRecord implements ProcedureInterface {
       fields[fieldPos] =
           originalValue.substring(0, posStart) + updateValue + originalValue.substring(posEnd);
     }
+  }
+
+  private void updateContent(String contentValue, String[] fields, int fieldPos) {
+    if (fields[0].equals("MSH") || fields[0].equals("FHS") || fields[0].equals("BHS")) {
+      fieldPos--;
+    }
+    if (fieldPos < fields.length) {
+      fields[fieldPos] = contentValue;
+    }
+  }
+
+  private void updateRepeat(String updateValue, String[] repeatFields, int repeatPos, int subPos) {
+    String originalValue = repeatFields[repeatPos];
+    int posStart = 0;
+    int posEnd = originalValue.length();
+    while (subPos > 1) {
+      int posCaret = originalValue.indexOf("^", posStart);
+      if (posCaret != -1) {
+        posStart = posCaret + 1;
+      } else {
+        originalValue += "^";
+        posStart = originalValue.length();
+      }
+      subPos--;
+    }
+    {
+      int posCaret = originalValue.indexOf("^", posStart);
+      if (posCaret != -1 && posCaret < posEnd) {
+        posEnd = posCaret;
+      }
+    }
+    {
+      int posAmpersand = originalValue.indexOf("&", posStart);
+      if (posAmpersand != -1 && posAmpersand < posEnd) {
+        posEnd = posAmpersand;
+      }
+    }
+    repeatFields[repeatPos] =
+        originalValue.substring(0, posStart) + updateValue + originalValue.substring(posEnd);
+  }
+
+  private String[] readRepeats(String[] fields, int fieldPos) {
+    if (fields[0].equals("MSH") || fields[0].equals("FHS") || fields[0].equals("BHS")) {
+      fieldPos--;
+    }
+    if (fieldPos < fields.length) {
+      return fields[fieldPos].split("\\~");
+    }
+    return new String[] {""};
+  }
+
+  private String readRepeatValue(String value, int subPos) {
+    while (subPos > 1) {
+      int posCaret = value.indexOf("^");
+      if (posCaret != -1) {
+        value = value.substring(posCaret + 1);
+      }
+      subPos--;
+    }
+    {
+      int posCaret = value.indexOf("^");
+      if (posCaret != -1) {
+        value = value.substring(0, posCaret);
+      }
+    }
+    {
+      int posAmpersand = value.indexOf("&");
+      if (posAmpersand != -1) {
+        value = value.substring(0, posAmpersand);
+      }
+    }
+    return value;
   }
 
   private String readValue(String[] fields, int fieldPos) {
