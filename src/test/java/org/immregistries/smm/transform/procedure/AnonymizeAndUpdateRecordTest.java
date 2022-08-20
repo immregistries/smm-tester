@@ -95,11 +95,9 @@ public class AnonymizeAndUpdateRecordTest extends TestCase {
   private void testContains(String om, String co) {
     TestCaseMessage testCaseMessage = new TestCaseMessage();
     testCaseMessage.setOriginalMessage(om);
-    System.out.println(om);
     testCaseMessage.appendCustomTransformation(" run procedure ANONYMIZE_AND_UPDATE_RECORD");
     Transformer transformer = new Transformer();
     transformer.transform(testCaseMessage);
-    System.out.println(testCaseMessage.getMessageText());
     assertTrue(testCaseMessage.getMessageText().contains(co));
   }
 
