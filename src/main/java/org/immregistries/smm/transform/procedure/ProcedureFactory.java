@@ -82,7 +82,9 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_HYPHENATE_OR_SWAP)) {
       procedureInterface = new LastNameHyphenateOrSwap();
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_HYPHENATE_VARIATION)) {
+      procedureInterface = new LastNameHyphenateVariation();
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_PREFIX_VARIATION)) {
+      procedureInterface = new LastNamePrefixVariation();
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_VOWELS)) {
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_BEGINNINGS)) {
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_ENDINGS)) {
