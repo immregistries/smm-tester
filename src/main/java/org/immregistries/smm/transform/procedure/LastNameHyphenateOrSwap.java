@@ -6,12 +6,12 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class LastNameHyphenateVariation extends ProcedureCommon implements ProcedureInterface {
+public class LastNameHyphenateOrSwap extends ProcedureCommon implements ProcedureInterface {
 
 
   private Transformer transformer;
   
-  public LastNameHyphenateVariation() {
+  public LastNameHyphenateOrSwap() {
 
   }
 
