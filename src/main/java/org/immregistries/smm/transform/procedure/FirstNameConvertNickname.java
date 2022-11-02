@@ -28,7 +28,7 @@ public class FirstNameConvertNickname extends ProcedureCommon implements Procedu
           int fieldPos = 5;
           int subPos = 2;
           String firstName = readValue(fields, fieldPos, subPos);
-          firstName = nameToNicknameMap(firstName);
+          firstName = nameToNicknameMap(firstName, transformer);
           updateValue(firstName, fields, fieldPos, subPos);
         }
 
@@ -42,11 +42,11 @@ public class FirstNameConvertNickname extends ProcedureCommon implements Procedu
   //  + Every name can have more then one nickname.
   //  + Every nickname can have more than one name that maps to it. 
 
-  protected static String nameToNicknameMap(String name) {
-    Random random = new Random();
+  protected static String nameToNicknameMap(String name, Transformer transformer) {
+    Random random = transformer.getRandom();
     List<String> nameList = nickNamesToNamesListMap.get(name.toUpperCase());
-    boolean upperCase = name.toUpperCase().equals(name);;
-    boolean lowerCase = name.toLowerCase().equals(name);;
+    boolean upperCase = name.toUpperCase().equals(name);
+    boolean lowerCase = name.toLowerCase().equals(name);
 
     if (nameList == null) {
       // this is not a nickname, maybe it's a name that has a nickname
@@ -844,8 +844,9 @@ public class FirstNameConvertNickname extends ProcedureCommon implements Procedu
     addNameAndNickName("Zachariah", "Zak");
   }
 
+  private Transformer transformer;
   public void setTransformer(Transformer transformer) {
-    // not needed
+    this.transformer = transformer;
   }
 
 

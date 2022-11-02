@@ -3102,5 +3102,10 @@ public class Transformer {
     }
     return s;
   }
+  
+  public Random getRandom()
+  {
+    return random;
+  }
 
 }

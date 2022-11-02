@@ -23,7 +23,7 @@ public class AnonymizeAndUpdateRecord extends ProcedureCommon implements Procedu
   private int daysToAdd;
   private Date today;
   private boolean isGirl = true;
-  private Transformer transfomer;
+  private Transformer transformer;
   private Patient patient;
   private int orcCount = 0;
 
@@ -34,7 +34,7 @@ public class AnonymizeAndUpdateRecord extends ProcedureCommon implements Procedu
   }
 
   public void setTransformer(Transformer transformer) {
-    this.transfomer = transformer;
+    this.transformer = transformer;
   }
 
   protected AnonymizeAndUpdateRecord(String asOfDate) {
@@ -62,7 +62,7 @@ public class AnonymizeAndUpdateRecord extends ProcedureCommon implements Procedu
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     try {
-      patient = transfomer.setupPatient(PatientType.BABY);
+      patient = transformer.setupPatient(PatientType.BABY);
     } catch (Throwable e) {
       e.printStackTrace();
     }
