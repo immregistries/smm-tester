@@ -8,11 +8,11 @@ import java.util.Random;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class FirstNameRepeatedConsonents extends ProcedureCommon implements ProcedureInterface {
+public class FirstNameRepeatedConsonants extends ProcedureCommon implements ProcedureInterface {
 
 
 
-  public FirstNameRepeatedConsonents() {
+  public FirstNameRepeatedConsonants() {
 
   }
 

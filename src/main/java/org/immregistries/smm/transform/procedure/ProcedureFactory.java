@@ -89,7 +89,7 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_VOWELS)) {
       procedureInterface = new FirstNameAlternativeVowels();  
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_REPEATED_CONSONANTS)) {
-      procedureInterface = new FirstNameRepeatedConsonents();  
+      procedureInterface = new FirstNameRepeatedConsonants();  
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_BEGINNINGS)) {
       
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_ENDINGS)) {
