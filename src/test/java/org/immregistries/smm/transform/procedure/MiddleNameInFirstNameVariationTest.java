@@ -16,8 +16,6 @@ public class MiddleNameInFirstNameVariationTest extends TestCase {
     assertEquals("", MiddleNameInFirstNameVariation.varyName("", "Liam")[0]);
     assertEquals("Mary", MiddleNameInFirstNameVariation.varyName("Mary Ann Sue", "")[0]);
     
-    System.out.println();
-    
     assertEquals("", MiddleNameInFirstNameVariation.varyName("Sam", "Liam")[1]);
     assertEquals("Liam", MiddleNameInFirstNameVariation.varyName("Sam Liam", "")[1]);
     assertEquals("", MiddleNameInFirstNameVariation.varyName("Sam", "")[1]);

@@ -96,6 +96,7 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_IN_FIRST_NAME_VARIATION)) {
       procedureInterface = new MiddleNameInFirstNameVariation();
     } else if (procedureName.equalsIgnoreCase(SUFFIX_VARIATION)) {
+      procedureInterface = new SuffixVariation();
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_TYPOS)) {
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_TYPOS)) {
     } else if (procedureName.equalsIgnoreCase(ADDRESS_STREET_CHANGE)) {

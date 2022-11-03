@@ -26,7 +26,7 @@ public class MiddleNameInFirstNameVariation extends ProcedureCommon implements P
           String middleName = readValue(fields, fieldPos, 3);
           String[] names = varyName(firstName, middleName);
           updateValue(names[0], fields, fieldPos, 2);
-          updateValue(names[0], fields, fieldPos, 3);
+          updateValue(names[1], fields, fieldPos, 3);
         }
       }
     }
