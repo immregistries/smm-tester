@@ -33,9 +33,6 @@ public class DateOfBirthMonthDaySwap extends ProcedureCommon implements Procedur
   }
 
   protected static String varyDate(String dob) {
-
-    String originalDob = dob;
-
     if (dob.length() >= 8) {
       if (dob.length() > 8) {
         dob = dob.substring(0, 8);
@@ -87,8 +84,6 @@ public class DateOfBirthMonthDaySwap extends ProcedureCommon implements Procedur
         }
       }
     }
-
-    System.out.println(originalDob + " --> " + dob);
 
     return dob;
   }

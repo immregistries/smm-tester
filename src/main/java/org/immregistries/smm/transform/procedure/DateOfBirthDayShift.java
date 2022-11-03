@@ -33,9 +33,6 @@ public class DateOfBirthDayShift extends ProcedureCommon implements ProcedureInt
   }
 
   protected static String varyDate(String dob) {
-
-    String originalDob = dob;
-
     if (dob.length() >= 8) {
       if (dob.length() > 8) {
         dob = dob.substring(0, 8);
@@ -64,11 +61,7 @@ public class DateOfBirthDayShift extends ProcedureCommon implements ProcedureInt
         }
         dob = createDate(year, month, day);
       }
-
     }
-
-    System.out.println(originalDob + " --> " + dob);
-
     return dob;
   }
 

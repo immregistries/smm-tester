@@ -115,11 +115,15 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_DAY_SHIFT)) {
       procedureInterface = new DateOfBirthDayShift();
     } else if (procedureName.equalsIgnoreCase(ADMINISTRATIVE_SEX_VARIATION)) {
+      procedureInterface = new AdministrativeSexVariation();
     } else if (procedureName.equalsIgnoreCase(EMAIL_CHANGE)) {
+      
     } else if (procedureName.equalsIgnoreCase(EMAIL_TYPO)) {
       
     } else if (procedureName.equalsIgnoreCase(PHONE_CHANGE)) {
+      
     } else if (procedureName.equalsIgnoreCase(PHONE_TYPO)) {
+      
     }
 
 
