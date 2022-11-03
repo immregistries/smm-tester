@@ -35,8 +35,6 @@ public class FirstNameAlternativeVowels extends ProcedureCommon implements Proce
   }
 
   protected static String varyName(String firstName, Transformer transformer) {
-    String firstNameOriginal = firstName;
-    
     boolean upperCase = firstName.toUpperCase().equals(firstName);
     boolean lowerCase = firstName.toLowerCase().equals(firstName);
 
@@ -67,8 +65,6 @@ public class FirstNameAlternativeVowels extends ProcedureCommon implements Proce
     } else {
       firstName = capitalizeFirst(firstName);
     }
-
-    System.out.println(firstNameOriginal + " --> " + firstName);
     return firstName;
   }
 
