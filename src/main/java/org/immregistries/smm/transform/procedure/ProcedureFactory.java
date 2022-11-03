@@ -39,6 +39,7 @@ public class ProcedureFactory {
   public static final String ADDRESS_CITY_TYPO = "ADDRESS_CITY_TYPO";
   public static final String DATE_OF_BIRTH_MONTH_DAY_SWAP =
       "DATE_OF_BIRTH_MONTH_DAY_SWAP";
+  public static final String DATE_OF_BIRTH_RECTIFY = "DATE_OF_BIRTH_RECTIFY";
   public static final String DATE_OF_BIRTH_MONTH_SHIFT = "DATE_OF_BIRTH_MONTH_SHIFT";
   public static final String DATE_OF_BIRTH_YEAR_SHIFT = "DATE_OF_BIRTH_YEAR_SHIFT";
   public static final String DATE_OF_BIRTH_DAY_SHIFT = "DATE_OF_BIRTH_DAY_SHIFT";
@@ -105,9 +106,14 @@ public class ProcedureFactory {
       procedureInterface = new NameTypo(NameTypo.Field.CITY);
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_DAY_SWAP)) {
       procedureInterface = new DateOfBirthMonthDaySwap();
+    } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_RECTIFY)) {
+      procedureInterface = new DateOfBirthRectify();
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_SHIFT)) {
+      procedureInterface = new DateOfBirthMonthShift();
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_YEAR_SHIFT)) {
+      procedureInterface = new DateOfBirthYearShift();
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_DAY_SHIFT)) {
+      procedureInterface = new DateOfBirthDayShift();
     } else if (procedureName.equalsIgnoreCase(ADMINISTRATIVE_SEX_VARIATION)) {
     } else if (procedureName.equalsIgnoreCase(EMAIL_CHANGE)) {
     } else if (procedureName.equalsIgnoreCase(EMAIL_TYPO)) {

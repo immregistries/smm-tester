@@ -215,4 +215,22 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     return namePart.substring(0, 1).toUpperCase() + namePart.substring(1);
   }
 
+  
+  protected static String createDate(int year, int month, int day) {
+    String dob;
+    dob = "" + year;
+    if (month < 10) {
+      dob += "0" + month;
+    } else {
+      dob += month;
+    }
+    if (day < 10) {
+      dob += "0" + day;
+    } else {
+      dob += day;
+    }
+    return dob;
+  }
+
+
 }

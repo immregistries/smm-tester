@@ -6,11 +6,11 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class DateOfBirthMonthDaySwap extends ProcedureCommon implements ProcedureInterface {
+public class DateOfBirthRectify extends ProcedureCommon implements ProcedureInterface {
 
 
 
-  public DateOfBirthMonthDaySwap() {
+  public DateOfBirthRectify() {
 
   }
 
@@ -52,39 +52,20 @@ public class DateOfBirthMonthDaySwap extends ProcedureCommon implements Procedur
       }
 
       if (day > 0 && month > 0 && year > 1900) {
-        if (day > 12) {
-          // If the day is too high then we have to move the date of birth back in time 
-          // to a day of the month that is 12 or lower. We will shift it back and then 
-          // adjust the date so that it is still accurate.
-          if (day > 24) {
-            month = month - 2;
-            day = day - 24;
-          } else {
-            month = month - 1;
-            day = day - 12;
-          }
+        if (day < 3) {
+          // don't leave day on the first two days of the month, move back to the previous month
+          month = month - 1;
           if (month < 1) {
             // month has decremented into next year
             month = month + 12;
             year = year - 1;
           }
-        } else {
-          // We are good to do a switch of dates
-          int temp = month;
-          month = day;
-          day = temp;
+          day = 28 - (day - 1);
+        } else if (day > 28) {
+          // don't leave the date on the days that don't work on all months, move backwards into month
+          day = 28 - (31 - day);
         }
-        dob = "" + year;
-        if (month < 10) {
-          dob += "0" + month;
-        } else {
-          dob += month;
-        }
-        if (day < 10) {
-          dob += "0" + day;
-        } else {
-          dob += day;
-        }
+        dob = createDate(year, month, day);
       }
     }
 
