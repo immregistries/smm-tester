@@ -21,9 +21,9 @@ public class RemoveAiraSuffix extends ProcedureCommon implements ProcedureInterf
   private Field field;
 
 
-  public RemoveAiraSuffix(Field field) {
-    this.field = field;
-  }
+public RemoveAiraSuffix(Field field) {
+this.field = field;
+}
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
@@ -49,9 +49,4 @@ public class RemoveAiraSuffix extends ProcedureCommon implements ProcedureInterf
     }
     putMessageBackTogether(transformRequest, fieldsList);
   }
-
-
-
-
-  
 }

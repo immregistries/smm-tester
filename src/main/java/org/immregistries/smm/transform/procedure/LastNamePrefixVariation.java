@@ -33,11 +33,6 @@ public class LastNamePrefixVariation extends ProcedureCommon implements Procedur
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
-  // Pulled common nicknames found here: https://www.familiesunearthed.com/nicknames.htm
-  //  + Removed nicknames that show up as names
-  //  + Every name can have more then one nickname.
-  //  + Every nickname can have more than one name that maps to it. 
-
   protected static String varyName(String lastName, Transformer transformer) {
     boolean upperCase = lastName.toUpperCase().equals(lastName);
     boolean lowerCase = lastName.toLowerCase().equals(lastName);

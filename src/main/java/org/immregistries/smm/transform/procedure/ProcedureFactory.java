@@ -98,9 +98,13 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(SUFFIX_VARIATION)) {
       procedureInterface = new SuffixVariation();
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_TYPOS)) {
+      procedureInterface = new NameTypo(NameTypo.Field.LAST_NAME);
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_TYPOS)) {
+      procedureInterface = new NameTypo(NameTypo.Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(ADDRESS_STREET_CHANGE)) {
+      
     } else if (procedureName.equalsIgnoreCase(ADDRESS_CITY_TYPO)) {
+      procedureInterface = new NameTypo(NameTypo.Field.CITY);
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_DAY_SWAP_OR_DAY_SHIFT)) {
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_DAY_SWAP_ONLY)) {
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_SHIFT)) {
