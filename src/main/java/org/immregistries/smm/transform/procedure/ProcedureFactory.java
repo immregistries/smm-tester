@@ -32,7 +32,6 @@ public class ProcedureFactory {
   public static final String FIRST_NAME_ALTERNATIVE_ENDINGS = "FIRST_NAME_ALTERNATIVE_ENDINGS";
   public static final String MIDDLE_NAME_IN_FIRST_NAME_VARIATION =
       "MIDDLE_NAME_IN_FIRST_NAME_VARIATION";
-  public static final String FIRST_NAME_SEPARATION_VARIATION = "FIRST_NAME_SEPARATION_VARIATION";
   public static final String SUFFIX_VARIATION = "SUFFIX_VARIATION";
   public static final String LAST_NAME_TYPOS = "LAST_NAME_TYPOS";
   public static final String FIRST_NAME_TYPOS = "FIRST_NAME_TYPOS";
@@ -95,7 +94,7 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_ENDINGS)) {
       procedureInterface = new FirstNameAlternativeEndings();
     } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_IN_FIRST_NAME_VARIATION)) {
-    } else if (procedureName.equalsIgnoreCase(FIRST_NAME_SEPARATION_VARIATION)) {
+      procedureInterface = new MiddleNameInFirstNameVariation();
     } else if (procedureName.equalsIgnoreCase(SUFFIX_VARIATION)) {
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_TYPOS)) {
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_TYPOS)) {
