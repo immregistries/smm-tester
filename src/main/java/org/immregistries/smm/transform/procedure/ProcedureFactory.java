@@ -37,10 +37,8 @@ public class ProcedureFactory {
   public static final String FIRST_NAME_TYPOS = "FIRST_NAME_TYPOS";
   public static final String ADDRESS_STREET_CHANGE = "ADDRESS_STREET_CHANGE";
   public static final String ADDRESS_CITY_TYPO = "ADDRESS_CITY_TYPO";
-  public static final String DATE_OF_BIRTH_MONTH_DAY_SWAP_OR_DAY_SHIFT =
-      "DATE_OF_BIRTH_MONTH_DAY_SWAP_OR_DAY_SHIFT";
-  public static final String DATE_OF_BIRTH_MONTH_DAY_SWAP_ONLY =
-      "DATE_OF_BIRTH_MONTH_DAY_SWAP_ONLY";
+  public static final String DATE_OF_BIRTH_MONTH_DAY_SWAP =
+      "DATE_OF_BIRTH_MONTH_DAY_SWAP";
   public static final String DATE_OF_BIRTH_MONTH_SHIFT = "DATE_OF_BIRTH_MONTH_SHIFT";
   public static final String DATE_OF_BIRTH_YEAR_SHIFT = "DATE_OF_BIRTH_YEAR_SHIFT";
   public static final String DATE_OF_BIRTH_DAY_SHIFT = "DATE_OF_BIRTH_DAY_SHIFT";
@@ -105,14 +103,15 @@ public class ProcedureFactory {
       
     } else if (procedureName.equalsIgnoreCase(ADDRESS_CITY_TYPO)) {
       procedureInterface = new NameTypo(NameTypo.Field.CITY);
-    } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_DAY_SWAP_OR_DAY_SHIFT)) {
-    } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_DAY_SWAP_ONLY)) {
+    } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_DAY_SWAP)) {
+      procedureInterface = new DateOfBirthMonthDaySwap();
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_SHIFT)) {
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_YEAR_SHIFT)) {
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_DAY_SHIFT)) {
     } else if (procedureName.equalsIgnoreCase(ADMINISTRATIVE_SEX_VARIATION)) {
     } else if (procedureName.equalsIgnoreCase(EMAIL_CHANGE)) {
     } else if (procedureName.equalsIgnoreCase(EMAIL_TYPO)) {
+      
     } else if (procedureName.equalsIgnoreCase(PHONE_CHANGE)) {
     } else if (procedureName.equalsIgnoreCase(PHONE_TYPO)) {
     }
