@@ -206,5 +206,13 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     }
     return value;
   }
+  
+
+  protected static String capitalizeFirst(String namePart) {
+    if (namePart.length() <= 1) {
+      return namePart.toUpperCase();
+    }
+    return namePart.substring(0, 1).toUpperCase() + namePart.substring(1);
+  }
 
 }
