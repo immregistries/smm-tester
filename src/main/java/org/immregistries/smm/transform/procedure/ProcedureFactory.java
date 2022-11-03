@@ -97,13 +97,13 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(SUFFIX_VARIATION)) {
       procedureInterface = new SuffixVariation();
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_TYPOS)) {
-      procedureInterface = new NameTypo(NameTypo.Field.LAST_NAME);
+      procedureInterface = new TextTypo(TextTypo.Field.LAST_NAME);
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_TYPOS)) {
-      procedureInterface = new NameTypo(NameTypo.Field.FIRST_NAME);
+      procedureInterface = new TextTypo(TextTypo.Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(ADDRESS_STREET_CHANGE)) {
       
     } else if (procedureName.equalsIgnoreCase(ADDRESS_CITY_TYPO)) {
-      procedureInterface = new NameTypo(NameTypo.Field.CITY);
+      procedureInterface = new TextTypo(TextTypo.Field.CITY);
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_DAY_SWAP)) {
       procedureInterface = new DateOfBirthMonthDaySwap();
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_RECTIFY)) {
@@ -119,11 +119,11 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(EMAIL_CHANGE)) {
       
     } else if (procedureName.equalsIgnoreCase(EMAIL_TYPO)) {
-      
+      procedureInterface = new TextTypo(TextTypo.Field.EMAIL);
     } else if (procedureName.equalsIgnoreCase(PHONE_CHANGE)) {
       
     } else if (procedureName.equalsIgnoreCase(PHONE_TYPO)) {
-      
+      procedureInterface = new TextTypo(TextTypo.Field.PHONE);
     }
 
 
