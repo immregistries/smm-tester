@@ -102,7 +102,7 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_TYPOS)) {
       procedureInterface = new TextTypo(TextTypo.Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(ADDRESS_STREET_CHANGE)) {
-      
+      procedureInterface = new AddressStreetVariation();
     } else if (procedureName.equalsIgnoreCase(ADDRESS_STREET_TYPO)) {
       procedureInterface = new TextTypo(TextTypo.Field.ADDRESS_STREET);
     } else if (procedureName.equalsIgnoreCase(ADDRESS_CITY_TYPO)) {

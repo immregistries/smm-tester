@@ -4,13 +4,13 @@ import org.immregistries.smm.transform.Transformer;
 import org.junit.Test;
 import junit.framework.TestCase;
 
-public class AddressVariationTest extends TestCase {
+public class AddressStreetVariationTest extends TestCase {
 
 
   @Test
   public void test() {
     Transformer transformer = new Transformer();
-    AddressVariation.varyAddress("1562 Weerijnen Ln", transformer);
+    AddressStreetVariation.varyAddress("1562 Weerijnen Ln", transformer);
   }
 
 }

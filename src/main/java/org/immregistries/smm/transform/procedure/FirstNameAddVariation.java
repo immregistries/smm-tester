@@ -8,8 +8,6 @@ import org.immregistries.smm.transform.Transformer;
 
 public class FirstNameAddVariation extends ProcedureCommon implements ProcedureInterface {
 
-
-
   public FirstNameAddVariation() {
 
   }
