@@ -63,7 +63,7 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
               if (field == Field.PHONE) {
                 int subPos = 6;
                 String phone = readRepeatValue(value, subPos);
-                if (phone.length() >= 9) {
+                if (phone.length() >= 4) {
                   phone = varyText(phone, transformer);
                 }
                 updateRepeat(phone, repeatFields, pos, subPos);
