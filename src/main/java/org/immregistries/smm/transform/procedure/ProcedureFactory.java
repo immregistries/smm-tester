@@ -26,6 +26,7 @@ public class ProcedureFactory {
   public static final String LAST_NAME_HYPHENATE_VARIATION = "LAST_NAME_HYPHENATE_VARIATION";
   public static final String LAST_NAME_PREFIX_VARIATION = "LAST_NAME_PREFIX_VARIATION";
   public static final String FIRST_NAME_ALTERNATIVE_VOWELS = "FIRST_NAME_ALTERNATIVE_VOWELS";
+  public static final String FIRST_NAME_REPEATED_CONSONANTS = "FIRST_NAME_REPEATED_CONSONANTS";
   public static final String FIRST_NAME_ALTERNATIVE_BEGINNINGS =
       "FIRST_NAME_ALTERNATIVE_BEGINNINGS";
   public static final String FIRST_NAME_ALTERNATIVE_ENDINGS = "FIRST_NAME_ALTERNATIVE_ENDINGS";
@@ -87,7 +88,10 @@ public class ProcedureFactory {
       procedureInterface = new LastNamePrefixVariation();
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_VOWELS)) {
       procedureInterface = new FirstNameAlternativeVowels();  
+    } else if (procedureName.equalsIgnoreCase(FIRST_NAME_REPEATED_CONSONANTS)) {
+      procedureInterface = new FirstNameRepeatedConsonents();  
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_BEGINNINGS)) {
+      
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_ENDINGS)) {
     } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_IN_FIRST_NAME_VARIATION)) {
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_SEPARATION_VARIATION)) {
