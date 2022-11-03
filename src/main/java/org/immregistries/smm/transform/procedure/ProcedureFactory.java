@@ -36,6 +36,7 @@ public class ProcedureFactory {
   public static final String LAST_NAME_TYPOS = "LAST_NAME_TYPOS";
   public static final String FIRST_NAME_TYPOS = "FIRST_NAME_TYPOS";
   public static final String ADDRESS_STREET_CHANGE = "ADDRESS_STREET_CHANGE";
+  public static final String ADDRESS_STREET_TYPO = "ADDRESS_STREET_TYPO";
   public static final String ADDRESS_CITY_TYPO = "ADDRESS_CITY_TYPO";
   public static final String DATE_OF_BIRTH_MONTH_DAY_SWAP =
       "DATE_OF_BIRTH_MONTH_DAY_SWAP";
@@ -102,6 +103,8 @@ public class ProcedureFactory {
       procedureInterface = new TextTypo(TextTypo.Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(ADDRESS_STREET_CHANGE)) {
       
+    } else if (procedureName.equalsIgnoreCase(ADDRESS_STREET_TYPO)) {
+      procedureInterface = new TextTypo(TextTypo.Field.ADDRESS_STREET);
     } else if (procedureName.equalsIgnoreCase(ADDRESS_CITY_TYPO)) {
       procedureInterface = new TextTypo(TextTypo.Field.CITY);
     } else if (procedureName.equalsIgnoreCase(DATE_OF_BIRTH_MONTH_DAY_SWAP)) {

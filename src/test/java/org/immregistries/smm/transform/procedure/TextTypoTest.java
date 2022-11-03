@@ -19,6 +19,7 @@ public class TextTypoTest extends TestCase {
     assertNotEquals("CARPENTER", TextTypo.varyText("CARPENTER", transformer));
     assertNotEquals("4356180", TextTypo.varyText("4356180", transformer));
     assertNotEquals("something@gmail.com", TextTypo.varyText("something@gmail.com", transformer));
+    assertNotEquals("1562 Weerijnen Ln", TextTypo.varyText("1562 Weerijnen Ln", transformer));
 
   }
 

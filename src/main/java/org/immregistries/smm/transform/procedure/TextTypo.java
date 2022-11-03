@@ -16,6 +16,7 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
                             FIRST_NAME,
                             LAST_NAME,
                             CITY,
+                            ADDRESS_STREET,
                             PHONE,
                             EMAIL
   }
@@ -41,7 +42,8 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
         if (segmentName.equals("PID")) {
-          if (field == Field.LAST_NAME || field == Field.FIRST_NAME || field == Field.LAST_NAME) {
+          if (field == Field.LAST_NAME || field == Field.FIRST_NAME || field == Field.LAST_NAME
+              || field == Field.ADDRESS_STREET) {
             int fieldPos = 5;
             int subPos = 1;
             if (field == Field.LAST_NAME) {
@@ -51,6 +53,9 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
             } else if (field == Field.CITY) {
               fieldPos = 11;
               subPos = 3;
+            } else if (field == Field.ADDRESS_STREET) {
+              fieldPos = 11;
+              subPos = 1;
             }
             String name = readValue(fields, fieldPos, subPos);
             name = varyText(name, transformer);
