@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
 public class FirstNameAlternativeBeginnings extends ProcedureCommon implements ProcedureInterface {
-
-
 
   public FirstNameAlternativeBeginnings() {
 
@@ -25,9 +22,9 @@ public class FirstNameAlternativeBeginnings extends ProcedureCommon implements P
         if (segmentName.equals("PID")) {
           int fieldPos = 5;
           int subPos = 2;
-          String lastName = readValue(fields, fieldPos, subPos);
-          lastName = varyName(lastName);
-          updateValue(lastName, fields, fieldPos, subPos);
+          String firstName = readValue(fields, fieldPos, subPos);
+          firstName = varyName(firstName);
+          updateValue(firstName, fields, fieldPos, subPos);
         }
       }
     }
@@ -35,8 +32,6 @@ public class FirstNameAlternativeBeginnings extends ProcedureCommon implements P
   }
 
   protected static String varyName(String firstName) {
-    String firstNameOriginal = firstName;
-
     boolean upperCase = firstName.toUpperCase().equals(firstName);
     boolean lowerCase = firstName.toLowerCase().equals(firstName);
 
@@ -60,8 +55,6 @@ public class FirstNameAlternativeBeginnings extends ProcedureCommon implements P
     } else {
       firstName = capitalizeFirst(firstName);
     }
-
-    System.out.println(firstNameOriginal + " --> " + firstName);
     return firstName;
   }
 

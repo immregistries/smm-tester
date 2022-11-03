@@ -25,9 +25,9 @@ public class FirstNameRepeatedConsonants extends ProcedureCommon implements Proc
         if (segmentName.equals("PID")) {
           int fieldPos = 5;
           int subPos = 2;
-          String lastName = readValue(fields, fieldPos, subPos);
-          lastName = varyName(lastName, transformer);
-          updateValue(lastName, fields, fieldPos, subPos);
+          String firstName = readValue(fields, fieldPos, subPos);
+          firstName = varyName(firstName, transformer);
+          updateValue(firstName, fields, fieldPos, subPos);
         }
       }
     }
