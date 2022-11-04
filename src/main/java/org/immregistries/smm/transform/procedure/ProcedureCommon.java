@@ -8,7 +8,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 
 public abstract class ProcedureCommon implements ProcedureInterface {
-  
+
   protected String readValue(String[] fields, int fieldPos) {
     return readValue(fields, fieldPos, 1);
   }
@@ -49,7 +49,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     }
     return value;
   }
-  
+
   protected void updateValue(String updateValue, String[] fields, int fieldPos, int subPos) {
     if (fields[0].equals("MSH") || fields[0].equals("FHS") || fields[0].equals("BHS")) {
       fieldPos--;
@@ -90,7 +90,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
           originalValue.substring(0, posStart) + updateValue + originalValue.substring(posEnd);
     }
   }
-  
+
   protected List<String[]> readMessage(TransformRequest transformRequest) throws IOException {
     BufferedReader inResult =
         new BufferedReader(new StringReader(transformRequest.getResultText()));
@@ -107,7 +107,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     return fieldsList;
   }
 
-  
+
   protected void putMessageBackTogether(TransformRequest transformRequest,
       List<String[]> fieldsList) {
     String finalMessage = "";
@@ -122,7 +122,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     }
     transformRequest.setResultText(finalMessage);
   }
-  
+
   protected void updateRepeatValue(String updateValue, String[] repeatFields, int repeatPos,
       int subPo) {
     String value = readRepeatValue(repeatFields[repeatPos], subPo);
@@ -144,7 +144,8 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     }
   }
 
-  protected void updateRepeat(String updateValue, String[] repeatFields, int repeatPos, int subPos) {
+  protected void updateRepeat(String updateValue, String[] repeatFields, int repeatPos,
+      int subPos) {
     String originalValue = repeatFields[repeatPos];
     int posStart = 0;
     int posEnd = originalValue.length();
@@ -174,6 +175,18 @@ public abstract class ProcedureCommon implements ProcedureInterface {
         originalValue.substring(0, posStart) + updateValue + originalValue.substring(posEnd);
   }
 
+
+  protected String createRepeatValue(String[] repeatFields) {
+    String value = "";
+    if (repeatFields.length > 0) {
+      value = repeatFields[0];
+      for (int i = 1; i < repeatFields.length; i++) {
+        value += "~" + repeatFields[i];
+      }
+    }
+    return value;
+  }
+
   protected String[] readRepeats(String[] fields, int fieldPos) {
     if (fields[0].equals("MSH") || fields[0].equals("FHS") || fields[0].equals("BHS")) {
       fieldPos--;
@@ -184,12 +197,14 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     return new String[] {""};
   }
 
-  protected String readRepeatValue(String value, int subPos) {
+  protected static String readRepeatValue(String value, int subPos) {
     while (subPos > 1) {
       int posCaret = value.indexOf("^");
-      if (posCaret != -1) {
-        value = value.substring(posCaret + 1);
+      if (posCaret == -1) {
+        // no more repeats, value is missing
+        return "";
       }
+      value = value.substring(posCaret + 1);
       subPos--;
     }
     {
@@ -206,7 +221,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     }
     return value;
   }
-  
+
 
   protected static String capitalizeFirst(String namePart) {
     if (namePart.length() <= 1) {
@@ -215,7 +230,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     return namePart.substring(0, 1).toUpperCase() + namePart.substring(1);
   }
 
-  
+
   protected static String createDate(int year, int month, int day) {
     String dob;
     dob = "" + year;

@@ -3,6 +3,7 @@ package org.immregistries.smm.transform.procedure;
 import static org.junit.Assert.assertNotEquals;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.Transformer;
+import org.junit.Test;
 import junit.framework.TestCase;
 
 public class ProcedureCommonTest extends TestCase {
@@ -45,7 +46,6 @@ public class ProcedureCommonTest extends TestCase {
     Transformer transformer = new Transformer();
     transformer.transform(testCaseMessage);
     assertNotEquals(om, testCaseMessage.getMessageText());
-    System.out.println(testCaseMessage.getMessageText());
     assertTrue(testCaseMessage.getMessageText().indexOf(fieldText) == -1);
   }
 
@@ -56,5 +56,18 @@ public class ProcedureCommonTest extends TestCase {
     Transformer transformer = new Transformer();
     transformer.transform(testCaseMessage);
     return testCaseMessage.getMessageText();
+  }
+  
+  @Test
+  public void testReadRepeatValue()
+  {
+    assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 1));
+    assertEquals("NET", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 2));
+    assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 3));
+    assertEquals("email@email.com", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 4));
+    assertEquals("email@email.com", ProcedureCommon.readRepeatValue("^NET^^email@email.com^", 4));
+    assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com^", 5));
+    assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 5));
+    assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 7));
   }
 }

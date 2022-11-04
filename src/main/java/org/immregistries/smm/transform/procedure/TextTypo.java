@@ -59,29 +59,32 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
             }
             String name = readValue(fields, fieldPos, subPos);
             name = varyText(name, transformer);
-            updateValue(name.substring(0, name.length() - 4), fields, fieldPos, subPos);
+            updateValue(name, fields, fieldPos, subPos);
           } else if (field == Field.PHONE || field == Field.EMAIL) {
             int fieldPos = 13;
             String[] repeatFields = readRepeats(fields, fieldPos);
             int pos = 0;
             for (String value : repeatFields) {
               if (field == Field.PHONE) {
-                int subPos = 6;
+                int subPos = 7;
                 String phone = readRepeatValue(value, subPos);
                 if (phone.length() >= 4) {
                   phone = varyText(phone, transformer);
+                  updateRepeat(phone, repeatFields, pos, subPos);
                 }
-                updateRepeat(phone, repeatFields, pos, subPos);
               } else if (field == Field.EMAIL) {
                 int subPos = 4;
+
                 String email = readRepeatValue(value, subPos);
                 if (email.indexOf('@') > 0) {
                   email = varyText(email, transformer);
+                  updateRepeat(email, repeatFields, pos, subPos);
                 }
-                updateRepeat(email, repeatFields, pos, subPos);
               }
               pos++;
             }
+            String fieldFinal = createRepeatValue(repeatFields);
+            updateContent(fieldFinal, fields, fieldPos);
           }
         }
       }
@@ -92,7 +95,6 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
 
 
   protected static String varyText(String name, Transformer transformer) {
-    String originalName = name;
     boolean upperCase = name.toUpperCase().equals(name);
     boolean lowerCase = name.toLowerCase().equals(name);
 
@@ -111,8 +113,6 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
     } else if (lowerCase) {
       name = name.toLowerCase();
     }
-
-    System.out.println(originalName + " --> " + name);
     return name;
   }
 
