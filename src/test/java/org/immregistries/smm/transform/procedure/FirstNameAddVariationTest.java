@@ -1,38 +1,39 @@
 package org.immregistries.smm.transform.procedure;
 
 import org.junit.Test;
-import junit.framework.TestCase;
 
-public class FirstNameAddVariationTest extends TestCase {
+public class FirstNameAddVariationTest extends ProcedureCommonTest {
 
 
   @Test
   public void test() {
-    assertEquals("De Shawn", FirstNameAddVariation.varyName("De'Shawn"));
-    assertEquals("DeShawn", FirstNameAddVariation.varyName("De Shawn"));
-    assertEquals("De'Shawn", FirstNameAddVariation.varyName("DeShawn"));
-    assertEquals("De'Shawn", FirstNameAddVariation.varyName("Deshawn"));
-    assertEquals("Des'Hawn", FirstNameAddVariation.varyName("DesHawn"));
-    assertEquals("DE'SHAWN", FirstNameAddVariation.varyName("DESHAWN"));
-    assertEquals("A'Nne", FirstNameAddVariation.varyName("Anne"));
-    assertEquals("Ma'Y", FirstNameAddVariation.varyName("May"));
-    assertEquals("Bee", FirstNameAddVariation.varyName("Bee"));
-    assertEquals("Nee'Lima", FirstNameAddVariation.varyName("Neelima"));
-    assertEquals("BeE", FirstNameAddVariation.varyName("Be e"));
-    assertEquals("Pe'Ter", FirstNameAddVariation.varyName("Peter"));
-    assertEquals("O Henry", FirstNameAddVariation.varyName("O'Henry"));
-    assertEquals("OHenry", FirstNameAddVariation.varyName("O Henry"));
-    assertEquals("O'Henry", FirstNameAddVariation.varyName("OHenry"));
-    assertEquals("Deu'Teaux", FirstNameAddVariation.varyName("Deuteaux"));
+    testVariation("De'Shawn", "De Shawn");
+    testVariation("De Shawn", "DeShawn");
+    testVariation("DeShawn", "De'Shawn");
+    testVariation("Deshawn", "De'Shawn");
+    testVariation("DesHawn", "Des'Hawn");
+    testVariation("DESHAWN", "DE'SHAWN");
+    testVariation("Anne", "A'Nne");
+    testVariation("May", "Ma'Y");
+    testVariation("Bee", "Bee");
+    testVariation("Neelima", "Nee'Lima");
+    testVariation("Be e", "BeE");
+    testVariation("Peter", "Pe'Ter");
+    testVariation("O'Henry", "O Henry");
+    testVariation("O Henry", "OHenry");
+    testVariation("OHenry", "O'Henry");
+    testVariation("Deuteaux", "Deu'Teaux");
+    testVariation("'DeShawn", "'DeShawn");
+    testVariation("DeShawn'", "DeShawn'");
+    testVariation("DeShaw'n", "DeShaw N");
+    testVariation("D'eShawn", "D EShawn");
+  }
 
-    assertEquals("DeShawn", FirstNameAddVariation
-        .varyName(FirstNameAddVariation.varyName(FirstNameAddVariation.varyName("DeShawn"))));
-    assertEquals("'DeShawn", FirstNameAddVariation.varyName("'DeShawn"));
-    assertEquals("DeShawn'", FirstNameAddVariation.varyName("DeShawn'"));
-    assertEquals("DeShaw N", FirstNameAddVariation.varyName("DeShaw'n"));
-    assertEquals("D EShawn", FirstNameAddVariation.varyName("D'eShawn"));
-
-
+  protected void testVariation(String startValue, String endValue) {
+    assertEquals(endValue, FirstNameAddVariation.varyName(startValue));
+    String testStart = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + startValue);
+    String testEnd = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + endValue);
+    testEquals(testStart, testEnd, ProcedureFactory.FIRST_NAME_ADD_VARIATION);
   }
 
 }

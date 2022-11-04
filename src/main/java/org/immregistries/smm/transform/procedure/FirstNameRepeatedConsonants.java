@@ -1,7 +1,6 @@
 package org.immregistries.smm.transform.procedure;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -41,8 +40,6 @@ public class FirstNameRepeatedConsonants extends ProcedureCommon implements Proc
       'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'y', 'z'};
 
   protected static String varyName(String firstName, Transformer transformer) {
-    String firstNameOriginal = firstName;
-
     boolean upperCase = firstName.toUpperCase().equals(firstName);
     boolean lowerCase = firstName.toLowerCase().equals(firstName);
 
@@ -66,8 +63,6 @@ public class FirstNameRepeatedConsonants extends ProcedureCommon implements Proc
     } else {
       firstName = capitalizeFirst(firstName);
     }
-
-    System.out.println(firstNameOriginal + " --> " + firstName);
     return firstName;
   }
 

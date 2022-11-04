@@ -28,7 +28,7 @@ public class ProcedureCommonTest extends TestCase {
     transformer.transform(testCaseMessage);
     assertEquals(fm, testCaseMessage.getMessageText());
   }
-
+  
   protected void testProcedureChangesMessage(String om, String procedure) {
     TestCaseMessage testCaseMessage = new TestCaseMessage();
     testCaseMessage.setOriginalMessage(om);

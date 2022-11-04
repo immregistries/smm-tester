@@ -1,38 +1,39 @@
 package org.immregistries.smm.transform.procedure;
 
 import org.junit.Test;
-import junit.framework.TestCase;
 
-public class FirstNameAlternativeEndingsTest extends TestCase {
+public class FirstNameAlternativeEndingsTest extends ProcedureCommonTest {
 
 
   @Test
   public void test() {
-    
-    assertEquals("Sann", FirstNameAlternativeEndings.varyName("Sam"));
-    assertEquals("Liann", FirstNameAlternativeEndings.varyName("Liam"));
-    assertEquals("Noaph", FirstNameAlternativeEndings.varyName("Noah"));
-    assertEquals("Oliverrie", FirstNameAlternativeEndings.varyName("Oliver"));
-    assertEquals("Elijaph", FirstNameAlternativeEndings.varyName("Elijah"));
-    assertEquals("Jamesz", FirstNameAlternativeEndings.varyName("James"));
-    assertEquals("Williann", FirstNameAlternativeEndings.varyName("William"));
-    assertEquals("Benjamimm", FirstNameAlternativeEndings.varyName("Benjamin"));
-    assertEquals("Lucasz", FirstNameAlternativeEndings.varyName("Lucas"));
-    assertEquals("Henrie", FirstNameAlternativeEndings.varyName("Henry"));
-    assertEquals("Oliviay", FirstNameAlternativeEndings.varyName("Olivia"));
-    assertEquals("Emmay", FirstNameAlternativeEndings.varyName("Emma"));
-    assertEquals("Charlottee", FirstNameAlternativeEndings.varyName("Charlotte"));
-    assertEquals("Ameliay", FirstNameAlternativeEndings.varyName("Amelia"));
-    assertEquals("Avay", FirstNameAlternativeEndings.varyName("Ava"));
-    assertEquals("Sophiay", FirstNameAlternativeEndings.varyName("Sophia"));
-    assertEquals("Isabellay", FirstNameAlternativeEndings.varyName("Isabella"));
-    assertEquals("Miay", FirstNameAlternativeEndings.varyName("Mia"));
-    assertEquals("Evelymm", FirstNameAlternativeEndings.varyName("Evelyn"));
-    assertEquals("Harperrie", FirstNameAlternativeEndings.varyName("Harper"));
-
-
-
-
+    testVariation("Sam", "Sann");
+    testVariation("Liam", "Liann");
+    testVariation("Noah", "Noaph");
+    testVariation("Oliver", "Oliverrie");
+    testVariation("Elijah", "Elijaph");
+    testVariation("James", "Jamesz");
+    testVariation("William", "Williann");
+    testVariation("Benjamin", "Benjamimm");
+    testVariation("Lucas", "Lucasz");
+    testVariation("Henry", "Henrie");
+    testVariation("Olivia", "Oliviay");
+    testVariation("Emma", "Emmay");
+    testVariation("Charlotte", "Charlottee");
+    testVariation("Amelia", "Ameliay");
+    testVariation("Ava", "Avay");
+    testVariation("Sophia", "Sophiay");
+    testVariation("Isabella", "Isabellay");
+    testVariation("Mia", "Miay");
+    testVariation("Evelyn", "Evelymm");
+    testVariation("Harper", "Harperrie");
+  }
+  
+  protected void testVariation(String startValue, String endValue) {
+    assertEquals(endValue, FirstNameAlternativeEndings.varyName(startValue));
+    String testStart = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + startValue);
+    String testEnd = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + endValue);
+    testEquals(testStart, testEnd, ProcedureFactory.FIRST_NAME_ALTERNATIVE_ENDINGS);
   }
 
 }

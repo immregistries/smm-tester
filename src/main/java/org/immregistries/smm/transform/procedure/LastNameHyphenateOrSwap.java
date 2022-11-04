@@ -23,7 +23,7 @@ public class LastNameHyphenateOrSwap extends ProcedureCommon implements Procedur
         String segmentName = fields[0];
         if (segmentName.equals("PID")) {
           int fieldPos = 5;
-          int subPos = 2;
+          int subPos = 1;
           String firstName = readValue(fields, fieldPos, subPos).trim();
           firstName = varyName(firstName, transformer);
           updateValue(firstName, fields, fieldPos, subPos);
