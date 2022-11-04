@@ -3,24 +3,30 @@ package org.immregistries.smm.transform.procedure;
 import static org.junit.Assert.assertNotEquals;
 import org.immregistries.smm.transform.Transformer;
 import org.junit.Test;
-import junit.framework.TestCase;
 
-public class TextTypoTest extends TestCase {
+public class TextTypoTest extends ProcedureCommonTest {
 
 
   @Test
   public void test() {
     Transformer transformer = new Transformer();
 
-    assertNotEquals("Samuel", TextTypo.varyText("Samuel", transformer));
-    assertNotEquals("Emily", TextTypo.varyText("Emily", transformer));
-    assertNotEquals("Mary Sue", TextTypo.varyText("Mary Sue", transformer));
-    assertNotEquals("Ye Sune", TextTypo.varyText("Ye Sune", transformer));
-    assertNotEquals("CARPENTER", TextTypo.varyText("CARPENTER", transformer));
-    assertNotEquals("4356180", TextTypo.varyText("4356180", transformer));
-    assertNotEquals("something@gmail.com", TextTypo.varyText("something@gmail.com", transformer));
-    assertNotEquals("1562 Weerijnen Ln", TextTypo.varyText("1562 Weerijnen Ln", transformer));
+    testVariationDifferent("CARPENTER", "PID-5.1", ProcedureFactory.LAST_NAME_TYPO, transformer);
+    testVariationDifferent("Samuel", "PID-5.2", ProcedureFactory.FIRST_NAME_TYPO, transformer);
+    testVariationDifferent("Emily", "PID-5.2", ProcedureFactory.FIRST_NAME_TYPO, transformer);
+    testVariationDifferent("Mary Sue", "PID-5.2", ProcedureFactory.FIRST_NAME_TYPO, transformer);
+    testVariationDifferent("Ye Sune", "PID-5.2", ProcedureFactory.FIRST_NAME_TYPO, transformer);
+    testVariationDifferent("4356180", "PID-13.7", ProcedureFactory.PHONE_TYPO, transformer);
+    testVariationDifferent("something@gmail.com", "PID-13#2.7", ProcedureFactory.EMAIL_TYPO, transformer);
+    testVariationDifferent("1562 Weerijnen Ln", "PID-11.1", ProcedureFactory.ADDRESS_STREET_TYPO, transformer);
 
+  }
+  
+  private void testVariationDifferent(String startValue, String location, String procedure, Transformer transformer) {
+    assertNotEquals(startValue, TextTypo.varyText(startValue, transformer));
+    String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
+    System.out.println(testStart);
+    testProcedureChangesMessageAndDoesNotContain(testStart, startValue, procedure);
   }
 
 }

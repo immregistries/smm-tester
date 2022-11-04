@@ -51,14 +51,14 @@ public class FirstNameAlternativeVowelsTest extends ProcedureCommonTest {
   }
   
   
-  protected void testVariation(String startValue, String endValue, Transformer transformer) {
+  private void testVariation(String startValue, String endValue, Transformer transformer) {
     assertEquals(endValue, FirstNameAlternativeVowels.varyName(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + startValue);
     String testEnd = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + endValue);
     testEquals(testStart, testEnd, ProcedureFactory.FIRST_NAME_ALTERNATIVE_VOWELS);
   }
   
-  protected void testVariationDifferent(String startValue, Transformer transformer) {
+  private void testVariationDifferent(String startValue, Transformer transformer) {
     assertNotEquals(startValue, FirstNameAlternativeVowels.varyName(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + startValue);
     testProcedureChangesMessage(testStart, ProcedureFactory.FIRST_NAME_ALTERNATIVE_VOWELS);

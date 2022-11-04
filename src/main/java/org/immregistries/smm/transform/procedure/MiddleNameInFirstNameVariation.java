@@ -34,10 +34,6 @@ public class MiddleNameInFirstNameVariation extends ProcedureCommon implements P
   }
 
   protected static String[] varyName(String firstName, String middleName) {
-
-    String firstNameOriginal = firstName;
-    String middleNameOriginal = middleName;
-
     boolean upperCase =
         firstName.toUpperCase().equals(firstName) && middleName.toUpperCase().equals(middleName);
     boolean lowerCase =
@@ -74,8 +70,6 @@ public class MiddleNameInFirstNameVariation extends ProcedureCommon implements P
       names[1] = names[1].toLowerCase();
     }
 
-    System.out.println(
-        firstNameOriginal + ", " + middleNameOriginal + " --> " + names[0] + ", " + names[1]);
     return names;
   }
 

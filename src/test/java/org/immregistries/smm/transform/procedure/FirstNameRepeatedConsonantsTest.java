@@ -18,7 +18,7 @@ public class FirstNameRepeatedConsonantsTest extends ProcedureCommonTest {
     testVariationDifferent("Ivan", transformer);
   }
   
-  protected void testVariationDifferent(String startValue, Transformer transformer) {
+  private void testVariationDifferent(String startValue, Transformer transformer) {
     assertNotEquals(startValue, FirstNameRepeatedConsonants.varyName(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + startValue);
     testProcedureChangesMessage(testStart, ProcedureFactory.FIRST_NAME_REPEATED_CONSONANTS);

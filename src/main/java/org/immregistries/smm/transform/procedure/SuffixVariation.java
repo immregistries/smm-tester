@@ -24,11 +24,11 @@ public class SuffixVariation extends ProcedureCommon implements ProcedureInterfa
           int fieldPos = 5;
           String lastName = readValue(fields, fieldPos, 1);
           String firstName = readValue(fields, fieldPos, 2);
-          String suffix = readValue(fields, fieldPos, 5);
+          String suffix = readValue(fields, fieldPos, 4);
           String[] names = varyName(lastName, firstName, suffix);
           updateValue(names[0], fields, fieldPos, 1);
           updateValue(names[1], fields, fieldPos, 2);
-          updateValue(names[2], fields, fieldPos, 3);
+          updateValue(names[2], fields, fieldPos, 4);
         }
       }
     }
@@ -36,11 +36,6 @@ public class SuffixVariation extends ProcedureCommon implements ProcedureInterfa
   }
 
   protected static String[] varyName(String lastName, String firstName, String suffix) {
-
-    String lastNameOriginal = lastName;
-    String firstNameOriginal = firstName;
-    String suffixOriginal = suffix;
-
     boolean upperCase =
         lastName.toUpperCase().equals(lastName) && firstName.toUpperCase().equals(firstName);
     boolean lowerCase =
@@ -87,8 +82,6 @@ public class SuffixVariation extends ProcedureCommon implements ProcedureInterfa
       names[1] = names[1].toLowerCase();
     }
 
-    System.out.println(lastNameOriginal + ", " + firstNameOriginal + ", " + suffixOriginal + " --> "
-        + names[0] + ", " + names[1] + ", " + names[2]);
     return names;
   }
 

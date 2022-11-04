@@ -29,7 +29,7 @@ public class FirstNameAlternativeEndingsTest extends ProcedureCommonTest {
     testVariation("Harper", "Harperrie");
   }
   
-  protected void testVariation(String startValue, String endValue) {
+  private void testVariation(String startValue, String endValue) {
     assertEquals(endValue, FirstNameAlternativeEndings.varyName(startValue));
     String testStart = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + startValue);
     String testEnd = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + endValue);

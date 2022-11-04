@@ -1,26 +1,29 @@
 package org.immregistries.smm.transform.procedure;
 
 import org.junit.Test;
-import junit.framework.TestCase;
 
-public class MiddleNameInFirstNameVariationTest extends TestCase {
+public class MiddleNameInFirstNameVariationTest extends ProcedureCommonTest {
 
 
   @Test
   public void test() {
     
-    assertEquals("Sam Liam", MiddleNameInFirstNameVariation.varyName("Sam", "Liam")[0]);
-    assertEquals("Sam", MiddleNameInFirstNameVariation.varyName("Sam Liam", "")[0]);
-    assertEquals("SamLiam", MiddleNameInFirstNameVariation.varyName("SamLiam", "")[0]);
-    assertEquals("Sam", MiddleNameInFirstNameVariation.varyName("Sam", "")[0]);
-    assertEquals("", MiddleNameInFirstNameVariation.varyName("", "Liam")[0]);
-    assertEquals("Mary", MiddleNameInFirstNameVariation.varyName("Mary Ann Sue", "")[0]);
+    testVariation("Sam", "Liam", "Sam Liam", "");
+    testVariation("Sam Liam", "", "Sam", "Liam");
+    testVariation("SamLiam", "", "SamLiam", "");
+    testVariation("Sam", "", "Sam", "");
+    testVariation("", "Liam", "", "Liam");
+    testVariation("Mary Ann Sue", "", "Mary", "Ann Sue");
     
-    assertEquals("", MiddleNameInFirstNameVariation.varyName("Sam", "Liam")[1]);
-    assertEquals("Liam", MiddleNameInFirstNameVariation.varyName("Sam Liam", "")[1]);
-    assertEquals("", MiddleNameInFirstNameVariation.varyName("Sam", "")[1]);
-    assertEquals("Liam", MiddleNameInFirstNameVariation.varyName("", "Liam")[1]);
-
+  }
+  
+  private void testVariation(String startFirst, String startMiddle, String endFirst, String endMiddle) {
+    String[] result = MiddleNameInFirstNameVariation.varyName(startFirst, startMiddle);
+    assertEquals(endFirst, result[0]);
+    assertEquals(endMiddle, result[1]);
+    String testStart = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + startFirst + "\nPID-5.3=" + startMiddle);
+    String testEnd = transform(DEFAULT_TEST_MESSAGE, "PID-5.2=" + endFirst + "\nPID-5.3=" + endMiddle);
+    testEquals(testStart, testEnd, ProcedureFactory.MIDDLE_NAME_IN_FIRST_NAME_VARIATION);
   }
 
 }

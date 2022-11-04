@@ -9,7 +9,7 @@ public class ProcedureCommonTest extends TestCase {
 
   protected static final String DEFAULT_TEST_MESSAGE =
       "MSH|^~\\&|||||20221102102500-0600||VXU^V04^VXU_V04|1cuT-A.01.01.3n|P|2.5.1|||ER|AL|||||Z22^CDCPHINVS\r"
-          + "PID|1||R52Z397663^^^AIRA^MR||StallardAIRA^RebeccaAIRA^Olivia^^^^L|BooneAIRA^RaginiAIRA^^^^^M|20211021|F||2106-3^White^CDCREC|1562 Weerijnen Ln^^Grant^MI^49327^USA^P||^PRN^PH^^^231^5666431|||||||||2186-5^not Hispanic or Latino^CDCREC||N||||||N\r"
+          + "PID|1||R52Z397663^^^AIRA^MR||StallardAIRA^RebeccaAIRA^Olivia^^^^L|BooneAIRA^RaginiAIRA^^^^^M|20211021|F||2106-3^White^CDCREC|1562 Weerijnen Ln^^Grant^MI^49327^USA^P||^PRN^PH^^^231^5666431~^NET^^email@email.com|||||||||2186-5^not Hispanic or Latino^CDCREC||N||||||N\r"
           + "PD1|||||||||||02^Reminder/Recall - any method^HL70215|N|20221102|||A|20221102|20221102\r"
           + "NK1|1|StallardAIRA^BooneAIRA^Marion^^^^L|MTH^Mother^HL70063|1562 Weerijnen Ln^^Grant^MI^49327^USA^P|^PRN^PH^^^231^5666431\r"
           + "ORC|RE|AR52Z397663.1^AIRA|BR52Z397663.1^AIRA|||||||I-23432^Burden^Donna^A^^^^^AIRA^L^^^PRN||57422^RADON^NICHOLAS^JOHN^^^^^AIRA^L^^^PRN\r"
@@ -36,6 +36,17 @@ public class ProcedureCommonTest extends TestCase {
     Transformer transformer = new Transformer();
     transformer.transform(testCaseMessage);
     assertNotEquals(om, testCaseMessage.getMessageText());
+  }
+  
+  protected void testProcedureChangesMessageAndDoesNotContain(String om, String fieldText, String procedure) {
+    TestCaseMessage testCaseMessage = new TestCaseMessage();
+    testCaseMessage.setOriginalMessage(om);
+    testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
+    Transformer transformer = new Transformer();
+    transformer.transform(testCaseMessage);
+    assertNotEquals(om, testCaseMessage.getMessageText());
+    System.out.println(testCaseMessage.getMessageText());
+    assertTrue(testCaseMessage.getMessageText().indexOf(fieldText) == -1);
   }
 
   protected String transform(String om, String transform) {
