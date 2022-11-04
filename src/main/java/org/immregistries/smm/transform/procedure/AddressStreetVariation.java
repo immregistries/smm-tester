@@ -8,12 +8,9 @@ import org.immregistries.smm.transform.Transformer;
 
 public class AddressStreetVariation extends ProcedureCommon implements ProcedureInterface {
 
-
-
   public AddressStreetVariation() {
 
   }
-
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
@@ -33,13 +30,9 @@ public class AddressStreetVariation extends ProcedureCommon implements Procedure
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
-
-
   protected static String varyAddress(String address, Transformer transformer) {
-    String addressOriginal = address;
     boolean upperCase = address.toUpperCase().equals(address);
     boolean lowerCase = address.toLowerCase().equals(address);
-
     int posStart = address.indexOf(' ');
     if (posStart > 0) {
       int posEnd = address.indexOf(' ', posStart + 1);
@@ -48,13 +41,11 @@ public class AddressStreetVariation extends ProcedureCommon implements Procedure
         address = address.substring(0, posStart) + " " + streetName + address.substring(posEnd);
       }
     }
-
     if (upperCase) {
       address = address.toUpperCase();
     } else if (lowerCase) {
       address = address.toLowerCase();
     }
-    System.out.println(addressOriginal + " --> " + address);
     return address;
   }
 
@@ -102,7 +93,5 @@ public class AddressStreetVariation extends ProcedureCommon implements Procedure
   public void setTransformer(Transformer transformer) {
     this.transformer = transformer;
   }
-
-
 
 }

@@ -1,11 +1,8 @@
 package org.immregistries.smm.transform.procedure;
 
-import org.immregistries.smm.transform.TestCaseMessage;
-import org.immregistries.smm.transform.Transformer;
 import org.junit.Test;
-import junit.framework.TestCase;
 
-public class AddFundingToRxaProcedureTest extends TestCase {
+public class AddFundingToRxaProcedureTest extends ProcedureCommonTest {
 
   private static final String ELIGIBILITY_ALL =
       ProcedureFactory.ADD_OBX_FOR_FUNDING_ELIGIBILITY_TO_ALL_RXA;
@@ -141,39 +138,32 @@ public class AddFundingToRxaProcedureTest extends TestCase {
 
   @Test
   public void test() {
-    test(TEST1_ORIGINAL, TEST1_FINAL, SOURCE_ALL);
-    test(TEST1_ORIGINAL, TEST1_FINAL, SOURCE_ADMIN);
+    testEquals(TEST1_ORIGINAL, TEST1_FINAL, SOURCE_ALL);
+    testEquals(TEST1_ORIGINAL, TEST1_FINAL, SOURCE_ADMIN);
 
     // nothing should happen to a fully populated message
-    test(TEST1_FINAL, TEST1_FINAL, SOURCE_ALL);
-    test(TEST1_FINAL, TEST1_FINAL, SOURCE_ADMIN);
-    test(TEST1_FINAL, TEST1_FINAL, ELIGIBILITY_ALL);
-    test(TEST1_FINAL, TEST1_FINAL, ELIGIBILITY_ADMIN);
+    testEquals(TEST1_FINAL, TEST1_FINAL, SOURCE_ALL);
+    testEquals(TEST1_FINAL, TEST1_FINAL, SOURCE_ADMIN);
+    testEquals(TEST1_FINAL, TEST1_FINAL, ELIGIBILITY_ALL);
+    testEquals(TEST1_FINAL, TEST1_FINAL, ELIGIBILITY_ADMIN);
 
-    test(TEST2_ORIGINAL, TEST2A_FINAL, ELIGIBILITY_ALL);
-    test(TEST2_ORIGINAL, TEST2A_FINAL, ELIGIBILITY_ADMIN);
-    test(TEST2A_FINAL, TEST2B_FINAL, SOURCE_ALL);
-    test(TEST2A_FINAL, TEST2B_FINAL, SOURCE_ADMIN);
+    testEquals(TEST2_ORIGINAL, TEST2A_FINAL, ELIGIBILITY_ALL);
+    testEquals(TEST2_ORIGINAL, TEST2A_FINAL, ELIGIBILITY_ADMIN);
+    testEquals(TEST2A_FINAL, TEST2B_FINAL, SOURCE_ALL);
+    testEquals(TEST2A_FINAL, TEST2B_FINAL, SOURCE_ADMIN);
 
     // no change for historical
-    test(TEST3_ORIGINAL, TEST3_ORIGINAL, SOURCE_ADMIN);
-    test(TEST3_ORIGINAL, TEST3_ORIGINAL, ELIGIBILITY_ADMIN);
+    testEquals(TEST3_ORIGINAL, TEST3_ORIGINAL, SOURCE_ADMIN);
+    testEquals(TEST3_ORIGINAL, TEST3_ORIGINAL, ELIGIBILITY_ADMIN);
 
     // change historical
-    test(TEST3_ORIGINAL, TEST3A_FINAL, ELIGIBILITY_ALL);
-    test(TEST3_ORIGINAL, TEST3B_FINAL, SOURCE_ALL);
+    testEquals(TEST3_ORIGINAL, TEST3A_FINAL, ELIGIBILITY_ALL);
+    testEquals(TEST3_ORIGINAL, TEST3B_FINAL, SOURCE_ALL);
 
     // multiple immunizations
-    test(TEST4_ORIGINAL, TEST4_FINAL, SOURCE_ADMIN);
+    testEquals(TEST4_ORIGINAL, TEST4_FINAL, SOURCE_ADMIN);
 
   }
 
-  public void test(String om, String fm, String procedure) {
-    TestCaseMessage testCaseMessage = new TestCaseMessage();
-    testCaseMessage.setOriginalMessage(om);
-    testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
-    Transformer transformer = new Transformer();
-    transformer.transform(testCaseMessage);
-    assertEquals(fm, testCaseMessage.getMessageText());
-  }
+
 }

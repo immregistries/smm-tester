@@ -1,21 +1,28 @@
 package org.immregistries.smm.transform.procedure;
 
 import org.junit.Test;
-import junit.framework.TestCase;
 
-public class DateOfBirthMonthDaySwapTest extends TestCase {
+public class DateOfBirthMonthDaySwapTest extends ProcedureCommonTest {
 
 
   @Test
   public void test() {
 
-    assertEquals("20220501", DateOfBirthMonthDaySwap.varyDate("20220105"));
-    assertEquals("20220103", DateOfBirthMonthDaySwap.varyDate("20220215"));    
-    assertEquals("20211206", DateOfBirthMonthDaySwap.varyDate("20220230"));
-    assertEquals("2022023", DateOfBirthMonthDaySwap.varyDate("2022023"));
-    assertEquals("BAD", DateOfBirthMonthDaySwap.varyDate("BAD"));
-    assertEquals("20220501", DateOfBirthMonthDaySwap.varyDate("20220105104530"));
-
+    testDobChange("20220105", "20220501");
+    testDobChange("20220215", "20220103");
+    testDobChange("20220230", "20211206");
+    testDobChange("2022023", "2022023");
+    testDobChange("BAD", "BAD");
+    testDobChange("20220105104530", "20220501");
+    
   }
+  
+  protected void testDobChange(String startDate, String endDate) {
+    assertEquals(endDate, DateOfBirthMonthDaySwap.varyDate(startDate));
+    String testStart = transform(DEFAULT_TEST_MESSAGE, "PID-7=" + startDate);
+    String testEnd = transform(DEFAULT_TEST_MESSAGE, "PID-7=" + endDate);
+    testEquals(testStart, testEnd, ProcedureFactory.DATE_OF_BIRTH_MONTH_DAY_SWAP);
+  }
+
 
 }

@@ -1,25 +1,28 @@
 package org.immregistries.smm.transform.procedure;
 
 import org.junit.Test;
-import junit.framework.TestCase;
 
-public class DateOfBirthRectifyTest extends TestCase {
+public class DateOfBirthRectifyTest extends ProcedureCommonTest {
 
 
   @Test
   public void test() {
+    testDobChange("20220105", "20220105");
+    testDobChange("20220201", "20220128");
+    testDobChange("20220202", "20220127");
+    testDobChange("20220203", "20220203");
+    testDobChange("20220228", "20220228");
+    testDobChange("20220128", "20220128");
+    testDobChange("20220129", "20220126");
+    testDobChange("20220130", "20220127");
+    testDobChange("20220131", "20220128");
+  }
 
-
-    assertEquals("20220105", DateOfBirthRectify.varyDate("20220105"));
-    assertEquals("20220128", DateOfBirthRectify.varyDate("20220201"));
-    assertEquals("20220127", DateOfBirthRectify.varyDate("20220202"));
-    assertEquals("20220203", DateOfBirthRectify.varyDate("20220203"));
-    assertEquals("20220228", DateOfBirthRectify.varyDate("20220228"));
-    assertEquals("20220128", DateOfBirthRectify.varyDate("20220128"));
-    assertEquals("20220126", DateOfBirthRectify.varyDate("20220129"));
-    assertEquals("20220127", DateOfBirthRectify.varyDate("20220130"));
-    assertEquals("20220128", DateOfBirthRectify.varyDate("20220131"));
-
+  protected void testDobChange(String startDate, String endDate) {
+    assertEquals(endDate, DateOfBirthRectify.varyDate(startDate));
+    String testStart = transform(DEFAULT_TEST_MESSAGE, "PID-7=" + startDate);
+    String testEnd = transform(DEFAULT_TEST_MESSAGE, "PID-7=" + endDate);
+    testEquals(testStart, testEnd, ProcedureFactory.DATE_OF_BIRTH_RECTIFY);
   }
 
 }
