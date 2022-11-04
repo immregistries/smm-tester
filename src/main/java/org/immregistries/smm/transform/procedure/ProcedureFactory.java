@@ -119,11 +119,11 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(ADMINISTRATIVE_SEX_VARIATION)) {
       procedureInterface = new AdministrativeSexVariation();
     } else if (procedureName.equalsIgnoreCase(EMAIL_CHANGE)) {
-
+      procedureInterface = new TextChange(TextChange.Field.EMAIL);
     } else if (procedureName.equalsIgnoreCase(EMAIL_TYPO)) {
       procedureInterface = new TextTypo(TextTypo.Field.EMAIL);
     } else if (procedureName.equalsIgnoreCase(PHONE_CHANGE)) {
-
+      procedureInterface = new TextChange(TextChange.Field.PHONE);
     } else if (procedureName.equalsIgnoreCase(PHONE_TYPO)) {
       procedureInterface = new TextTypo(TextTypo.Field.PHONE);
     }
