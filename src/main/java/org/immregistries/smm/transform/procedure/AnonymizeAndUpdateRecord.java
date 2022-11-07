@@ -15,7 +15,7 @@ import org.immregistries.smm.transform.PatientType;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class AnonymizeAndUpdateRecord implements ProcedureInterface {
+public class AnonymizeAndUpdateRecord extends ProcedureCommon implements ProcedureInterface {
 
   private static final int MS_IN_DAY = 24 * 60 * 60 * 1000;
 
@@ -23,7 +23,7 @@ public class AnonymizeAndUpdateRecord implements ProcedureInterface {
   private int daysToAdd;
   private Date today;
   private boolean isGirl = true;
-  private Transformer transfomer;
+  private Transformer transformer;
   private Patient patient;
   private int orcCount = 0;
 
@@ -34,7 +34,7 @@ public class AnonymizeAndUpdateRecord implements ProcedureInterface {
   }
 
   public void setTransformer(Transformer transformer) {
-    this.transfomer = transformer;
+    this.transformer = transformer;
   }
 
   protected AnonymizeAndUpdateRecord(String asOfDate) {
@@ -62,7 +62,7 @@ public class AnonymizeAndUpdateRecord implements ProcedureInterface {
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     try {
-      patient = transfomer.setupPatient(PatientType.BABY);
+      patient = transformer.setupPatient(PatientType.BABY);
     } catch (Throwable e) {
       e.printStackTrace();
     }
@@ -219,199 +219,6 @@ public class AnonymizeAndUpdateRecord implements ProcedureInterface {
     daysToAdd = 0;
   }
 
-  private void updateRepeatValue(String updateValue, String[] repeatFields, int repeatPos,
-      int subPo) {
-    String value = readRepeatValue(repeatFields[repeatPos], subPo);
-    if (!value.equals("")) {
-      updateRepeat(updateValue, repeatFields, repeatPos, subPo);
-    }
-  }
 
-  private void updateValue(String updateValue, String[] fields, int fieldPos) {
-    updateValue(updateValue, fields, fieldPos, 1);
-  }
 
-  private void updateValue(String updateValue, String[] fields, int fieldPos, int subPos) {
-    if (fields[0].equals("MSH") || fields[0].equals("FHS") || fields[0].equals("BHS")) {
-      fieldPos--;
-    }
-    if (fieldPos < fields.length) {
-      String originalValue = fields[fieldPos];
-      int posStart = 0;
-      int posEnd = originalValue.length();
-      {
-        int posTilde = originalValue.indexOf("~");
-        if (posTilde != -1) {
-          posEnd = posTilde;
-        }
-      }
-      while (subPos > 1) {
-        int posCaret = originalValue.indexOf("^", posStart);
-        if (posCaret != -1) {
-          posStart = posCaret + 1;
-        } else {
-          originalValue += "^";
-          posStart = originalValue.length();
-        }
-        subPos--;
-      }
-      {
-        int posCaret = originalValue.indexOf("^", posStart);
-        if (posCaret != -1 && posCaret < posEnd) {
-          posEnd = posCaret;
-        }
-      }
-      {
-        int posAmpersand = originalValue.indexOf("&", posStart);
-        if (posAmpersand != -1 && posAmpersand < posEnd) {
-          posEnd = posAmpersand;
-        }
-      }
-      fields[fieldPos] =
-          originalValue.substring(0, posStart) + updateValue + originalValue.substring(posEnd);
-    }
-  }
-
-  private void updateContent(String contentValue, String[] fields, int fieldPos) {
-    if (fields[0].equals("MSH") || fields[0].equals("FHS") || fields[0].equals("BHS")) {
-      fieldPos--;
-    }
-    if (fieldPos < fields.length) {
-      fields[fieldPos] = contentValue;
-    }
-  }
-
-  private void updateRepeat(String updateValue, String[] repeatFields, int repeatPos, int subPos) {
-    String originalValue = repeatFields[repeatPos];
-    int posStart = 0;
-    int posEnd = originalValue.length();
-    while (subPos > 1) {
-      int posCaret = originalValue.indexOf("^", posStart);
-      if (posCaret != -1) {
-        posStart = posCaret + 1;
-      } else {
-        originalValue += "^";
-        posStart = originalValue.length();
-      }
-      subPos--;
-    }
-    {
-      int posCaret = originalValue.indexOf("^", posStart);
-      if (posCaret != -1 && posCaret < posEnd) {
-        posEnd = posCaret;
-      }
-    }
-    {
-      int posAmpersand = originalValue.indexOf("&", posStart);
-      if (posAmpersand != -1 && posAmpersand < posEnd) {
-        posEnd = posAmpersand;
-      }
-    }
-    repeatFields[repeatPos] =
-        originalValue.substring(0, posStart) + updateValue + originalValue.substring(posEnd);
-  }
-
-  private String[] readRepeats(String[] fields, int fieldPos) {
-    if (fields[0].equals("MSH") || fields[0].equals("FHS") || fields[0].equals("BHS")) {
-      fieldPos--;
-    }
-    if (fieldPos < fields.length) {
-      return fields[fieldPos].split("\\~");
-    }
-    return new String[] {""};
-  }
-
-  private String readRepeatValue(String value, int subPos) {
-    while (subPos > 1) {
-      int posCaret = value.indexOf("^");
-      if (posCaret != -1) {
-        value = value.substring(posCaret + 1);
-      }
-      subPos--;
-    }
-    {
-      int posCaret = value.indexOf("^");
-      if (posCaret != -1) {
-        value = value.substring(0, posCaret);
-      }
-    }
-    {
-      int posAmpersand = value.indexOf("&");
-      if (posAmpersand != -1) {
-        value = value.substring(0, posAmpersand);
-      }
-    }
-    return value;
-  }
-
-  private String readValue(String[] fields, int fieldPos) {
-    return readValue(fields, fieldPos, 1);
-  }
-
-  private String readValue(String[] fields, int fieldPos, int subPos) {
-    String value = "";
-    if (fields[0].equals("MSH") || fields[0].equals("FHS") || fields[0].equals("BHS")) {
-      fieldPos--;
-    }
-    if (fieldPos < fields.length) {
-      value = fields[fieldPos];
-      {
-        int posTilde = value.indexOf("~");
-        if (posTilde != -1) {
-          value = value.substring(0, posTilde);
-        }
-      }
-      while (subPos > 1) {
-        int posCaret = value.indexOf("^");
-        if (posCaret != -1) {
-          value = value.substring(posCaret + 1);
-        }
-        subPos--;
-      }
-      {
-        int posCaret = value.indexOf("^");
-        if (posCaret != -1) {
-          value = value.substring(0, posCaret);
-        }
-      }
-      {
-        int posAmpersand = value.indexOf("&");
-        if (posAmpersand != -1) {
-          value = value.substring(0, posAmpersand);
-        }
-      }
-    }
-    return value;
-  }
-
-  private List<String[]> readMessage(TransformRequest transformRequest) throws IOException {
-    BufferedReader inResult =
-        new BufferedReader(new StringReader(transformRequest.getResultText()));
-    String lineResult;
-    List<String[]> fieldsList = new ArrayList<String[]>();
-    while ((lineResult = inResult.readLine()) != null) {
-      lineResult = lineResult.trim();
-      String[] fields = lineResult.split("\\|");
-      if (fields.length > 0) {
-        fieldsList.add(fields);
-      }
-    }
-    inResult.close();
-    return fieldsList;
-  }
-
-  private void putMessageBackTogether(TransformRequest transformRequest,
-      List<String[]> fieldsList) {
-    String finalMessage = "";
-    for (String[] fields : fieldsList) {
-      if (fields[0].length() == 3) {
-        finalMessage += fields[0];
-        for (int i = 1; i < fields.length; i++) {
-          finalMessage += "|" + fields[i];
-        }
-        finalMessage += transformRequest.getSegmentSeparator();
-      }
-    }
-    transformRequest.setResultText(finalMessage);
-  }
 }

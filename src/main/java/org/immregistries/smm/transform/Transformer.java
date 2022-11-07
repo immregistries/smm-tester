@@ -711,17 +711,20 @@ public class Transformer {
           quickTransforms = addDelete(quickTransforms, "2", count);
         } else if (extra.equals("VAC2_ADMIN")) {
           int count = 3;
-          count -= alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST")
-              ? 1 : 0;
+          count -=
+              alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST") ? 1
+                  : 0;
           quickTransforms = addAdmin(quickTransforms, "2", count);
         } else if (extra.equals("VAC3_ADMIN")) {
           quickTransforms = addAdmin(quickTransforms, "3", 3);
         } else if (extra.equals("VAC1_NA")) {
           int count = 3;
-          count -= alsoHas(testCaseMessage, "VAC2_ADMIN") || alsoHas(testCaseMessage, "VAC2_HIST")
-              ? 1 : 0;
-          count -= alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST")
-              ? 1 : 0;
+          count -=
+              alsoHas(testCaseMessage, "VAC2_ADMIN") || alsoHas(testCaseMessage, "VAC2_HIST") ? 1
+                  : 0;
+          count -=
+              alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST") ? 1
+                  : 0;
           quickTransforms += "ORC-3=[VAC" + count + "_ID]\n";
           quickTransforms += "RXA-3=[VAC" + count + "_DATE]\n";
           quickTransforms += "RXA-5.1=[VAC" + count + "_CVX]\n";
@@ -731,10 +734,12 @@ public class Transformer {
           quickTransforms += "RXA-21=A\n";
         } else if (extra.equals("VAC1_HIST")) {
           int count = 3;
-          count -= alsoHas(testCaseMessage, "VAC2_ADMIN") || alsoHas(testCaseMessage, "VAC2_HIST")
-              ? 1 : 0;
-          count -= alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST")
-              ? 1 : 0;
+          count -=
+              alsoHas(testCaseMessage, "VAC2_ADMIN") || alsoHas(testCaseMessage, "VAC2_HIST") ? 1
+                  : 0;
+          count -=
+              alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST") ? 1
+                  : 0;
           quickTransforms += "ORC-3=[VAC" + count + "_ID]\n";
           quickTransforms += "RXA-3=[VAC2_DATE]\n";
           quickTransforms += "RXA-5.1=[VAC" + count + "_CVX]\n";
@@ -748,8 +753,9 @@ public class Transformer {
           quickTransforms += "RXA-21=A\n";
         } else if (extra.equals("VAC2_HIST")) {
           int count = 3;
-          count -= alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST")
-              ? 1 : 0;
+          count -=
+              alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST") ? 1
+                  : 0;
           quickTransforms += "ORC#2-3=[VAC" + count + "_ID]\n";
           quickTransforms += "RXA#2-3=[VAC" + count + "_DATE]\n";
           quickTransforms += "RXA#2-5.1=[VAC" + count + "_CVX]\n";
@@ -775,8 +781,9 @@ public class Transformer {
           quickTransforms += "RXA#3-21=A\n";
         } else if (extra.equals("VAC2_NA")) {
           int count = 3;
-          count -= alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST")
-              ? 1 : 0;
+          count -=
+              alsoHas(testCaseMessage, "VAC3_ADMIN") || alsoHas(testCaseMessage, "VAC3_HIST") ? 1
+                  : 0;
           quickTransforms += "ORC#2-3=[VAC" + count + "_ID]\n";
           quickTransforms += "RXA#2-3=[VAC" + count + "_DATE]\n";
           quickTransforms += "RXA#2-5.1=[VAC" + count + "_CVX]\n";
@@ -2965,15 +2972,17 @@ public class Transformer {
     patient.setPhoneAlt("(" + patient.getPhoneAltArea() + ")" + patient.getPhoneAltLocal());
     if (PatientType.ADULT == patientType) {
       if (patient.getGender().equals("M")) {
-        patient.setEmail(patient.getBoyName().toLowerCase() + "."
-            + patient.getLastName().toLowerCase() + "@madeupemailaddress.com");
+        patient
+            .setEmail(patient.getBoyName().toLowerCase() + "." + patient.getLastName().toLowerCase()
+                + random.nextInt(2500) + "@madeupemailaddress.com");
       } else {
-        patient.setEmail(patient.getGirlName().toLowerCase() + "."
-            + patient.getLastName().toLowerCase() + "@madeupemailaddress.com");
+        patient.setEmail(
+            patient.getGirlName().toLowerCase() + "." + patient.getLastName().toLowerCase()
+                + random.nextInt(2500) + "@madeupemailaddress.com");
       }
     } else {
       patient.setEmail(patient.getMotherName().toLowerCase() + "."
-          + patient.getLastName().toLowerCase() + "@madeupemailaddress.com");
+          + patient.getLastName().toLowerCase() + random.nextInt(2500) + "@madeupemailaddress.com");
     }
     patient.setBirthCount(makeBirthCount());
 
@@ -3101,6 +3110,10 @@ public class Transformer {
       number = (number - a) / 62;
     }
     return s;
+  }
+
+  public Random getRandom() {
+    return random;
   }
 
 }
