@@ -1,7 +1,6 @@
 package gov.nist.healthcare.hl7ws.client;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-
 import gov.nist.healthcare.hl7ws.messagegeneration.MessageGenerationV2Interface;
 
 

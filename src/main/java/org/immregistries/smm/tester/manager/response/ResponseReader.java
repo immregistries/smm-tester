@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.immregistries.smm.tester.manager.HL7Reader;
 import org.immregistries.smm.tester.manager.query.ImmunizationUpdate;
 import org.immregistries.smm.tester.manager.query.Patient;

@@ -4,7 +4,6 @@
 package org.immregistries.smm.tester.connectors;
 
 import java.util.List;
-
 import org.immregistries.smm.tester.connectors.nm.RhapWSUAT_EHR_IIS;
 import org.immregistries.smm.tester.connectors.nm.RhapWSUAT_EHR_IISStub;
 import org.immregistries.smm.tester.connectors.tlep.ConnectivityTestRequestType;

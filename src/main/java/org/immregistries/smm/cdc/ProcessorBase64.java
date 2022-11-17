@@ -2,7 +2,6 @@ package org.immregistries.smm.cdc;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 import org.apache.commons.codec.binary.Base64;
 
 public class ProcessorBase64 extends Processor {

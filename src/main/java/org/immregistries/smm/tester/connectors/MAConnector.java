@@ -9,7 +9,6 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-
 import org.apache.commons.codec.binary.Base64;
 
 public class MAConnector extends HttpConnector {

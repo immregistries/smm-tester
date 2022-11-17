@@ -6,7 +6,6 @@ package org.immregistries.smm.tester.transform;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-
 import org.immregistries.smm.transform.TestCaseMessage;
 
 /**

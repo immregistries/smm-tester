@@ -5,7 +5,6 @@
  * (05:33:49 IST)
  */
 package org.immregistries.smm.tester.connectors.tlep;
-import java.security.cert.CertificateException;
 
 /*
  * Client_ServiceStub java implementation

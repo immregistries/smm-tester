@@ -1,7 +1,6 @@
 package org.immregistries.smm.tester.connectors;
 
 import java.io.IOException;
-
 import org.immregistries.smm.tester.connectors.al.Test_adphhieStub;
 
 public class ALSoapConnector extends HttpConnector {

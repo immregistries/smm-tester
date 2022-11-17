@@ -7,6 +7,7 @@ import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_FORECAST
 import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_FORECAST_STATUS_NOT_INCLUDED;
 import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR;
 import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR_Z33;
+import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR_Z33_QUERY_REJECTED;
 import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_LIST;
 import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MATCH;
 import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MATCH_Z32;
@@ -19,7 +20,6 @@ import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TY
 import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_PROFILE_ID_UNEXPECTED;
 import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_TOO_MANY;
 import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_UNEXPECTED_IIS_RESPONSE;
-import static org.immregistries.smm.RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR_Z33_QUERY_REJECTED;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

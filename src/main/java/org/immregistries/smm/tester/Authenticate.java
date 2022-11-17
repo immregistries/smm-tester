@@ -5,7 +5,6 @@ package org.immregistries.smm.tester;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.immregistries.smm.mover.ConnectionManager;
 import org.immregistries.smm.mover.SendData;
 

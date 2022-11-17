@@ -1,7 +1,6 @@
 package org.immregistries.smm.tester.connectors;
 
 import java.io.IOException;
-
 import org.immregistries.smm.tester.connectors.az.asiis_request.aie_schemas.Credentials_type2;
 import org.immregistries.smm.tester.connectors.az.asiis_request.aie_schemas.Request_type0;
 import org.immregistries.smm.tester.connectors.az.gov.azdhs.www.ASIISStub;

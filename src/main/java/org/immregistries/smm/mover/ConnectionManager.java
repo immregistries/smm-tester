@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-
 import org.immregistries.smm.tester.Authenticate;
 
 public class ConnectionManager {

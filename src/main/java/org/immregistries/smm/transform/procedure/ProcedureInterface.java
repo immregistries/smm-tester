@@ -2,7 +2,6 @@ package org.immregistries.smm.transform.procedure;
 
 import java.io.IOException;
 import java.util.LinkedList;
-
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 

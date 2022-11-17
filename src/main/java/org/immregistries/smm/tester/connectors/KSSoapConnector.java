@@ -1,9 +1,7 @@
 package org.immregistries.smm.tester.connectors;
 
 import java.io.IOException;
-
 import javax.activation.DataHandler;
-
 import org.immregistries.smm.tester.connectors.ks.HL7WSStub;
 import org.immregistries.smm.tester.connectors.ks.HL7WSStub.KSRequest;
 import org.immregistries.smm.tester.connectors.ks.HL7WSStub.KSResult;

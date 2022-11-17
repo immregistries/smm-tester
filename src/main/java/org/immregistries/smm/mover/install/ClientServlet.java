@@ -4,10 +4,8 @@
 package org.immregistries.smm.mover.install;
 
 import java.io.PrintWriter;
-
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-
 import org.immregistries.smm.SoftwareVersion;
 
 /**
