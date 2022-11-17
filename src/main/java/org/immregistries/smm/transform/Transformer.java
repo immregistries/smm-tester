@@ -2352,8 +2352,7 @@ public class Transformer {
         if (lineResult.startsWith(t.segment + "|")) {
           repeatCount++;
           if (t.segmentRepeat == repeatCount) {
-            if (!t.fieldSet)
-            {
+            if (!t.fieldSet) {
               // The field was not set, this a reference to the whole segment
               return lineResult.substring(3);
             }
@@ -2520,6 +2519,7 @@ public class Transformer {
       int posHash = t.segment.indexOf("#");
       if (posHash != -1) {
         t.segmentRepeat = Integer.parseInt(t.segment.substring(posHash + 1));
+        t.segmentRepeatSet = true;
         t.segment = t.segment.substring(0, posHash);
       }
       if (posDash < endOfInput) {
@@ -2623,7 +2623,11 @@ public class Transformer {
       t.valueTransform = readHL7Reference(v, v.length());
     }
     if (t.valueTransform != null) {
-      t.valueTransform.segmentRepeat = t.segmentRepeat;
+      if (t.valueTransform.getSegment().equals(t.segment)
+          && !t.valueTransform.isSegmentRepeatSet()) {
+        // Referencing same segment and specific repeat not set, so assume to be referencing the same segment
+        t.valueTransform.segmentRepeat = t.segmentRepeat;
+      }
       t.value = getValueFromHL7(resultText, t.valueTransform, transformRequest);
     }
   }
