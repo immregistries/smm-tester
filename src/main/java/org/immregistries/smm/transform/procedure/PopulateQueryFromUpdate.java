@@ -1,8 +1,6 @@
 package org.immregistries.smm.transform.procedure;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
