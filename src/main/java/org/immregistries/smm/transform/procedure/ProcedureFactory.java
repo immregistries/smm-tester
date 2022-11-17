@@ -3,51 +3,49 @@ package org.immregistries.smm.transform.procedure;
 import org.immregistries.smm.transform.Transformer;
 
 public class ProcedureFactory {
-  public static final String REMOVE_VACCINATION_GROUPS = "REMOVE_VACCINATION_GROUPS";
   public static final String ADD_FUNDING_ELGIBILITY_TO_ALL_RXA =
       "ADD_FUNDING_ELGIBILITY_TO_ALL_RXA";
-
-  public static final String ADD_OBX_FOR_FUNDING_ELIGIBILITY_TO_ALL_RXA =
-      "ADD_OBX_FOR_FUNDING_ELIGIBILITY_TO_ALL_RXA";
   public static final String ADD_OBX_FOR_FUNDING_ELIGIBILITY_TO_ALL_ADMINISTERED_RXA =
       "ADD_OBX_FOR_FUNDING_ELIGIBILITY_TO_ALL_ADMINISTERED_RXA";
-  public static final String ADD_OBX_FOR_FUNDING_SOURCE_TO_ALL_RXA =
-      "ADD_OBX_FOR_FUNDING_SOURCE_TO_ALL_RXA";
+  public static final String ADD_OBX_FOR_FUNDING_ELIGIBILITY_TO_ALL_RXA =
+      "ADD_OBX_FOR_FUNDING_ELIGIBILITY_TO_ALL_RXA";
   public static final String ADD_OBX_FOR_FUNDING_SOURCE_TO_ALL_ADMINISTERED_RXA =
       "ADD_OBX_FOR_FUNDING_SOURCE_TO_ALL_ADMINISTERED_RXA";
-
+  public static final String ADD_OBX_FOR_FUNDING_SOURCE_TO_ALL_RXA =
+      "ADD_OBX_FOR_FUNDING_SOURCE_TO_ALL_RXA";
+  public static final String ADDRESS_CITY_TYPO = "ADDRESS_CITY_TYPO";
+  public static final String ADDRESS_STREET_CHANGE = "ADDRESS_STREET_CHANGE";
+  public static final String ADDRESS_STREET_TYPO = "ADDRESS_STREET_TYPO";
+  public static final String ADMINISTRATIVE_SEX_VARIATION = "ADMINISTRATIVE_SEX_VARIATION";
   public static final String ANONYMIZE_AND_UPDATE_RECORD = "ANONYMIZE_AND_UPDATE_RECORD";
-
-  public static final String FIRST_NAME_REMOVE_AIRA_SUFFIX = "FIRST_NAME_REMOVE_AIRA_SUFFIX";
-  public static final String LAST_NAME_REMOVE_AIRA_SUFFIX = "LAST_NAME_REMOVE_AIRA_SUFFIX";
-  public static final String FIRST_NAME_CONVERT_TO_NICKNAME = "FIRST_NAME_CONVERT_TO_NICKNAME";
+  public static final String DATE_OF_BIRTH_DAY_SHIFT = "DATE_OF_BIRTH_DAY_SHIFT";
+  public static final String DATE_OF_BIRTH_MONTH_DAY_SWAP = "DATE_OF_BIRTH_MONTH_DAY_SWAP";
+  public static final String DATE_OF_BIRTH_MONTH_SHIFT = "DATE_OF_BIRTH_MONTH_SHIFT";
+  public static final String DATE_OF_BIRTH_RECTIFY = "DATE_OF_BIRTH_RECTIFY";
+  public static final String DATE_OF_BIRTH_YEAR_SHIFT = "DATE_OF_BIRTH_YEAR_SHIFT";
+  public static final String EMAIL_CHANGE = "EMAIL_CHANGE";
+  public static final String EMAIL_TYPO = "EMAIL_TYPO";
   public static final String FIRST_NAME_ADD_VARIATION = "FIRST_NAME_ADD_VARIATION";
-  public static final String LAST_NAME_HYPHENATE_OR_SWAP = "LAST_NAME_HYPHENATE_OR_SWAP";
-  public static final String LAST_NAME_HYPHENATE_VARIATION = "LAST_NAME_HYPHENATE_VARIATION";
-  public static final String LAST_NAME_PREFIX_VARIATION = "LAST_NAME_PREFIX_VARIATION";
-  public static final String FIRST_NAME_ALTERNATIVE_VOWELS = "FIRST_NAME_ALTERNATIVE_VOWELS";
-  public static final String FIRST_NAME_REPEATED_CONSONANTS = "FIRST_NAME_REPEATED_CONSONANTS";
   public static final String FIRST_NAME_ALTERNATIVE_BEGINNINGS =
       "FIRST_NAME_ALTERNATIVE_BEGINNINGS";
   public static final String FIRST_NAME_ALTERNATIVE_ENDINGS = "FIRST_NAME_ALTERNATIVE_ENDINGS";
+  public static final String FIRST_NAME_ALTERNATIVE_VOWELS = "FIRST_NAME_ALTERNATIVE_VOWELS";
+  public static final String FIRST_NAME_CONVERT_TO_NICKNAME = "FIRST_NAME_CONVERT_TO_NICKNAME";
+  public static final String FIRST_NAME_REMOVE_AIRA_SUFFIX = "FIRST_NAME_REMOVE_AIRA_SUFFIX";
+  public static final String FIRST_NAME_REPEATED_CONSONANTS = "FIRST_NAME_REPEATED_CONSONANTS";
+  public static final String FIRST_NAME_TYPO = "FIRST_NAME_TYPO";
+  public static final String LAST_NAME_HYPHENATE_OR_SWAP = "LAST_NAME_HYPHENATE_OR_SWAP";
+  public static final String LAST_NAME_HYPHENATE_VARIATION = "LAST_NAME_HYPHENATE_VARIATION";
+  public static final String LAST_NAME_PREFIX_VARIATION = "LAST_NAME_PREFIX_VARIATION";
+  public static final String LAST_NAME_REMOVE_AIRA_SUFFIX = "LAST_NAME_REMOVE_AIRA_SUFFIX";
+  public static final String LAST_NAME_TYPO = "LAST_NAME_TYPO";
   public static final String MIDDLE_NAME_IN_FIRST_NAME_VARIATION =
       "MIDDLE_NAME_IN_FIRST_NAME_VARIATION";
-  public static final String SUFFIX_VARIATION = "SUFFIX_VARIATION";
-  public static final String LAST_NAME_TYPO = "LAST_NAME_TYPO";
-  public static final String FIRST_NAME_TYPO = "FIRST_NAME_TYPO";
-  public static final String ADDRESS_STREET_CHANGE = "ADDRESS_STREET_CHANGE";
-  public static final String ADDRESS_STREET_TYPO = "ADDRESS_STREET_TYPO";
-  public static final String ADDRESS_CITY_TYPO = "ADDRESS_CITY_TYPO";
-  public static final String DATE_OF_BIRTH_MONTH_DAY_SWAP = "DATE_OF_BIRTH_MONTH_DAY_SWAP";
-  public static final String DATE_OF_BIRTH_RECTIFY = "DATE_OF_BIRTH_RECTIFY";
-  public static final String DATE_OF_BIRTH_MONTH_SHIFT = "DATE_OF_BIRTH_MONTH_SHIFT";
-  public static final String DATE_OF_BIRTH_YEAR_SHIFT = "DATE_OF_BIRTH_YEAR_SHIFT";
-  public static final String DATE_OF_BIRTH_DAY_SHIFT = "DATE_OF_BIRTH_DAY_SHIFT";
-  public static final String ADMINISTRATIVE_SEX_VARIATION = "ADMINISTRATIVE_SEX_VARIATION";
-  public static final String EMAIL_CHANGE = "EMAIL_CHANGE";
-  public static final String EMAIL_TYPO = "EMAIL_TYPO";
   public static final String PHONE_CHANGE = "PHONE_CHANGE";
   public static final String PHONE_TYPO = "PHONE_TYPO";
+  public static final String POPULATE_QUERY_FROM_UPDATE = "POPULATE_QUERY_FROM_UPDATE";
+  public static final String REMOVE_VACCINATION_GROUPS = "REMOVE_VACCINATION_GROUPS";
+  public static final String SUFFIX_VARIATION = "SUFFIX_VARIATION";
 
   public static ProcedureInterface getProcedure(String procedureName, Transformer transformer) {
     ProcedureInterface procedureInterface = null;
@@ -126,6 +124,8 @@ public class ProcedureFactory {
       procedureInterface = new TextChange(TextChange.Field.PHONE);
     } else if (procedureName.equalsIgnoreCase(PHONE_TYPO)) {
       procedureInterface = new TextTypo(TextTypo.Field.PHONE);
+    } else if (procedureName.equalsIgnoreCase(POPULATE_QUERY_FROM_UPDATE)) {
+      procedureInterface = new PopulateQueryFromUpdate();
     }
 
 
