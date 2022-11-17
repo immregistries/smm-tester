@@ -71,7 +71,7 @@ public class SuffixVariation extends ProcedureCommon implements ProcedureInterfa
     } else {
       names[0] = lastName;
       names[1] = firstName;
-      names[2] = SUFFIXES[(int) System.currentTimeMillis() % SUFFIXES.length];
+      names[2] = SUFFIXES[(int) (System.currentTimeMillis() % SUFFIXES.length)];
     }
 
     if (upperCase) {
