@@ -5,11 +5,9 @@ package org.immregistries.smm.tester;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.immregistries.smm.transform.ModifyMessageRequest;
 import org.immregistries.smm.transform.ModifyMessageService;
 import org.immregistries.smm.transform.ScenarioManager;

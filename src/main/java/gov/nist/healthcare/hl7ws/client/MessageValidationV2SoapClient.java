@@ -1,7 +1,6 @@
 package gov.nist.healthcare.hl7ws.client;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-
 import gov.nist.healthcare.hl7ws.messagevalidation.MessageValidationV2Interface;
 
 public class MessageValidationV2SoapClient implements MessageValidationV2Interface {

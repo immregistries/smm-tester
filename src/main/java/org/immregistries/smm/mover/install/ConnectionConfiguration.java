@@ -1,7 +1,6 @@
 package org.immregistries.smm.mover.install;
 
 import java.io.PrintWriter;
-
 import org.immregistries.smm.tester.connectors.ConnectorFactory;
 
 public class ConnectionConfiguration {

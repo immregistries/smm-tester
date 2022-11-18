@@ -29,7 +29,17 @@ public class ProcedureCommonTest extends TestCase {
     transformer.transform(testCaseMessage);
     assertEquals(fm, testCaseMessage.getMessageText());
   }
-  
+
+  protected void testEquals(String om, String fm1, String fm2, String procedure) {
+    TestCaseMessage testCaseMessage = new TestCaseMessage();
+    testCaseMessage.setOriginalMessage(om);
+    testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
+    Transformer transformer = new Transformer();
+    transformer.transform(testCaseMessage);
+    String messageText = testCaseMessage.getMessageText();
+    assertTrue(fm1.equals(messageText) || fm2.equals(messageText));
+  }
+
   protected void testProcedureChangesMessage(String om, String procedure) {
     TestCaseMessage testCaseMessage = new TestCaseMessage();
     testCaseMessage.setOriginalMessage(om);
@@ -38,8 +48,9 @@ public class ProcedureCommonTest extends TestCase {
     transformer.transform(testCaseMessage);
     assertNotEquals(om, testCaseMessage.getMessageText());
   }
-  
-  protected void testProcedureChangesMessageAndDoesNotContain(String om, String fieldText, String procedure) {
+
+  protected void testProcedureChangesMessageAndDoesNotContain(String om, String fieldText,
+      String procedure) {
     TestCaseMessage testCaseMessage = new TestCaseMessage();
     testCaseMessage.setOriginalMessage(om);
     testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
@@ -57,10 +68,9 @@ public class ProcedureCommonTest extends TestCase {
     transformer.transform(testCaseMessage);
     return testCaseMessage.getMessageText();
   }
-  
+
   @Test
-  public void testReadRepeatValue()
-  {
+  public void testReadRepeatValue() {
     assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 1));
     assertEquals("NET", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 2));
     assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 3));

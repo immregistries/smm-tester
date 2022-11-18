@@ -31,30 +31,37 @@ public class FirstNameAddVariation extends ProcedureCommon implements ProcedureI
   }
 
   protected static String varyName(String firstName) {
-    if (firstName.startsWith("'") || firstName.endsWith("'"))
-    {
+    if (firstName.startsWith("'") || firstName.endsWith("'")) {
       return firstName;
     }
     boolean upperCase = firstName.toUpperCase().equals(firstName);
     boolean lowerCase = firstName.toLowerCase().equals(firstName);
 
-    int pos = firstName.indexOf('\'');
-    if (pos > 0 && (pos + 1) < firstName.length()) {
-      firstName = firstName.substring(0, pos) + " " + capitalizeFirst(firstName.substring(pos + 1));
+    int posApostrophe = firstName.indexOf('\'');
+
+    int posSpace = firstName.indexOf(' ');
+    boolean hasApostrophe = posApostrophe > 0 && (posApostrophe + 1) < firstName.length();
+    boolean hasSpace = posSpace > 0 && (posSpace + 1) < firstName.length();
+    if (hasApostrophe) {
+      firstName = firstName.substring(0, posApostrophe)
+          + capitalizeFirst(firstName.substring(posApostrophe + 1));
+    } else if (hasSpace) {
+      firstName =
+          firstName.substring(0, posSpace) + capitalizeFirst(firstName.substring(posSpace + 1));
     } else {
-      pos = firstName.indexOf(' ');
-      if (pos > 0 && (pos + 1) < firstName.length()) {
-        firstName = firstName.substring(0, pos) + capitalizeFirst(firstName.substring(pos + 1));
-      } else {
-        pos = findAnotherCapital(firstName);
-        if (pos == -1) {
-          pos = findFirstConsentAfterVowel(firstName);
-        }
-        if (pos > 0 && pos < firstName.length()) {
+      int pos = findAnotherCapital(firstName);
+      if (pos == -1) {
+        pos = findFirstConsentAfterVowel(firstName);
+      }
+      if (pos > 0 && pos < firstName.length()) {
+        if (System.currentTimeMillis() % 2 == 0) {
           firstName = firstName.substring(0, pos) + "'" + capitalizeFirst(firstName.substring(pos));
+        } else {
+          firstName = firstName.substring(0, pos) + " " + capitalizeFirst(firstName.substring(pos));
         }
       }
     }
+
     if (upperCase) {
       firstName = firstName.toUpperCase();
     } else if (lowerCase) {

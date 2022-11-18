@@ -4,7 +4,6 @@
 package org.immregistries.smm.tester.connectors;
 
 import java.util.List;
-
 import org.immregistries.smm.tester.connectors.co.Client_ServiceStub;
 
 /**

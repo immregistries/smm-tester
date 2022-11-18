@@ -15,12 +15,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.immregistries.smm.RecordServletInterface;
 import org.immregistries.smm.mover.ConnectionManager;
 import org.immregistries.smm.mover.SendData;

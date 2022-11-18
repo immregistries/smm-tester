@@ -4,14 +4,12 @@ import static org.immregistries.smm.mover.RemoteConnectionReportingInterface.LOG
 import static org.immregistries.smm.mover.RemoteConnectionReportingInterface.LOG_LEVEL_ERROR;
 import static org.immregistries.smm.mover.RemoteConnectionReportingInterface.LOG_LEVEL_INFO;
 import static org.immregistries.smm.mover.RemoteConnectionReportingInterface.LOG_LEVEL_WARNING;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.immregistries.smm.SoftwareVersion;
 import org.immregistries.smm.mover.SendData.ScanStatus;
 

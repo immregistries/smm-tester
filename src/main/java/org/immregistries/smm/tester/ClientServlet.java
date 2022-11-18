@@ -5,11 +5,9 @@ package org.immregistries.smm.tester;
 
 import java.io.PrintWriter;
 import java.util.List;
-
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.immregistries.smm.SoftwareVersion;
 import org.immregistries.smm.tester.connectors.Connector;
 

@@ -1,7 +1,6 @@
 package org.immregistries.smm.tester.manager.query;
 
 import java.util.List;
-
 import org.immregistries.smm.tester.manager.response.ImmunizationMessage;
 
 public class ImmunizationUpdate implements ImmunizationMessage {

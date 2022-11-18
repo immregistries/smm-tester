@@ -14,6 +14,13 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 /*
  * Copyright 2006 Sun Microsystems, Inc. All Rights Reserved.
@@ -44,13 +51,6 @@ import java.security.cert.X509Certificate;
  * Originally from: http://blogs.sun.com/andreas/resource/InstallCert.java Use: java InstallCert
  * hostname Example: % java InstallCert ecc.fedora.redhat.com
  */
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 
 /**
  * Class used to add the server's certificate to the KeyStore with your trusted certificates.

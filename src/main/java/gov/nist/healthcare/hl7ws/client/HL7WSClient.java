@@ -12,10 +12,8 @@ import java.io.StringReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.apache.cxf.helpers.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

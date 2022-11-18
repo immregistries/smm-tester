@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.immregistries.smm.RecordServletInterface;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.forecast.ForecastTestPanel;

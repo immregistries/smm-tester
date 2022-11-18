@@ -9,11 +9,9 @@ package org.immregistries.smm.mover;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.immregistries.smm.cdc.CDCWSDLServer;
 import org.immregistries.smm.cdc.Fault;
 import org.immregistries.smm.cdc.SecurityFault;

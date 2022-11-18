@@ -2,11 +2,9 @@ package org.immregistries.smm.mover.install;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.immregistries.smm.mover.install.templates.ConnectionTemplateFactory;
 
 @SuppressWarnings("serial")

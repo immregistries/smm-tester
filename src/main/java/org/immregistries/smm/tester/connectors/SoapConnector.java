@@ -5,7 +5,6 @@ package org.immregistries.smm.tester.connectors;
 
 import java.net.URLDecoder;
 import java.util.List;
-
 import org.immregistries.smm.tester.connectors.tlep.Client_Service;
 import org.immregistries.smm.tester.connectors.tlep.Client_ServiceStub;
 import org.immregistries.smm.tester.connectors.tlep.ConnectivityTest;

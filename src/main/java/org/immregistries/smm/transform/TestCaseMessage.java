@@ -11,7 +11,6 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.immregistries.smm.tester.manager.forecast.EvaluationActual;
 import org.immregistries.smm.tester.manager.forecast.ForecastActual;

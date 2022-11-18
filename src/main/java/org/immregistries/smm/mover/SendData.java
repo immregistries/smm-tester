@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.manager.TestParticipant;
 import org.immregistries.smm.transform.Transformer;

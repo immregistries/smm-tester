@@ -1,7 +1,6 @@
 package org.immregistries.smm.tester.manager.nist;
 
 import org.immregistries.smm.SoftwareVersion;
-
 import gov.nist.healthcare.hl7ws.client.MessageValidationV2SoapClient;
 
 public class NISTValidator {

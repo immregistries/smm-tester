@@ -3,12 +3,10 @@ package org.immregistries.smm.mover.install;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.immregistries.smm.mover.SendData;
 import org.immregistries.smm.mover.install.templates.ConnectionTemplate;
 import org.immregistries.smm.mover.install.templates.ConnectionTemplateFactory;

@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.immregistries.smm.mover.SendData;
 import org.immregistries.smm.tester.CreateTestCaseServlet;
 import org.immregistries.smm.tester.connectors.Connector;

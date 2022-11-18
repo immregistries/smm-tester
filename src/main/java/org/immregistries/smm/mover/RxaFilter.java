@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.immregistries.smm.tester.connectors.Connector;
 
 public class RxaFilter {

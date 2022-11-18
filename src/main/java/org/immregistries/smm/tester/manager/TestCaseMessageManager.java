@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.immregistries.smm.transform.PatientType;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.TestCaseMode;

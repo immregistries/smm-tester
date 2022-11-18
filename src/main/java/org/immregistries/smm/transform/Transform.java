@@ -11,7 +11,9 @@ public class Transform {
 
   protected String segment;
   protected int field = 0;
+  protected boolean fieldSet = false;
   protected int segmentRepeat = 1;
+  protected boolean segmentRepeatSet = false;
   protected int fieldRepeat = 1;
   protected boolean fieldRepeatSet = false;
   protected String value;
@@ -24,6 +26,22 @@ public class Transform {
   protected String testCaseId = null;
   protected Transform valueTransform = null;
 
+  public boolean isSegmentRepeatSet() {
+    return segmentRepeatSet;
+  }
+  
+  public void setSegmentRepeatSet(boolean segmentRepeatSet) {
+    this.segmentRepeatSet = segmentRepeatSet;
+  }
+  
+  public boolean isFieldSet() {
+    return fieldSet;
+  }
+  
+  public void setFieldSet(boolean fieldSet) {
+    this.fieldSet = fieldSet;
+  }
+  
   public String getSegment() {
     return segment;
   }
