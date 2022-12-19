@@ -84,6 +84,10 @@
     <servlet-class>org.immregistries.smm.tester.ModifyMessageServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>GenerateExamplesServlet</servlet-name>
+    <servlet-class>org.immregistries.smm.tester.GenerateExamplesServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>DownloadServlet</servlet-name>
     <servlet-class>org.immregistries.smm.tester.DownloadServlet</servlet-class>
   </servlet>
@@ -250,6 +254,10 @@
   <servlet-mapping>
     <servlet-name>ModifyMessageServlet</servlet-name>
     <url-pattern>/ModifyMessageServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GenerateExamplesServlet</servlet-name>
+    <url-pattern>/GenerateExamplesServlet</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>smm.install.InstallServlet</servlet-name>
