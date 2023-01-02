@@ -41,6 +41,7 @@ public class ProcedureFactory {
   public static final String LAST_NAME_TYPO = "LAST_NAME_TYPO";
   public static final String MIDDLE_NAME_IN_FIRST_NAME_VARIATION =
       "MIDDLE_NAME_IN_FIRST_NAME_VARIATION";
+  public static final String MIDDLE_NAME_TYPO = "MIDDLE_NAME_TYPO";
   public static final String PHONE_CHANGE = "PHONE_CHANGE";
   public static final String PHONE_TYPO = "PHONE_TYPO";
   public static final String POPULATE_QUERY_FROM_UPDATE = "POPULATE_QUERY_FROM_UPDATE";
@@ -92,6 +93,8 @@ public class ProcedureFactory {
       procedureInterface = new FirstNameAlternativeEndings();
     } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_IN_FIRST_NAME_VARIATION)) {
       procedureInterface = new MiddleNameInFirstNameVariation();
+    } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_TYPO)) {
+      procedureInterface = new TextTypo(TextTypo.Field.MIDDLE_NAME);
     } else if (procedureName.equalsIgnoreCase(SUFFIX_VARIATION)) {
       procedureInterface = new SuffixVariation();
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_TYPO)) {
