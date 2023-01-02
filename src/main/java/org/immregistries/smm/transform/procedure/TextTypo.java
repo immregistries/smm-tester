@@ -43,7 +43,7 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
         if (segmentName.equals("PID")) {
-          if (field == Field.LAST_NAME || field == Field.FIRST_NAME || field == Field.LAST_NAME
+          if (field == Field.LAST_NAME || field == Field.FIRST_NAME
               || field == Field.ADDRESS_STREET || field == Field.MIDDLE_NAME) {
             int fieldPos = 5;
             int subPos = 1;
