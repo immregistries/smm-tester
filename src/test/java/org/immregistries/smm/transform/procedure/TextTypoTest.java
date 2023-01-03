@@ -23,6 +23,10 @@ public class TextTypoTest extends ProcedureCommonTest {
     testVariationDifferent("Ryan", "PID-5.3", ProcedureFactory.MIDDLE_NAME_TYPO, transformer);
     testVariationDifferent("Frederick Dempsey", "PID-5.3", ProcedureFactory.MIDDLE_NAME_TYPO, transformer);
     testVariationDifferent("Stan", "PID-5.3", ProcedureFactory.MIDDLE_NAME_TYPO, transformer);
+    testVariationDifferent("Grace", "PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO, transformer);
+    testVariationDifferent("Patrick", "PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO, transformer);
+    testVariationDifferent("Ziegfried", "PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO, transformer);
+    testVariationDifferent("Threepwood", "PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO, transformer);
   }
   
   private void testVariationDifferent(String startValue, String location, String procedure, Transformer transformer) {

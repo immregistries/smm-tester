@@ -53,6 +53,7 @@ public class ProcedureFactory {
   public static final String SUFFIX_VARIATION = "SUFFIX_VARIATION";
   public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS =
       "MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS";
+  public static final String MOTHERS_MAIDEN_NAME_TYPO = "MOTHERS_MAIDEN_NAME_TYPO";
 
   public static ProcedureInterface getProcedure(String procedureName, Transformer transformer) {
     ProcedureInterface procedureInterface = null;
@@ -141,6 +142,8 @@ public class ProcedureFactory {
       procedureInterface = new PopulateQueryFromUpdate();
     } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS)) {
       procedureInterface = new AlternativeBeginnings(AlternativeBeginnings.Field.MOTHERS_MAIDEN_NAME);
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_TYPO)) {
+      procedureInterface = new TextTypo(TextTypo.Field.MOTHERS_MAIDEN_NAME);
     }
 
 

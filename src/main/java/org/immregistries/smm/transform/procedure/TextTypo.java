@@ -16,6 +16,7 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
                             FIRST_NAME,
                             MIDDLE_NAME,
                             LAST_NAME,
+                            MOTHERS_MAIDEN_NAME,
                             CITY,
                             ADDRESS_STREET,
                             PHONE,
@@ -44,7 +45,8 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
         String segmentName = fields[0];
         if (segmentName.equals("PID")) {
           if (field == Field.LAST_NAME || field == Field.FIRST_NAME
-              || field == Field.ADDRESS_STREET || field == Field.MIDDLE_NAME) {
+              || field == Field.ADDRESS_STREET || field == Field.MIDDLE_NAME
+              || field == Field.MOTHERS_MAIDEN_NAME) {
             int fieldPos = 5;
             int subPos = 1;
             if (field == Field.LAST_NAME) {
@@ -58,6 +60,9 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
               subPos = 3;
             } else if (field == Field.ADDRESS_STREET) {
               fieldPos = 11;
+              subPos = 1;
+            } else if (field == Field.MOTHERS_MAIDEN_NAME) {
+              fieldPos = 6;
               subPos = 1;
             }
             String name = readValue(fields, fieldPos, subPos);
