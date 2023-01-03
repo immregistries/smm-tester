@@ -54,6 +54,8 @@ public class ProcedureFactory {
   public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS =
       "MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS";
   public static final String MOTHERS_MAIDEN_NAME_TYPO = "MOTHERS_MAIDEN_NAME_TYPO";
+  public static final String MOTHERS_MAIDEN_NAME_REMOVE_AIRA_SUFFIX =
+      "MOTHERS_MAIDEN_NAME_REMOVE_AIRA_SUFFIX";
 
   public static ProcedureInterface getProcedure(String procedureName, Transformer transformer) {
     ProcedureInterface procedureInterface = null;
@@ -144,6 +146,8 @@ public class ProcedureFactory {
       procedureInterface = new AlternativeBeginnings(AlternativeBeginnings.Field.MOTHERS_MAIDEN_NAME);
     } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_TYPO)) {
       procedureInterface = new TextTypo(TextTypo.Field.MOTHERS_MAIDEN_NAME);
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_REMOVE_AIRA_SUFFIX)) {
+      procedureInterface = new RemoveAiraSuffix(RemoveAiraSuffix.Field.MOTHERS_MAIDEN_NAME);
     }
 
 
