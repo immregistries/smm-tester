@@ -7,12 +7,19 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class FirstNameAlternativeEndings extends ProcedureCommon implements ProcedureInterface {
+public class AlternativeEndings extends ProcedureCommon implements ProcedureInterface {
 
+  public static enum Field {
+    FIRST_NAME,
+    MIDDLE_NAME,
+    LAST_NAME,
+    MOTHERS_MAIDEN_NAME
+  }
+  
+  private Field field;
 
-
-  public FirstNameAlternativeEndings() {
-
+  public AlternativeEndings(Field field) {
+    this.field = field;
   }
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
@@ -22,27 +29,44 @@ public class FirstNameAlternativeEndings extends ProcedureCommon implements Proc
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
         if (segmentName.equals("PID")) {
-          int fieldPos = 5;
-          int subPos = 2;
-          String firstName = readValue(fields, fieldPos, subPos);
-          firstName = varyName(firstName);
-          updateValue(firstName, fields, fieldPos, subPos);
+          if (field == Field.LAST_NAME
+            || field == Field.FIRST_NAME
+            || field == Field.MIDDLE_NAME
+            || field == Field.MOTHERS_MAIDEN_NAME) {
+            
+            int fieldPos = 5;
+            int subPos = 1;
+            if (field == Field.LAST_NAME) {
+              subPos = 1;
+            } else if (field == Field.FIRST_NAME) {
+              subPos = 2;
+            } else if (field == Field.MIDDLE_NAME) {
+              subPos = 3;
+            } else if (field == Field.MOTHERS_MAIDEN_NAME) {
+              fieldPos = 6;
+              subPos = 1;
+            }
+            
+            String value = readValue(fields, fieldPos, subPos);
+            value = varyName(value);
+            updateValue(value, fields, fieldPos, subPos);
+          }
         }
       }
     }
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
-  protected static String varyName(String firstName) {
-    boolean upperCase = firstName.toUpperCase().equals(firstName);
-    boolean lowerCase = firstName.toLowerCase().equals(firstName);
+  protected static String varyName(String name) {
+    boolean upperCase = name.toUpperCase().equals(name);
+    boolean lowerCase = name.toLowerCase().equals(name);
 
-    String firstNameLower = firstName.trim().toLowerCase();
+    String nameLower = name.trim().toLowerCase();
     for (String[] consonantClusterMap : consonantClusterMapList) {
       String lookingFor = consonantClusterMap[0];
       String replacingWith = consonantClusterMap[1];
-      if (firstNameLower.endsWith(lookingFor)) {
-        firstName = firstNameLower.substring(0, firstNameLower.length() - lookingFor.length())
+      if (nameLower.endsWith(lookingFor)) {
+        name = nameLower.substring(0, nameLower.length() - lookingFor.length())
             + replacingWith;
         break;
       }
@@ -51,13 +75,13 @@ public class FirstNameAlternativeEndings extends ProcedureCommon implements Proc
 
 
     if (upperCase) {
-      firstName = firstName.toUpperCase();
+      name = name.toUpperCase();
     } else if (lowerCase) {
-      firstName = firstName.toLowerCase();
+      name = name.toLowerCase();
     } else {
-      firstName = capitalizeFirst(firstName);
+      name = capitalizeFirst(name);
     }
-    return firstName;
+    return name;
   }
 
 
