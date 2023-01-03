@@ -92,6 +92,7 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
     consonantClusterMapList.add(new String[] {"spl", "pl"});
     consonantClusterMapList.add(new String[] {"squ", "qu"});
     consonantClusterMapList.add(new String[] {"thr", "fr"});
+    consonantClusterMapList.add(new String[] {"str", "t"});
     consonantClusterMapList.add(new String[] {"bl", "l"});
     consonantClusterMapList.add(new String[] {"br", "r"});
     consonantClusterMapList.add(new String[] {"ch", "s"});
@@ -113,7 +114,6 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
     consonantClusterMapList.add(new String[] {"sl", "l"});
     consonantClusterMapList.add(new String[] {"sn", "n"});
     consonantClusterMapList.add(new String[] {"sp", "p"});
-    consonantClusterMapList.add(new String[] {"str", "t"});
     consonantClusterMapList.add(new String[] {"st", "t"});
     consonantClusterMapList.add(new String[] {"sw", "w"});
     consonantClusterMapList.add(new String[] {"th", "f"});
