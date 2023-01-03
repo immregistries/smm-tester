@@ -70,6 +70,15 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testVariation("Trill", "Rill", location, procedure);
     testVariation("Wrtrykowski", "Rtrykowski", location, procedure);
     testVariation("Quinn", "Kinn", location, procedure);
+    
+    location = "PID-6.1";
+    procedure = ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS;
+    
+    testVariation("Pastel", "Quastel", location, procedure);
+    testVariation("Sanders", "Tsanders", location, procedure);
+    testVariation("Xander", "Ekander", location, procedure);
+    testVariation("Yennifer", "Wennifer", location, procedure);
+    testVariation("Zozo", "Sozo", location, procedure);
   }
 
   private void testVariation(String startValue, String endValue, String location, String procedure) {

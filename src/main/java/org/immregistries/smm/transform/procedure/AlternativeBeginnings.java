@@ -12,7 +12,8 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
   public static enum Field {
     FIRST_NAME,
     MIDDLE_NAME,
-    LAST_NAME
+    LAST_NAME,
+    MOTHERS_MAIDEN_NAME
   }
 	
   private Field field;
@@ -30,7 +31,8 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
         if (segmentName.equals("PID")) {
           if (field == Field.LAST_NAME
             || field == Field.FIRST_NAME
-            || field == Field.MIDDLE_NAME) {
+            || field == Field.MIDDLE_NAME
+            || field == Field.MOTHERS_MAIDEN_NAME) {
             
             int fieldPos = 5;
             int subPos = 1;
@@ -40,6 +42,9 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
               subPos = 2;
             } else if (field == Field.MIDDLE_NAME) {
               subPos = 3;
+            } else if (field == Field.MOTHERS_MAIDEN_NAME) {
+              fieldPos = 6;
+              subPos = 1;
             }
             
             String value = readValue(fields, fieldPos, subPos);

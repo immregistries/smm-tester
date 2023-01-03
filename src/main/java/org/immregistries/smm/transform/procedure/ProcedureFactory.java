@@ -51,6 +51,8 @@ public class ProcedureFactory {
   public static final String POPULATE_QUERY_FROM_UPDATE = "POPULATE_QUERY_FROM_UPDATE";
   public static final String REMOVE_VACCINATION_GROUPS = "REMOVE_VACCINATION_GROUPS";
   public static final String SUFFIX_VARIATION = "SUFFIX_VARIATION";
+  public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS =
+      "MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS";
 
   public static ProcedureInterface getProcedure(String procedureName, Transformer transformer) {
     ProcedureInterface procedureInterface = null;
@@ -137,6 +139,8 @@ public class ProcedureFactory {
       procedureInterface = new TextTypo(TextTypo.Field.PHONE);
     } else if (procedureName.equalsIgnoreCase(POPULATE_QUERY_FROM_UPDATE)) {
       procedureInterface = new PopulateQueryFromUpdate();
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS)) {
+      procedureInterface = new AlternativeBeginnings(AlternativeBeginnings.Field.MOTHERS_MAIDEN_NAME);
     }
 
 
