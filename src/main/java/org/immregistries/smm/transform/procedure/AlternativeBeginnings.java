@@ -7,10 +7,18 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class FirstNameAlternativeBeginnings extends ProcedureCommon implements ProcedureInterface {
-
-  public FirstNameAlternativeBeginnings() {
-
+public class AlternativeBeginnings extends ProcedureCommon implements ProcedureInterface {
+  
+  public static enum Field {
+    FIRST_NAME,
+    MIDDLE_NAME,
+    LAST_NAME
+  }
+	
+  private Field field;
+  
+  public AlternativeBeginnings(Field field) {
+    this.field = field;
   }
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
@@ -20,28 +28,41 @@ public class FirstNameAlternativeBeginnings extends ProcedureCommon implements P
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
         if (segmentName.equals("PID")) {
-          int fieldPos = 5;
-          int subPos = 2;
-          String firstName = readValue(fields, fieldPos, subPos);
-          firstName = varyName(firstName);
-          updateValue(firstName, fields, fieldPos, subPos);
+          if (field == Field.LAST_NAME
+            || field == Field.FIRST_NAME
+            || field == Field.MIDDLE_NAME) {
+            
+            int fieldPos = 5;
+            int subPos = 1;
+            if (field == Field.LAST_NAME) {
+              subPos = 1;
+            } else if (field == Field.FIRST_NAME) {
+              subPos = 2;
+            } else if (field == Field.MIDDLE_NAME) {
+              subPos = 3;
+            }
+            
+            String value = readValue(fields, fieldPos, subPos);
+            value = varyName(value);
+            updateValue(value, fields, fieldPos, subPos);
+          }
         }
       }
     }
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
-  protected static String varyName(String firstName) {
-    boolean upperCase = firstName.toUpperCase().equals(firstName);
-    boolean lowerCase = firstName.toLowerCase().equals(firstName);
+  protected static String varyName(String name) {
+    boolean upperCase = name.toUpperCase().equals(name);
+    boolean lowerCase = name.toLowerCase().equals(name);
 
 
-    String firstNameLower = firstName.trim().toLowerCase();
+    String nameLower = name.trim().toLowerCase();
     for (String[] consonantClusterMap : consonantClusterMapList) {
       String lookingFor = consonantClusterMap[0];
       String replacingWith = consonantClusterMap[1];
-      if (firstNameLower.startsWith(lookingFor)) {
-        firstName = replacingWith + firstNameLower.substring(lookingFor.length());
+      if (nameLower.startsWith(lookingFor)) {
+        name = replacingWith + nameLower.substring(lookingFor.length());
         break;
       }
     }
@@ -49,20 +70,19 @@ public class FirstNameAlternativeBeginnings extends ProcedureCommon implements P
 
 
     if (upperCase) {
-      firstName = firstName.toUpperCase();
+      name = name.toUpperCase();
     } else if (lowerCase) {
-      firstName = firstName.toLowerCase();
+      name = name.toLowerCase();
     } else {
-      firstName = capitalizeFirst(firstName);
+      name = capitalizeFirst(name);
     }
-    return firstName;
+    return name;
   }
 
 
   private static List<String[]> consonantClusterMapList = new ArrayList<>();
 
   static {
-    consonantClusterMapList.add(new String[] {"chr", "kr"});
     consonantClusterMapList.add(new String[] {"chr", "kr"});
     consonantClusterMapList.add(new String[] {"spl", "pl"});
     consonantClusterMapList.add(new String[] {"squ", "qu"});
@@ -88,8 +108,8 @@ public class FirstNameAlternativeBeginnings extends ProcedureCommon implements P
     consonantClusterMapList.add(new String[] {"sl", "l"});
     consonantClusterMapList.add(new String[] {"sn", "n"});
     consonantClusterMapList.add(new String[] {"sp", "p"});
-    consonantClusterMapList.add(new String[] {"st", "t"});
     consonantClusterMapList.add(new String[] {"str", "t"});
+    consonantClusterMapList.add(new String[] {"st", "t"});
     consonantClusterMapList.add(new String[] {"sw", "w"});
     consonantClusterMapList.add(new String[] {"th", "f"});
     consonantClusterMapList.add(new String[] {"tr", "r"});
