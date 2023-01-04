@@ -33,7 +33,7 @@ public class RepeatedConsonantsTest extends ProcedureCommonTest {
     location = "PID-5.3";
     procedure = ProcedureFactory.MIDDLE_NAME_REPEATED_CONSONANTS;
     
-    testVariationDifferent("Brady", location, procedure, transformer);
+    testVariationDifferent("Bradley", location, procedure, transformer);
     testVariationDifferent("Blankenship", location, procedure, transformer);
     testVariationDifferent("Mccarty", location, procedure, transformer);
     testVariationDifferent("Barrett", location, procedure, transformer);
