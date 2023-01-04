@@ -63,7 +63,6 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
   }
   
   private void testVariation(String startValue, String endValue, String location, String procedure) {
-    System.out.println("|" + startValue + "|" + endValue + "|");
     assertEquals(endValue, AlternativeEndings.varyName(startValue));
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     String testEnd = transform(DEFAULT_TEST_MESSAGE, location + "=" + endValue);
