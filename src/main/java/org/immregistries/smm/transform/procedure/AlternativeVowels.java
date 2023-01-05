@@ -65,7 +65,6 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
 
     Random random = transformer.getRandom();
     String nameLower = name.toLowerCase();
-    boolean foundMatch = false;
     for (int i = 0; i < 100; i++) {
       String[] vowelSounds = vowelSoundsList.get(random.nextInt(vowelSoundsList.size()));
       String lookingFor = vowelSounds[random.nextInt(vowelSounds.length)];
@@ -78,21 +77,7 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
         name = nameLower.substring(0, pos) + replacingWith
             + nameLower.substring(pos + lookingFor.length());
         
-        foundMatch = true;
         break;
-      }
-    }
-
-    // if no match was found with the random lookups, brute force one
-    if(!foundMatch) {
-      for(int i = 1; i < nameLower.length(); i++) {
-        String letter = nameLower.substring(i, i + 1);
-        for(String[] vowelSounds : vowelSoundsList) {
-          if(letter.equals(vowelSounds[0])) {
-            name = nameLower.substring(0, i) + vowelSounds[1]
-                + nameLower.substring(i + 1);
-          }
-        }
       }
     }
 

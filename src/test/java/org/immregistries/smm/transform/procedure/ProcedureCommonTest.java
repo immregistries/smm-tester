@@ -68,6 +68,15 @@ public class ProcedureCommonTest extends TestCase {
     transformer.transform(testCaseMessage);
     return testCaseMessage.getMessageText();
   }
+  
+  protected String processProcedureChangesMessage(String om, String procedure) {
+    TestCaseMessage testCaseMessage = new TestCaseMessage();
+    testCaseMessage.setOriginalMessage(om);
+    testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
+    Transformer transformer = new Transformer();
+    transformer.transform(testCaseMessage);
+    return testCaseMessage.getMessageText();
+  }
 
   @Test
   public void testReadRepeatValue() {
