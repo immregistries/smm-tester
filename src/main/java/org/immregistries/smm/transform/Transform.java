@@ -25,6 +25,7 @@ public class Transform {
   protected boolean all = false;
   protected String testCaseId = null;
   protected Transform valueTransform = null;
+  protected boolean concatenate = false;
 
   public boolean isSegmentRepeatSet() {
     return segmentRepeatSet;
@@ -152,5 +153,13 @@ public class Transform {
 
   public void setValueTransform(Transform valueTransform) {
     this.valueTransform = valueTransform;
+  }
+  
+  public boolean isConcatenate() {
+    return concatenate;
+  }
+  
+  public void setConcatenate(boolean concatenate) {
+    this.concatenate = concatenate;
   }
 }
