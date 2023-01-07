@@ -10,7 +10,8 @@ public class RemoveAiraSuffix extends ProcedureCommon implements ProcedureInterf
 
   public static enum Field {
                             FIRST_NAME,
-                            LAST_NAME
+                            LAST_NAME,
+                            MOTHERS_MAIDEN_NAME
   }
 
 
@@ -21,9 +22,9 @@ public class RemoveAiraSuffix extends ProcedureCommon implements ProcedureInterf
   private Field field;
 
 
-public RemoveAiraSuffix(Field field) {
-this.field = field;
-}
+  public RemoveAiraSuffix(Field field) {
+    this.field = field;
+  }
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
@@ -38,15 +39,22 @@ this.field = field;
             subPos = 1;
           } else if (field == Field.FIRST_NAME) {
             subPos = 2;
+          } else if (field == Field.MOTHERS_MAIDEN_NAME) {
+            fieldPos = 6;
+            subPos = 1;
           }
           String name = readValue(fields, fieldPos, subPos);
           if (name.endsWith("AIRA")) {
-            updateValue(name.substring(0, name.length() - 4), fields, fieldPos, subPos);
+            updateValue(removeSuffix(name), fields, fieldPos, subPos);
           }
         }
 
       }
     }
     putMessageBackTogether(transformRequest, fieldsList);
+  }
+  
+  protected static String removeSuffix(String name) {
+    return name.substring(0, name.length() - 4);
   }
 }

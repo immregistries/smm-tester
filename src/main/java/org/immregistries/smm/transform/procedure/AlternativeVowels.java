@@ -5,15 +5,23 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class FirstNameAlternativeVowels extends ProcedureCommon implements ProcedureInterface {
+public class AlternativeVowels extends ProcedureCommon implements ProcedureInterface {
 
+  public static enum Field {
+    FIRST_NAME,
+    MIDDLE_NAME,
+    LAST_NAME,
+    MOTHERS_MAIDEN_NAME
+  }
+  
+  private Field field;
 
-
-  public FirstNameAlternativeVowels() {
-
+  public AlternativeVowels(Field field) {
+    this.field = field;
   }
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
@@ -23,49 +31,64 @@ public class FirstNameAlternativeVowels extends ProcedureCommon implements Proce
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
         if (segmentName.equals("PID")) {
-          int fieldPos = 5;
-          int subPos = 2;
-          String firstName = readValue(fields, fieldPos, subPos);
-          firstName = varyName(firstName, transformer);
-          updateValue(firstName, fields, fieldPos, subPos);
+          if (field == Field.LAST_NAME
+            || field == Field.FIRST_NAME
+            || field == Field.MIDDLE_NAME
+            || field == Field.MOTHERS_MAIDEN_NAME) {
+            
+            int fieldPos = 5;
+            int subPos = 1;
+            if (field == Field.LAST_NAME) {
+              subPos = 1;
+            } else if (field == Field.FIRST_NAME) {
+              subPos = 2;
+            } else if (field == Field.MIDDLE_NAME) {
+              subPos = 3;
+            } else if (field == Field.MOTHERS_MAIDEN_NAME) {
+              fieldPos = 6;
+              subPos = 1;
+            }
+            
+            String value = readValue(fields, fieldPos, subPos);
+            value = varyName(value, transformer);
+            updateValue(value, fields, fieldPos, subPos);
+          }
         }
       }
     }
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
-  protected static String varyName(String firstName, Transformer transformer) {
-    boolean upperCase = firstName.toUpperCase().equals(firstName);
-    boolean lowerCase = firstName.toLowerCase().equals(firstName);
+  protected static String varyName(String name, Transformer transformer) {
+    boolean upperCase = name.toUpperCase().equals(name);
+    boolean lowerCase = name.toLowerCase().equals(name);
 
     Random random = transformer.getRandom();
-
-    String firstNameLower = firstName.toLowerCase();
+    String nameLower = name.toLowerCase();
     for (int i = 0; i < 100; i++) {
       String[] vowelSounds = vowelSoundsList.get(random.nextInt(vowelSoundsList.size()));
       String lookingFor = vowelSounds[random.nextInt(vowelSounds.length)];
-      int pos = firstNameLower.indexOf(lookingFor);
+      int pos = nameLower.indexOf(lookingFor);
       if (pos > 0) {
         String replacingWith = vowelSounds[random.nextInt(vowelSounds.length)];
         while (replacingWith.equals(lookingFor)) {
           replacingWith = vowelSounds[random.nextInt(vowelSounds.length)];
         }
-        firstName = firstNameLower.substring(0, pos) + replacingWith
-            + firstNameLower.substring(pos + lookingFor.length());
+        name = nameLower.substring(0, pos) + replacingWith
+            + nameLower.substring(pos + lookingFor.length());
+        
         break;
       }
     }
 
-
-
     if (upperCase) {
-      firstName = firstName.toUpperCase();
+      name = name.toUpperCase();
     } else if (lowerCase) {
-      firstName = firstName.toLowerCase();
+      name = name.toLowerCase();
     } else {
-      firstName = capitalizeFirst(firstName);
+      name = capitalizeFirst(name);
     }
-    return firstName;
+    return name;
   }
 
 

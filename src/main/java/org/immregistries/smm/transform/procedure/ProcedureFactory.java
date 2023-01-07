@@ -1,6 +1,7 @@
 package org.immregistries.smm.transform.procedure;
 
 import org.immregistries.smm.transform.Transformer;
+import org.immregistries.smm.transform.procedure.AddVariation.Field;
 
 public class ProcedureFactory {
   public static final String ADD_FUNDING_ELGIBILITY_TO_ALL_RXA =
@@ -39,13 +40,40 @@ public class ProcedureFactory {
   public static final String LAST_NAME_PREFIX_VARIATION = "LAST_NAME_PREFIX_VARIATION";
   public static final String LAST_NAME_REMOVE_AIRA_SUFFIX = "LAST_NAME_REMOVE_AIRA_SUFFIX";
   public static final String LAST_NAME_TYPO = "LAST_NAME_TYPO";
+  public static final String LAST_NAME_ALTERNATIVE_BEGINNINGS =
+      "LAST_NAME_ALTERNATIVE_BEGINNINGS";
+  public static final String LAST_NAME_ALTERNATIVE_ENDINGS =
+      "LAST_NAME_ALTERNATIVE_ENDINGS";
+  public static final String LAST_NAME_REPEATED_CONSONANTS = "LAST_NAME_REPEATED_CONSONANTS";
+  public static final String LAST_NAME_ALTERNATIVE_VOWELS = "LAST_NAME_ALTERNATIVE_VOWELS";
+  public static final String LAST_NAME_ADD_VARIATION = "LAST_NAME_ADD_VARIATION";
   public static final String MIDDLE_NAME_IN_FIRST_NAME_VARIATION =
       "MIDDLE_NAME_IN_FIRST_NAME_VARIATION";
+  public static final String MIDDLE_NAME_TYPO = "MIDDLE_NAME_TYPO";
+  public static final String MIDDLE_NAME_ALTERNATIVE_BEGINNINGS =
+      "MIDDLE_NAME_ALTERNATIVE_BEGINNINGS";
+  public static final String MIDDLE_NAME_ALTERNATIVE_ENDINGS =
+      "MIDDLE_NAME_ALTERNATIVE_ENDINGS";
+  public static final String MIDDLE_NAME_REPEATED_CONSONANTS = "MIDDLE_NAME_REPEATED_CONSONANTS";
+  public static final String MIDDLE_NAME_ALTERNATIVE_VOWELS = "MIDDLE_NAME_ALTERNATIVE_VOWELS";
+  public static final String MIDDLE_NAME_ADD_VARIATION = "MIDDLE_NAME_ADD_VARIATION";
   public static final String PHONE_CHANGE = "PHONE_CHANGE";
   public static final String PHONE_TYPO = "PHONE_TYPO";
   public static final String POPULATE_QUERY_FROM_UPDATE = "POPULATE_QUERY_FROM_UPDATE";
   public static final String REMOVE_VACCINATION_GROUPS = "REMOVE_VACCINATION_GROUPS";
   public static final String SUFFIX_VARIATION = "SUFFIX_VARIATION";
+  public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS =
+      "MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS";
+  public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS =
+      "MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS";
+  public static final String MOTHERS_MAIDEN_NAME_TYPO = "MOTHERS_MAIDEN_NAME_TYPO";
+  public static final String MOTHERS_MAIDEN_NAME_REMOVE_AIRA_SUFFIX =
+      "MOTHERS_MAIDEN_NAME_REMOVE_AIRA_SUFFIX";
+  public static final String MOTHERS_MAIDEN_NAME_REPEATED_CONSONANTS =
+      "MOTHERS_MAIDEN_NAME_REPEATED_CONSONANTS";
+  public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS =
+      "MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS";
+  public static final String MOTHERS_MAIDEN_NAME_ADD_VARIATION = "MOTHERS_MAIDEN_NAME_ADD_VARIATION";
 
   public static ProcedureInterface getProcedure(String procedureName, Transformer transformer) {
     ProcedureInterface procedureInterface = null;
@@ -75,7 +103,7 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_CONVERT_TO_NICKNAME)) {
       procedureInterface = new FirstNameConvertNickname();
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ADD_VARIATION)) {
-      procedureInterface = new FirstNameAddVariation();
+      procedureInterface = new AddVariation(Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_HYPHENATE_OR_SWAP)) {
       procedureInterface = new LastNameHyphenateOrSwap();
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_HYPHENATE_VARIATION)) {
@@ -83,19 +111,41 @@ public class ProcedureFactory {
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_PREFIX_VARIATION)) {
       procedureInterface = new LastNamePrefixVariation();
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_VOWELS)) {
-      procedureInterface = new FirstNameAlternativeVowels();
+      procedureInterface = new AlternativeVowels(AlternativeVowels.Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_REPEATED_CONSONANTS)) {
-      procedureInterface = new FirstNameRepeatedConsonants();
+      procedureInterface = new RepeatedConsonants(RepeatedConsonants.Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_BEGINNINGS)) {
-      procedureInterface = new FirstNameAlternativeBeginnings();
+      procedureInterface = new AlternativeBeginnings(AlternativeBeginnings.Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_ALTERNATIVE_ENDINGS)) {
-      procedureInterface = new FirstNameAlternativeEndings();
+      procedureInterface = new AlternativeEndings(AlternativeEndings.Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_IN_FIRST_NAME_VARIATION)) {
       procedureInterface = new MiddleNameInFirstNameVariation();
+    } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_TYPO)) {
+      procedureInterface = new TextTypo(TextTypo.Field.MIDDLE_NAME);
+    } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_ALTERNATIVE_BEGINNINGS)) {
+      procedureInterface = new AlternativeBeginnings(AlternativeBeginnings.Field.MIDDLE_NAME);
+    } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_ALTERNATIVE_ENDINGS)) {
+      procedureInterface = new AlternativeEndings(AlternativeEndings.Field.MIDDLE_NAME);
+    } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_REPEATED_CONSONANTS)) {
+      procedureInterface = new RepeatedConsonants(RepeatedConsonants.Field.MIDDLE_NAME);
+    } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_ALTERNATIVE_VOWELS)) {
+      procedureInterface = new AlternativeVowels(AlternativeVowels.Field.MIDDLE_NAME);
+    } else if (procedureName.equalsIgnoreCase(MIDDLE_NAME_ADD_VARIATION)) {
+      procedureInterface = new AddVariation(Field.MIDDLE_NAME);
     } else if (procedureName.equalsIgnoreCase(SUFFIX_VARIATION)) {
       procedureInterface = new SuffixVariation();
     } else if (procedureName.equalsIgnoreCase(LAST_NAME_TYPO)) {
       procedureInterface = new TextTypo(TextTypo.Field.LAST_NAME);
+    } else if (procedureName.equalsIgnoreCase(LAST_NAME_ALTERNATIVE_BEGINNINGS)) {
+      procedureInterface = new AlternativeBeginnings(AlternativeBeginnings.Field.LAST_NAME);
+    } else if (procedureName.equalsIgnoreCase(LAST_NAME_ALTERNATIVE_ENDINGS)) {
+      procedureInterface = new AlternativeEndings(AlternativeEndings.Field.LAST_NAME);
+    } else if (procedureName.equalsIgnoreCase(LAST_NAME_REPEATED_CONSONANTS)) {
+      procedureInterface = new RepeatedConsonants(RepeatedConsonants.Field.LAST_NAME);
+    } else if (procedureName.equalsIgnoreCase(LAST_NAME_ALTERNATIVE_VOWELS)) {
+      procedureInterface = new AlternativeVowels(AlternativeVowels.Field.LAST_NAME);
+    } else if (procedureName.equalsIgnoreCase(LAST_NAME_ADD_VARIATION)) {
+      procedureInterface = new AddVariation(Field.LAST_NAME);
     } else if (procedureName.equalsIgnoreCase(FIRST_NAME_TYPO)) {
       procedureInterface = new TextTypo(TextTypo.Field.FIRST_NAME);
     } else if (procedureName.equalsIgnoreCase(ADDRESS_STREET_CHANGE)) {
@@ -126,6 +176,20 @@ public class ProcedureFactory {
       procedureInterface = new TextTypo(TextTypo.Field.PHONE);
     } else if (procedureName.equalsIgnoreCase(POPULATE_QUERY_FROM_UPDATE)) {
       procedureInterface = new PopulateQueryFromUpdate();
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS)) {
+      procedureInterface = new AlternativeBeginnings(AlternativeBeginnings.Field.MOTHERS_MAIDEN_NAME);
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS)) {
+      procedureInterface = new AlternativeEndings(AlternativeEndings.Field.MOTHERS_MAIDEN_NAME);
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_TYPO)) {
+      procedureInterface = new TextTypo(TextTypo.Field.MOTHERS_MAIDEN_NAME);
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_REMOVE_AIRA_SUFFIX)) {
+      procedureInterface = new RemoveAiraSuffix(RemoveAiraSuffix.Field.MOTHERS_MAIDEN_NAME);
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_REPEATED_CONSONANTS)) {
+      procedureInterface = new RepeatedConsonants(RepeatedConsonants.Field.MOTHERS_MAIDEN_NAME);
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS)) {
+      procedureInterface = new AlternativeVowels(AlternativeVowels.Field.MOTHERS_MAIDEN_NAME);
+    } else if (procedureName.equalsIgnoreCase(MOTHERS_MAIDEN_NAME_ADD_VARIATION)) {
+      procedureInterface = new AddVariation(Field.MOTHERS_MAIDEN_NAME);
     }
 
 

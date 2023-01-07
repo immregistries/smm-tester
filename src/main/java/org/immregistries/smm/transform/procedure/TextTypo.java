@@ -14,7 +14,9 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
 
   public static enum Field {
                             FIRST_NAME,
+                            MIDDLE_NAME,
                             LAST_NAME,
+                            MOTHERS_MAIDEN_NAME,
                             CITY,
                             ADDRESS_STREET,
                             PHONE,
@@ -42,19 +44,25 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
         if (segmentName.equals("PID")) {
-          if (field == Field.LAST_NAME || field == Field.FIRST_NAME || field == Field.LAST_NAME
-              || field == Field.ADDRESS_STREET) {
+          if (field == Field.LAST_NAME || field == Field.FIRST_NAME
+              || field == Field.ADDRESS_STREET || field == Field.MIDDLE_NAME
+              || field == Field.MOTHERS_MAIDEN_NAME || field == Field.CITY) {
             int fieldPos = 5;
             int subPos = 1;
             if (field == Field.LAST_NAME) {
               subPos = 1;
             } else if (field == Field.FIRST_NAME) {
               subPos = 2;
+            } else if (field == Field.MIDDLE_NAME) {
+              subPos = 3;
             } else if (field == Field.CITY) {
               fieldPos = 11;
               subPos = 3;
             } else if (field == Field.ADDRESS_STREET) {
               fieldPos = 11;
+              subPos = 1;
+            } else if (field == Field.MOTHERS_MAIDEN_NAME) {
+              fieldPos = 6;
               subPos = 1;
             }
             String name = readValue(fields, fieldPos, subPos);
