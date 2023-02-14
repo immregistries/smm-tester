@@ -51,7 +51,7 @@ public class ModifyMessageServlet extends ClientServlet {
       Transformer transformer = new Transformer();
       transformer.transform(testCaseMessage);
       originalMessage = testCaseMessage.getMessageText();
-      script = "PID-5.1=Smith\nPID-8=[MAP 'M'==>'Male', 'F'=>'Female']\nPID-5.3=[TRUNC 1]";
+      script = "PID-5.1=Smith\nPID-8=[MAP 'M'=>'Male', 'F'=>'Female']\nPID-5.3=[TRUNC 1]";
       mmr = null;
     }
 
@@ -101,6 +101,8 @@ public class ModifyMessageServlet extends ClientServlet {
           "<p>Now in 2016, the next step is to create a more generalized solution that does what this solution does "
               + "but with improvements to the language and the ability to support other domain knowledge areas. The proposal "
               + "listed above is now out-dated and is only being listed for reference purposes. </p>");
+      
+      out.println("<p><a href=\"GenerateExamplesServlet\">Generate Examples</a></p>");
 
       ClientServlet.printHtmlFoot(out);
     } catch (Exception e) {
