@@ -36,7 +36,7 @@ public class TextChange extends ProcedureCommon implements ProcedureInterface {
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
 
           int fieldPos = 13;
           String[] repeatFields = readRepeats(fields, fieldPos);

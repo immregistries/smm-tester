@@ -20,7 +20,7 @@ public class DateOfBirthDayShift extends ProcedureCommon implements ProcedureInt
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
           int fieldPos = 7;
           int subPos = 1;
           String dob = readValue(fields, fieldPos, subPos);

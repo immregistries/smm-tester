@@ -20,7 +20,7 @@ public class MiddleNameInFirstNameVariation extends ProcedureCommon implements P
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
           int fieldPos = 5;
           String firstName = readValue(fields, fieldPos, 2);
           String middleName = readValue(fields, fieldPos, 3);

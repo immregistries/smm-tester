@@ -28,7 +28,7 @@ public class AddVariation extends ProcedureCommon implements ProcedureInterface 
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
           if (field == Field.LAST_NAME
             || field == Field.FIRST_NAME
             || field == Field.MIDDLE_NAME

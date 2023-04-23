@@ -20,7 +20,7 @@ public class AdministrativeSexVariation extends ProcedureCommon implements Proce
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
           int fieldPos = 8;
           int subPos = 1;
           String administrativeSex = readValue(fields, fieldPos, subPos).trim();

@@ -20,7 +20,7 @@ public class SuffixVariation extends ProcedureCommon implements ProcedureInterfa
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
           int fieldPos = 5;
           String lastName = readValue(fields, fieldPos, 1);
           String firstName = readValue(fields, fieldPos, 2);

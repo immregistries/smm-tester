@@ -18,7 +18,7 @@ public class AddressStreetVariation extends ProcedureCommon implements Procedure
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
           int fieldPos = 11;
           int subPos = 1;
           String address = readValue(fields, fieldPos, subPos).trim();
