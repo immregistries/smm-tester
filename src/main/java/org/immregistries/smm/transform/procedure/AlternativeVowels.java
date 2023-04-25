@@ -5,19 +5,27 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
 public class AlternativeVowels extends ProcedureCommon implements ProcedureInterface {
 
-  public static enum Field {
-    FIRST_NAME,
-    MIDDLE_NAME,
-    LAST_NAME,
-    MOTHERS_MAIDEN_NAME
+  public enum Field {
+                     FIRST_NAME(5, 2),
+                     MIDDLE_NAME(5, 3),
+                     LAST_NAME(5, 1),
+                     MOTHERS_MAIDEN_NAME(6, 1),
+                     MOTHERS_MAIDEN_FIRST_NAME(6, 2);
+
+    int fieldPos;
+    int subPos;
+
+    private Field(int fieldPos, int subPos) {
+      this.fieldPos = fieldPos;
+      this.subPos = subPos;
+    }
   }
-  
+
   private Field field;
 
   public AlternativeVowels(Field field) {
@@ -27,35 +35,16 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
-    {
-      for (String[] fields : fieldsList) {
-        String segmentName = fields[0];
-        if ("PID".equals(segmentName)) {
-          if (field == Field.LAST_NAME
-            || field == Field.FIRST_NAME
-            || field == Field.MIDDLE_NAME
-            || field == Field.MOTHERS_MAIDEN_NAME) {
-            
-            int fieldPos = 5;
-            int subPos = 1;
-            if (field == Field.LAST_NAME) {
-              subPos = 1;
-            } else if (field == Field.FIRST_NAME) {
-              subPos = 2;
-            } else if (field == Field.MIDDLE_NAME) {
-              subPos = 3;
-            } else if (field == Field.MOTHERS_MAIDEN_NAME) {
-              fieldPos = 6;
-              subPos = 1;
-            }
-            
-            String value = readValue(fields, fieldPos, subPos);
-            value = varyName(value, transformer);
-            updateValue(value, fields, fieldPos, subPos);
-          }
-        }
+
+    for (String[] fields : fieldsList) {
+      String segmentName = fields[0];
+      if ("PID".equals(segmentName)) {
+        String value = readValue(fields, field.fieldPos, field.subPos);
+        value = varyName(value, transformer);
+        updateValue(value, fields, field.fieldPos, field.subPos);
       }
     }
+
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
@@ -76,7 +65,7 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
         }
         name = nameLower.substring(0, pos) + replacingWith
             + nameLower.substring(pos + lookingFor.length());
-        
+
         break;
       }
     }
@@ -90,7 +79,6 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
     }
     return name;
   }
-
 
   private static List<String[]> vowelSoundsList = new ArrayList<>();
 
@@ -111,13 +99,9 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
     vowelSoundsList.add(new String[] {"u", "o", "oo", "ew", "ue", "ui", "ou"});
   }
 
-
   private Transformer transformer;
 
   public void setTransformer(Transformer transformer) {
     this.transformer = transformer;
   }
-
-
-
 }
