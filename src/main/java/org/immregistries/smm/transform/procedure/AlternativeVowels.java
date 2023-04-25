@@ -16,7 +16,9 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
                      LAST_NAME(5, 1),
                      MOTHERS_MAIDEN_NAME(6, 1),
                      MOTHERS_MAIDEN_FIRST_NAME(6, 2),
-                     ADDRESS_STREET(11, 1);
+                     ADDRESS_STREET(11, 1),
+                     ADDRESS_CITY(11, 3),
+                     EMAIL(13, 4);
 
     int fieldPos;
     int subPos;

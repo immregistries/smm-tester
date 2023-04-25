@@ -20,7 +20,9 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
             Arrays.asList("PID-5.3", ProcedureFactory.MIDDLE_NAME_ALTERNATIVE_VOWELS),
             Arrays.asList("PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS),
             Arrays.asList("PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS),
-            Arrays.asList("PID-11.1", ProcedureFactory.ADDRESS_STREET_ALTERNATIVE_VOWELS));
+            Arrays.asList("PID-11.1", ProcedureFactory.ADDRESS_STREET_ALTERNATIVE_VOWELS),
+            Arrays.asList("PID-11.3", ProcedureFactory.ADDRESS_CITY_ALTERNATIVE_VOWELS),
+            Arrays.asList("PID-13.4", ProcedureFactory.EMAIL_ALTERNATIVE_VOWELS));
 
     for (List<String> pair : locationProcedurePairs) {
       for (int i = 0; i < 100; i++) {
@@ -40,6 +42,8 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
         testVariationDifferent("Chewie", location, procedure, transformer);
         testVariationDifferent("100 Figaro Ave.", location, procedure, transformer);
         testVariationDifferent("Bobby Lee", location, procedure, transformer);
+        testVariationDifferent("Green Bay", location, procedure, transformer);
+        testVariationDifferent("test.email@gmail.com", location, procedure, transformer);
 
         // won't change first letter so "i" or "e" has to change
         assertTrue(AlternativeVowels.varyName("Annie", transformer).startsWith("Ann"));
@@ -57,10 +61,6 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     String testEnd = transform(DEFAULT_TEST_MESSAGE, location + "=" + endValue);
     testEquals(testStart, testEnd, procedure);
-
-
-    //    System.out.println(
-    //        "location = " + location + "; startValue = " + startValue + "; endValue = " + endValue);
   }
 
   private void testVariationDifferent(String startValue, String location, String procedure,
@@ -83,9 +83,6 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
 
     assertTrue(startValue.equals(procedureResult)
         || procedureResult.startsWith(startValue.substring(0, 1)));
-
-    System.out.println("location = " + location + "; startValue = " + startValue
-        + "; procedureResult = " + procedureResult);
   }
 
 }
