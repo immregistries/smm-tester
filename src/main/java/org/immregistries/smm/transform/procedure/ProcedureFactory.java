@@ -13,6 +13,8 @@ public class ProcedureFactory {
       "MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS";
   public static final String MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS =
       "MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS";
+  public static final String ADDRESS_STREET_ALTERNATIVE_VOWELS =
+      "ADDRESS_STREET_ALTERNATIVE_VOWELS";
 
   // alternative beginnings
   public static final String FIRST_NAME_ALTERNATIVE_BEGINNINGS =
@@ -127,6 +129,10 @@ public class ProcedureFactory {
         return new AlternativeVowels(AlternativeVowels.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS:
         return new AlternativeVowels(AlternativeVowels.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS:
+        return new AlternativeVowels(AlternativeVowels.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case ADDRESS_STREET_ALTERNATIVE_VOWELS:
+        return new AlternativeVowels(AlternativeVowels.Field.ADDRESS_STREET);
 
       // alternative beginnings
       case FIRST_NAME_ALTERNATIVE_BEGINNINGS:

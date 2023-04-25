@@ -14,12 +14,13 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
     Transformer transformer = new Transformer();
     // Testing multiple times to make sure random process is consistent
 
-    List<List<String>> locationProcedurePairs = Arrays.asList(
-        Arrays.asList("PID-5.1", ProcedureFactory.LAST_NAME_ALTERNATIVE_VOWELS),
-        Arrays.asList("PID-5.2", ProcedureFactory.FIRST_NAME_ALTERNATIVE_VOWELS),
-        Arrays.asList("PID-5.3", ProcedureFactory.MIDDLE_NAME_ALTERNATIVE_VOWELS),
-        Arrays.asList("PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS),
-        Arrays.asList("PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS));
+    List<List<String>> locationProcedurePairs =
+        Arrays.asList(Arrays.asList("PID-5.1", ProcedureFactory.LAST_NAME_ALTERNATIVE_VOWELS),
+            Arrays.asList("PID-5.2", ProcedureFactory.FIRST_NAME_ALTERNATIVE_VOWELS),
+            Arrays.asList("PID-5.3", ProcedureFactory.MIDDLE_NAME_ALTERNATIVE_VOWELS),
+            Arrays.asList("PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS),
+            Arrays.asList("PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS),
+            Arrays.asList("PID-11.1", ProcedureFactory.ADDRESS_STREET_ALTERNATIVE_VOWELS));
 
     for (List<String> pair : locationProcedurePairs) {
       for (int i = 0; i < 100; i++) {
@@ -37,6 +38,8 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
         testVariationDifferent("Goose", location, procedure, transformer);
         testVariationDifferent("Mouse", location, procedure, transformer);
         testVariationDifferent("Chewie", location, procedure, transformer);
+        testVariationDifferent("100 Figaro Ave.", location, procedure, transformer);
+        testVariationDifferent("Bobby Lee", location, procedure, transformer);
 
         // won't change first letter so "i" or "e" has to change
         assertTrue(AlternativeVowels.varyName("Annie", transformer).startsWith("Ann"));
@@ -54,6 +57,10 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     String testEnd = transform(DEFAULT_TEST_MESSAGE, location + "=" + endValue);
     testEquals(testStart, testEnd, procedure);
+
+
+    //    System.out.println(
+    //        "location = " + location + "; startValue = " + startValue + "; endValue = " + endValue);
   }
 
   private void testVariationDifferent(String startValue, String location, String procedure,
@@ -68,11 +75,17 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
     String result = processProcedureChangesMessage(testStart, procedure);
     HL7Reader reader = new HL7Reader(result);
     reader.advanceToSegment("PID");
+
     // looking up something like PID-5.1
-    String procedureResult = reader.getValue(Integer.parseInt(location.substring(4, 5)),
-        Integer.parseInt(location.substring(6, 7)));
+    String[] positions = location.split("-")[1].split("\\.");
+    String procedureResult =
+        reader.getValue(Integer.parseInt(positions[0]), Integer.parseInt(positions[1]));
+
     assertTrue(startValue.equals(procedureResult)
         || procedureResult.startsWith(startValue.substring(0, 1)));
+
+    System.out.println("location = " + location + "; startValue = " + startValue
+        + "; procedureResult = " + procedureResult);
   }
 
 }
