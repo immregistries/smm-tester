@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.text.WordUtils;
 import org.immregistries.smm.transform.TransformRequest;
 
 public abstract class ProcedureCommon implements ProcedureInterface {
@@ -224,10 +225,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
 
 
   protected static String capitalizeFirst(String namePart) {
-    if (namePart.length() <= 1) {
-      return namePart.toUpperCase();
-    }
-    return namePart.substring(0, 1).toUpperCase() + namePart.substring(1);
+    return WordUtils.capitalize(namePart);
   }
 
 
