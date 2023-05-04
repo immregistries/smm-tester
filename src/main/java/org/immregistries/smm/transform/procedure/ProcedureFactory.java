@@ -64,6 +64,7 @@ public class ProcedureFactory {
   public static final String MIDDLE_NAME_TYPO = "MIDDLE_NAME_TYPO";
   public static final String LAST_NAME_TYPO = "LAST_NAME_TYPO";
   public static final String MOTHERS_MAIDEN_NAME_TYPO = "MOTHERS_MAIDEN_NAME_TYPO";
+  public static final String MOTHERS_MAIDEN_FIRST_NAME_TYPO = "MOTHERS_MAIDEN_FIRST_NAME_TYPO";
   public static final String ADDRESS_STREET_TYPO = "ADDRESS_STREET_TYPO";
   public static final String ADDRESS_CITY_TYPO = "ADDRESS_CITY_TYPO";
   public static final String PHONE_TYPO = "PHONE_TYPO";
@@ -221,10 +222,12 @@ public class ProcedureFactory {
         return new TextTypo(TextTypo.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_TYPO:
         return new TextTypo(TextTypo.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_MAIDEN_FIRST_NAME_TYPO:
+        return new TextTypo(TextTypo.Field.MOTHERS_MAIDEN_FIRST_NAME);
       case ADDRESS_STREET_TYPO:
         return new TextTypo(TextTypo.Field.ADDRESS_STREET);
       case ADDRESS_CITY_TYPO:
-        return new TextTypo(TextTypo.Field.CITY);
+        return new TextTypo(TextTypo.Field.ADDRESS_CITY);
       case EMAIL_TYPO:
         return new TextTypo(TextTypo.Field.EMAIL);
       case PHONE_TYPO:

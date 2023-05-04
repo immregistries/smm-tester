@@ -12,15 +12,26 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
 
 
 
-  public static enum Field {
-                            FIRST_NAME,
-                            MIDDLE_NAME,
-                            LAST_NAME,
-                            MOTHERS_MAIDEN_NAME,
-                            CITY,
-                            ADDRESS_STREET,
-                            PHONE,
-                            EMAIL
+  public enum Field {
+                     FIRST_NAME(5, 2, false),
+                     MIDDLE_NAME(5, 3, false),
+                     LAST_NAME(5, 1, false),
+                     MOTHERS_MAIDEN_NAME(6, 1, false),
+                     MOTHERS_MAIDEN_FIRST_NAME(6, 2, false),
+                     ADDRESS_STREET(11, 1, false),
+                     ADDRESS_CITY(11, 3, false),
+                     PHONE(13, 7, true),
+                     EMAIL(13, 4, true);
+
+    int fieldPos;
+    int subPos;
+    boolean specialCase;
+
+    private Field(int fieldPos, int subPos, boolean specialCase) {
+      this.fieldPos = fieldPos;
+      this.subPos = subPos;
+      this.specialCase = specialCase;
+    }
   }
 
 
@@ -40,63 +51,43 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
-    {
-      for (String[] fields : fieldsList) {
-        String segmentName = fields[0];
-        if ("PID".equals(segmentName)) {
-          if (field == Field.LAST_NAME || field == Field.FIRST_NAME
-              || field == Field.ADDRESS_STREET || field == Field.MIDDLE_NAME
-              || field == Field.MOTHERS_MAIDEN_NAME || field == Field.CITY) {
-            int fieldPos = 5;
-            int subPos = 1;
-            if (field == Field.LAST_NAME) {
-              subPos = 1;
-            } else if (field == Field.FIRST_NAME) {
-              subPos = 2;
-            } else if (field == Field.MIDDLE_NAME) {
-              subPos = 3;
-            } else if (field == Field.CITY) {
-              fieldPos = 11;
-              subPos = 3;
-            } else if (field == Field.ADDRESS_STREET) {
-              fieldPos = 11;
-              subPos = 1;
-            } else if (field == Field.MOTHERS_MAIDEN_NAME) {
-              fieldPos = 6;
-              subPos = 1;
-            }
-            String name = readValue(fields, fieldPos, subPos);
-            name = varyText(name, transformer);
-            updateValue(name, fields, fieldPos, subPos);
-          } else if (field == Field.PHONE || field == Field.EMAIL) {
-            int fieldPos = 13;
-            String[] repeatFields = readRepeats(fields, fieldPos);
-            int pos = 0;
-            for (String value : repeatFields) {
-              if (field == Field.PHONE) {
-                int subPos = 7;
-                String phone = readRepeatValue(value, subPos);
-                if (phone.length() >= 4) {
-                  phone = varyText(phone, transformer);
-                  updateRepeat(phone, repeatFields, pos, subPos);
-                }
-              } else if (field == Field.EMAIL) {
-                int subPos = 4;
 
-                String email = readRepeatValue(value, subPos);
-                if (email.indexOf('@') > 0) {
-                  email = varyText(email, transformer);
-                  updateRepeat(email, repeatFields, pos, subPos);
-                }
+    for (String[] fields : fieldsList) {
+      String segmentName = fields[0];
+      if ("PID".equals(segmentName)) {
+        if (!field.specialCase) {
+          String value = readValue(fields, field.fieldPos, field.subPos);
+          value = varyText(value, transformer);
+          updateValue(value, fields, field.fieldPos, field.subPos);
+        } else {
+          int fieldPos = 13;
+          String[] repeatFields = readRepeats(fields, fieldPos);
+          int pos = 0;
+          for (String value : repeatFields) {
+            if (field == Field.PHONE) {
+              int subPos = 7;
+              String phone = readRepeatValue(value, subPos);
+              if (phone.length() >= 4) {
+                phone = varyText(phone, transformer);
+                updateRepeat(phone, repeatFields, pos, subPos);
               }
-              pos++;
+            } else if (field == Field.EMAIL) {
+              int subPos = 4;
+
+              String email = readRepeatValue(value, subPos);
+              if (email.indexOf('@') > 0) {
+                email = varyText(email, transformer);
+                updateRepeat(email, repeatFields, pos, subPos);
+              }
             }
-            String fieldFinal = createRepeatValue(repeatFields);
-            updateContent(fieldFinal, fields, fieldPos);
+            pos++;
           }
+          String fieldFinal = createRepeatValue(repeatFields);
+          updateContent(fieldFinal, fields, fieldPos);
         }
       }
     }
+
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
