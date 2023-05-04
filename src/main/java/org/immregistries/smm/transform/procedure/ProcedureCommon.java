@@ -225,7 +225,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
 
 
   protected static String capitalizeFirst(String namePart) {
-    return WordUtils.capitalize(namePart);
+    return WordUtils.capitalize(namePart, ' ', '-');
   }
 
 

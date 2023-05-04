@@ -26,6 +26,13 @@ public class ProcedureFactory {
   public static final String LAST_NAME_ALTERNATIVE_BEGINNINGS = "LAST_NAME_ALTERNATIVE_BEGINNINGS";
   public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS =
       "MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS";
+  public static final String MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_BEGINNINGS =
+      "MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_BEGINNINGS";
+  public static final String ADDRESS_STREET_ALTERNATIVE_BEGINNINGS =
+      "ADDRESS_STREET_ALTERNATIVE_BEGINNINGS";
+  public static final String ADDRESS_CITY_ALTERNATIVE_BEGINNINGS =
+      "ADDRESS_CITY_ALTERNATIVE_BEGINNINGS";
+  public static final String EMAIL_ALTERNATIVE_BEGINNINGS = "EMAIL_ALTERNATIVE_BEGINNINGS";
 
   // alternative endings
   public static final String FIRST_NAME_ALTERNATIVE_ENDINGS = "FIRST_NAME_ALTERNATIVE_ENDINGS";
@@ -149,6 +156,14 @@ public class ProcedureFactory {
         return new AlternativeBeginnings(AlternativeBeginnings.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS:
         return new AlternativeBeginnings(AlternativeBeginnings.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_BEGINNINGS:
+        return new AlternativeBeginnings(AlternativeBeginnings.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case ADDRESS_STREET_ALTERNATIVE_BEGINNINGS:
+        return new AlternativeBeginnings(AlternativeBeginnings.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_ALTERNATIVE_BEGINNINGS:
+        return new AlternativeBeginnings(AlternativeBeginnings.Field.ADDRESS_CITY);
+      case EMAIL_ALTERNATIVE_BEGINNINGS:
+        return new AlternativeBeginnings(AlternativeBeginnings.Field.EMAIL);
 
       // alternative endings
       case FIRST_NAME_ALTERNATIVE_ENDINGS:
