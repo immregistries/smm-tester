@@ -40,6 +40,12 @@ public class ProcedureFactory {
   public static final String LAST_NAME_ALTERNATIVE_ENDINGS = "LAST_NAME_ALTERNATIVE_ENDINGS";
   public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS =
       "MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS";
+  public static final String MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_ENDINGS =
+      "OTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_ENDINGS";
+  public static final String ADDRESS_STREET_ALTERNATIVE_ENDINGS =
+      "ADDRESS_STREET_ALTERNATIVE_ENDINGS";
+  public static final String ADDRESS_CITY_ALTERNATIVE_ENDINGS = "ADDRESS_CITY_ALTERNATIVE_ENDINGS";
+  public static final String EMAIL_ALTERNATIVE_ENDINGS = "EMAIL_ALTERNATIVE_ENDINGS";
 
   // add variation
   public static final String FIRST_NAME_ADD_VARIATION = "FIRST_NAME_ADD_VARIATION";
@@ -174,6 +180,14 @@ public class ProcedureFactory {
         return new AlternativeEndings(AlternativeEndings.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS:
         return new AlternativeEndings(AlternativeEndings.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_ENDINGS:
+        return new AlternativeEndings(AlternativeEndings.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case ADDRESS_STREET_ALTERNATIVE_ENDINGS:
+        return new AlternativeEndings(AlternativeEndings.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_ALTERNATIVE_ENDINGS:
+        return new AlternativeEndings(AlternativeEndings.Field.ADDRESS_CITY);
+      case EMAIL_ALTERNATIVE_ENDINGS:
+        return new AlternativeEndings(AlternativeEndings.Field.EMAIL);
 
       // add variation
       case FIRST_NAME_ADD_VARIATION:
