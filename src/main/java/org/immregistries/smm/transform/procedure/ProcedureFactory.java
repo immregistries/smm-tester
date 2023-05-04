@@ -53,6 +53,11 @@ public class ProcedureFactory {
   public static final String LAST_NAME_ADD_VARIATION = "LAST_NAME_ADD_VARIATION";
   public static final String MOTHERS_MAIDEN_NAME_ADD_VARIATION =
       "MOTHERS_MAIDEN_NAME_ADD_VARIATION";
+  public static final String MOTHERS_MAIDEN_FIRST_NAME_ADD_VARIATION =
+      "MOTHERS_MAIDEN_FIRST_NAME_ADD_VARIATION";
+  public static final String ADDRESS_STREET_ADD_VARIATION = "ADDRESS_STREET_ADD_VARIATION";
+  public static final String ADDRESS_CITY_ADD_VARIATION = "ADDRESS_CITY_ADD_VARIATION";
+  public static final String EMAIL_ADD_VARIATION = "EMAIL_ADD_VARIATION";
 
   // typo
   public static final String FIRST_NAME_TYPO = "FIRST_NAME_TYPO";
@@ -198,6 +203,14 @@ public class ProcedureFactory {
         return new AddVariation(AddVariation.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_ADD_VARIATION:
         return new AddVariation(AddVariation.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_MAIDEN_FIRST_NAME_ADD_VARIATION:
+        return new AddVariation(AddVariation.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case ADDRESS_STREET_ADD_VARIATION:
+        return new AddVariation(AddVariation.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_ADD_VARIATION:
+        return new AddVariation(AddVariation.Field.ADDRESS_CITY);
+      case EMAIL_ADD_VARIATION:
+        return new AddVariation(AddVariation.Field.EMAIL);
 
       // typo
       case FIRST_NAME_TYPO:
