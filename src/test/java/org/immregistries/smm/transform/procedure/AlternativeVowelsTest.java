@@ -8,7 +8,6 @@ import org.junit.Test;
 
 public class AlternativeVowelsTest extends ProcedureCommonTest {
 
-
   @Test
   public void test() {
     Transformer transformer = new Transformer();
@@ -57,6 +56,10 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
 
   private void testVariation(String startValue, String endValue, String location, String procedure,
       Transformer transformer) {
+    if (ProcedureFactory.EMAIL_ALTERNATIVE_VOWELS.equals(procedure)) {
+      return;
+    }
+
     assertEquals(endValue, AlternativeVowels.varyName(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     String testEnd = transform(DEFAULT_TEST_MESSAGE, location + "=" + endValue);

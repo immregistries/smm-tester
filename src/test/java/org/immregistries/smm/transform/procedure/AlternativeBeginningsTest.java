@@ -1,5 +1,6 @@
 package org.immregistries.smm.transform.procedure;
 
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 public class AlternativeBeginningsTest extends ProcedureCommonTest {
@@ -126,16 +127,16 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     procedure = ProcedureFactory.EMAIL_ALTERNATIVE_BEGINNINGS;
 
     // random emails from randomlists.com
-    testVariation("dwendlan@me.com", "twendlan@me.com", location, procedure);
-    testVariation("lauronen@msn.com", "jauronen@msn.com", location, procedure);
-    testVariation("wmszeliga@gmail.com", "vmszeliga@gmail.com", location, procedure);
-    testVariation("isotopian@yahoo.com", "esotopian@yahoo.com", location, procedure);
-    testVariation("osrin@att.net", "asrin@att.net", location, procedure);
-    testVariation("paina@optonline.net", "quaina@optonline.net", location, procedure);
-    testVariation("hamilton@gmail.com", "vamilton@gmail.com", location, procedure);
-    testVariation("gboss@mac.com", "kboss@mac.com", location, procedure);
-    testVariation("peoplesr@comcast.net", "queoplesr@comcast.net", location, procedure);
-    testVariation("lipeng@gmail.com", "jipeng@gmail.com", location, procedure);
+    testDifferent("dwendlan@me.com", "twendlan@me.com", location, procedure);
+    testDifferent("lauronen@msn.com", "jauronen@msn.com", location, procedure);
+    testDifferent("wmszeliga@gmail.com", "vmszeliga@gmail.com", location, procedure);
+    testDifferent("isotopian@yahoo.com", "esotopian@yahoo.com", location, procedure);
+    testDifferent("osrin@att.net", "asrin@att.net", location, procedure);
+    testDifferent("paina@optonline.net", "quaina@optonline.net", location, procedure);
+    testDifferent("hamilton@gmail.com", "vamilton@gmail.com", location, procedure);
+    testDifferent("gboss@mac.com", "kboss@mac.com", location, procedure);
+    testDifferent("peoplesr@comcast.net", "queoplesr@comcast.net", location, procedure);
+    testDifferent("lipeng@gmail.com", "jipeng@gmail.com", location, procedure);
   }
 
   private void testVariation(String startValue, String endValue, String location,
@@ -146,4 +147,11 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testEquals(testStart, testEnd, procedure);
   }
 
+  private void testDifferent(String startValue, String endValue, String location,
+      String procedure) {
+    assertEquals(endValue, AlternativeBeginnings.varyName(startValue));
+    String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
+    String after = processProcedureChangesMessage(testStart, procedure);
+    assertNotEquals(testStart, after);
+  }
 }

@@ -10,21 +10,23 @@ import org.immregistries.smm.transform.Transformer;
 public class AlternativeBeginnings extends ProcedureCommon implements ProcedureInterface {
 
   public enum Field {
-                     FIRST_NAME(5, 2),
-                     MIDDLE_NAME(5, 3),
-                     LAST_NAME(5, 1),
-                     MOTHERS_MAIDEN_NAME(6, 1),
-                     MOTHERS_MAIDEN_FIRST_NAME(6, 2),
-                     ADDRESS_STREET(11, 1),
-                     ADDRESS_CITY(11, 3),
-                     EMAIL(13, 4);
+                     FIRST_NAME(5, 2, false),
+                     MIDDLE_NAME(5, 3, false),
+                     LAST_NAME(5, 1, false),
+                     MOTHERS_MAIDEN_NAME(6, 1, false),
+                     MOTHERS_MAIDEN_FIRST_NAME(6, 2, false),
+                     ADDRESS_STREET(11, 1, false),
+                     ADDRESS_CITY(11, 3, false),
+                     EMAIL(13, 4, true);
 
     int fieldPos;
     int subPos;
+    boolean repeatedField;
 
-    private Field(int fieldPos, int subPos) {
+    private Field(int fieldPos, int subPos, boolean repeatedField) {
       this.fieldPos = fieldPos;
       this.subPos = subPos;
+      this.repeatedField = repeatedField;
     }
   }
 
@@ -41,9 +43,27 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
     for (String[] fields : fieldsList) {
       String segmentName = fields[0];
       if ("PID".equals(segmentName)) {
-        String value = readValue(fields, field.fieldPos, field.subPos);
-        value = varyName(value);
-        updateValue(value, fields, field.fieldPos, field.subPos);
+        if (!field.repeatedField) {
+          String value = readValue(fields, field.fieldPos, field.subPos);
+          value = varyName(value);
+          updateValue(value, fields, field.fieldPos, field.subPos);
+        } else {
+          int fieldPos = 13;
+          String[] repeatFields = readRepeats(fields, fieldPos);
+          int pos = 0;
+          for (String value : repeatFields) {
+            int subPos = 4;
+
+            String email = readRepeatValue(value, subPos);
+            if (email.indexOf('@') > 0) {
+              email = varyName(email);
+              updateRepeat(email, repeatFields, pos, subPos);
+            }
+            pos++;
+          }
+          String fieldFinal = createRepeatValue(repeatFields);
+          updateContent(fieldFinal, fields, fieldPos);
+        }
       }
     }
 

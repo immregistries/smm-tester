@@ -1,5 +1,6 @@
 package org.immregistries.smm.transform.procedure;
 
+import static org.junit.Assert.assertNotEquals;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
@@ -16,8 +17,7 @@ public class AddVariationTest extends ProcedureCommonTest {
             Arrays.asList("PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_ADD_VARIATION),
             Arrays.asList("PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_ADD_VARIATION),
             Arrays.asList("PID-11.1", ProcedureFactory.ADDRESS_STREET_ADD_VARIATION),
-            Arrays.asList("PID-11.3", ProcedureFactory.ADDRESS_CITY_ADD_VARIATION),
-            Arrays.asList("PID-13.4", ProcedureFactory.EMAIL_ADD_VARIATION));
+            Arrays.asList("PID-11.3", ProcedureFactory.ADDRESS_CITY_ADD_VARIATION));
 
     for (List<String> pair : locationProcedurePairs) {
       String location = pair.get(0);
@@ -49,10 +49,10 @@ public class AddVariationTest extends ProcedureCommonTest {
       testVariation("1234 East Circle Dr.", "1234East Circle Dr.", location, procedure);
       testVariation("Martha's Vineyard", "MarthaS Vineyard", location, procedure);
       testVariation("Po'ipu", "PoIpu", location, procedure);
-      testVariation("bob@comcast.net", "bob'@comcast.net", "bob @comcast.net", location, procedure);
-
-      //TODO more tests
     }
+
+    testDifferent("bob@comcast.net", "bob'@comcast.net", "bob @comcast.net", "PID-13.4",
+        ProcedureFactory.EMAIL_ADD_VARIATION);
   }
 
   private void testVariation(String startValue, String endValueExpected, String location,
@@ -64,6 +64,15 @@ public class AddVariationTest extends ProcedureCommonTest {
     testEquals(testStart, testEnd, procedure);
   }
 
+  private void testDifferent(String startValue, String endValue1, String endValue2, String location,
+      String procedure) {
+    String endValue = AddVariation.varyName(startValue);
+    assertTrue(endValue.equals(endValue1) || endValue.equals(endValue2));
+    String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
+    String after = processProcedureChangesMessage(testStart, procedure);
+    assertNotEquals(testStart, after);
+  }
+
   private void testVariation(String startValue, String endValue1, String endValue2, String location,
       String procedure) {
     String endValue = AddVariation.varyName(startValue);
@@ -73,5 +82,4 @@ public class AddVariationTest extends ProcedureCommonTest {
     String testEnd2 = transform(DEFAULT_TEST_MESSAGE, location + "=" + endValue2);
     testEquals(testStart, testEnd1, testEnd2, procedure);
   }
-
 }

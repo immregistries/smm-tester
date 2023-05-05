@@ -71,7 +71,13 @@ public class ProcedureFactory {
   public static final String EMAIL_TYPO = "EMAIL_TYPO";
 
   // change
+  public static final String FIRST_NAME_CHANGE = "FIRST_NAME_CHANGE";
+  public static final String MIDDLE_NAME_CHANGE = "MIDDLE_NAME_CHANGE";
+  public static final String LAST_NAME_CHANGE = "LAST_NAME_CHANGE";
+  public static final String MOTHERS_MAIDEN_NAME_CHANGE = "MOTHERS_MAIDEN_NAME_CHANGE";
+  public static final String MOTHERS_MAIDEN_FIRST_NAME_CHANGE = "MOTHERS_MAIDEN_FIRST_NAME_CHANGE";
   public static final String ADDRESS_STREET_CHANGE = "ADDRESS_STREET_CHANGE";
+  public static final String ADDRESS_CITY_CHANGE = "ADDRESS_CITY_CHANGE";
   public static final String EMAIL_CHANGE = "EMAIL_CHANGE";
   public static final String PHONE_CHANGE = "PHONE_CHANGE";
 
@@ -234,8 +240,20 @@ public class ProcedureFactory {
         return new TextTypo(TextTypo.Field.PHONE);
 
       // change
-      case ADDRESS_STREET_CHANGE: //TODO is this a change or a variation?
+      case FIRST_NAME_CHANGE:
+        return new TextChange(TextChange.Field.FIRST_NAME);
+      case MIDDLE_NAME_CHANGE:
+        return new TextChange(TextChange.Field.MIDDLE_NAME);
+      case LAST_NAME_CHANGE:
+        return new TextChange(TextChange.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_CHANGE:
+        return new TextChange(TextChange.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_MAIDEN_FIRST_NAME_CHANGE:
+        return new TextChange(TextChange.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case ADDRESS_STREET_CHANGE:
         return new AddressStreetVariation();
+      case ADDRESS_CITY_CHANGE:
+        return new TextChange(TextChange.Field.ADDRESS_CITY);
       case EMAIL_CHANGE:
         return new TextChange(TextChange.Field.EMAIL);
       case PHONE_CHANGE:

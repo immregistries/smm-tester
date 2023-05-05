@@ -25,12 +25,12 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
 
     int fieldPos;
     int subPos;
-    boolean specialCase;
+    boolean repeatedField;
 
-    private Field(int fieldPos, int subPos, boolean specialCase) {
+    private Field(int fieldPos, int subPos, boolean repeatedField) {
       this.fieldPos = fieldPos;
       this.subPos = subPos;
-      this.specialCase = specialCase;
+      this.repeatedField = repeatedField;
     }
   }
 
@@ -55,7 +55,7 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
     for (String[] fields : fieldsList) {
       String segmentName = fields[0];
       if ("PID".equals(segmentName)) {
-        if (!field.specialCase) {
+        if (!field.repeatedField) {
           String value = readValue(fields, field.fieldPos, field.subPos);
           value = varyText(value, transformer);
           updateValue(value, fields, field.fieldPos, field.subPos);
@@ -90,8 +90,6 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
 
     putMessageBackTogether(transformRequest, fieldsList);
   }
-
-
 
   protected static String varyText(String name, Transformer transformer) {
     boolean upperCase = name.toUpperCase().equals(name);
@@ -158,7 +156,4 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
     typoesMap.put("@", "2!#");
     typoesMap.put(".", ",>");
   }
-
-
-
 }
