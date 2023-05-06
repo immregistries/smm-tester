@@ -157,6 +157,16 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
     consonantClusterMapList.add(new String[] {"x", "ek"});
     consonantClusterMapList.add(new String[] {"y", "w"});
     consonantClusterMapList.add(new String[] {"z", "s"});
+    consonantClusterMapList.add(new String[] {"1", "2"});
+    consonantClusterMapList.add(new String[] {"2", "3"});
+    consonantClusterMapList.add(new String[] {"3", "4"});
+    consonantClusterMapList.add(new String[] {"4", "5"});
+    consonantClusterMapList.add(new String[] {"5", "6"});
+    consonantClusterMapList.add(new String[] {"6", "7"});
+    consonantClusterMapList.add(new String[] {"7", "8"});
+    consonantClusterMapList.add(new String[] {"8", "9"});
+    consonantClusterMapList.add(new String[] {"9", "0"});
+    consonantClusterMapList.add(new String[] {"0", "1"});
   }
 
   public void setTransformer(Transformer transformer) {

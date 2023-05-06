@@ -87,6 +87,12 @@ public class ProcedureFactory {
   public static final String LAST_NAME_REPEATED_CONSONANTS = "LAST_NAME_REPEATED_CONSONANTS";
   public static final String MOTHERS_MAIDEN_NAME_REPEATED_CONSONANTS =
       "MOTHERS_MAIDEN_NAME_REPEATED_CONSONANTS";
+  public static final String MOTHERS_MAIDEN_FIRST_NAME_REPEATED_CONSONANTS =
+      "MOTHERS_MAIDEN_FIRST_NAME_REPEATED_CONSONANTS";
+  public static final String ADDRESS_STREET_REPEATED_CONSONANTS =
+      "ADDRESS_STREET_REPEATED_CONSONANTS";
+  public static final String ADDRESS_CITY_REPEATED_CONSONANTS = "ADDRESS_CITY_REPEATED_CONSONANTS";
+  public static final String EMAIL_REPEATED_CONSONANTS = "EMAIL_REPEATED_CONSONANTS";
 
   // hyphen variation
   public static final String LAST_NAME_HYPHENATE_VARIATION = "LAST_NAME_HYPHENATE_VARIATION";
@@ -268,6 +274,14 @@ public class ProcedureFactory {
         return new RepeatedConsonants(RepeatedConsonants.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_REPEATED_CONSONANTS:
         return new RepeatedConsonants(RepeatedConsonants.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_MAIDEN_FIRST_NAME_REPEATED_CONSONANTS:
+        return new RepeatedConsonants(RepeatedConsonants.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case ADDRESS_STREET_REPEATED_CONSONANTS:
+        return new RepeatedConsonants(RepeatedConsonants.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_REPEATED_CONSONANTS:
+        return new RepeatedConsonants(RepeatedConsonants.Field.ADDRESS_CITY);
+      case EMAIL_REPEATED_CONSONANTS:
+        return new RepeatedConsonants(RepeatedConsonants.Field.EMAIL);
 
       // hyphen variation
       case LAST_NAME_HYPHENATE_VARIATION:

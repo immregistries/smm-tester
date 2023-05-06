@@ -46,6 +46,8 @@ public class ProcedureCommonTest extends TestCase {
     testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
     Transformer transformer = new Transformer();
     transformer.transform(testCaseMessage);
+    System.out.println("after = " + testCaseMessage.getMessageText());
+    System.out.println("---------------------------");
     assertNotEquals(om, testCaseMessage.getMessageText());
   }
 

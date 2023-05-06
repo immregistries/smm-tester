@@ -79,16 +79,16 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
     location = "PID-11.1";
     procedure = ProcedureFactory.ADDRESS_STREET_ALTERNATIVE_ENDINGS;
 
-    testVariation("Crescent Ln.", "Crescent Lmm.", location, procedure);
-    testVariation("North La Sierra Dr.", "North La Sierra Drrie.", location, procedure);
-    testVariation("Beechwood Drive", "Beechwood Drivee", location, procedure);
-    testVariation("Gainsway Ave", "Gainsway Avee", location, procedure);
-    testVariation("Denning Road", "Denning Roadd", location, procedure);
-    testVariation("Glen Ridge Blvd.", "Glen Ridge Blvdd.", location, procedure);
-    testVariation("Bohemia Circ;", "Bohemia Cirk;", location, procedure);
-    testVariation("Albany Street", "Albany Streets", location, procedure);
-    testVariation("Abbey Rd.", "Abbey Rdy.", location, procedure);
-    testVariation("Shore Ave.", "Shore Avee.", location, procedure);
+    testVariation("555 Crescent Ln.", "555 Crescent Lmm.", location, procedure);
+    testVariation("1000 North La Sierra Dr.", "1000 North La Sierra Drrie.", location, procedure);
+    testVariation("808 Beechwood Drive", "808 Beechwood Drivee", location, procedure);
+    testVariation("W984 Gainsway Ave", "W984 Gainsway Avee", location, procedure);
+    testVariation("N9655 Denning Road", "N9655 Denning Roadd", location, procedure);
+    testVariation("12 Glen Ridge Blvd.", "12 Glen Ridge Blvdd.", location, procedure);
+    testVariation("100a Bohemia Circ;", "100a Bohemia Cirk;", location, procedure);
+    testVariation("988112 Albany Street", "988112 Albany Streets", location, procedure);
+    testVariation("16 Abbey Rd.", "16 Abbey Rdy.", location, procedure);
+    testVariation("5 Shore Ave.", "5 Shore Avee.", location, procedure);
 
     location = "PID-11.3";
     procedure = ProcedureFactory.ADDRESS_CITY_ALTERNATIVE_ENDINGS;
