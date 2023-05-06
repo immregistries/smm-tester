@@ -96,9 +96,6 @@ public class RepeatedConsonantsTest extends ProcedureCommonTest {
       Transformer transformer) {
     assertNotEquals(startValue, RepeatedConsonants.varyName(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
-
-    System.out.println("testStart = " + testStart);
-
     testProcedureChangesMessage(testStart, procedure);
   }
 }

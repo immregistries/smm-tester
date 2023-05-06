@@ -76,18 +76,7 @@ public class AdministrativeSexVariation extends ProcedureCommon implements Proce
     return -1;
   }
 
-  protected static String capitalizeFirst(String namePart) {
-    if (namePart.length() <= 1) {
-      return namePart.toUpperCase();
-    }
-    return namePart.substring(0, 1).toUpperCase() + namePart.substring(1);
-  }
-
-
   public void setTransformer(Transformer transformer) {
     // not needed
   }
-
-
-
 }

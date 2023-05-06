@@ -95,7 +95,17 @@ public class ProcedureFactory {
   public static final String EMAIL_REPEATED_CONSONANTS = "EMAIL_REPEATED_CONSONANTS";
 
   // hyphen variation
+  public static final String FIRST_NAME_HYPHENATE_VARIATION = "FIRST_NAME_HYPHENATE_VARIATION";
+  public static final String MIDDLE_NAME_HYPHENATE_VARIATION = "MIDDLE_NAME_HYPHENATE_VARIATION";
   public static final String LAST_NAME_HYPHENATE_VARIATION = "LAST_NAME_HYPHENATE_VARIATION";
+  public static final String MOTHERS_MAIDEN_NAME_HYPHENATE_VARIATION =
+      "MOTHERS_MAIDEN_NAME_HYPHENATE_VARIATION";
+  public static final String MOTHERS_MAIDEN_FIRST_NAME_HYPHENATE_VARIATION =
+      "MOTHERS_MAIDEN_FIRST_NAME_HYPHENATE_VARIATION";
+  public static final String ADDRESS_STREET_HYPHENATE_VARIATION =
+      "ADDRESS_STREET_HYPHENATE_VARIATION";
+  public static final String ADDRESS_CITY_HYPHENATE_VARIATION = "ADDRESS_CITY_HYPHENATE_VARIATION";
+  public static final String EMAIL_HYPHENATE_VARIATION = "EMAIL_HYPHENATE_VARIATION";
 
   // remove aira suffix
   public static final String FIRST_NAME_REMOVE_AIRA_SUFFIX = "FIRST_NAME_REMOVE_AIRA_SUFFIX";
@@ -284,8 +294,22 @@ public class ProcedureFactory {
         return new RepeatedConsonants(RepeatedConsonants.Field.EMAIL);
 
       // hyphen variation
+      case FIRST_NAME_HYPHENATE_VARIATION:
+        return new HyphenateVariation(HyphenateVariation.Field.FIRST_NAME);
+      case MIDDLE_NAME_HYPHENATE_VARIATION:
+        return new HyphenateVariation(HyphenateVariation.Field.MIDDLE_NAME);
       case LAST_NAME_HYPHENATE_VARIATION:
-        return new LastNameHyphenateVariation();
+        return new HyphenateVariation(HyphenateVariation.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_HYPHENATE_VARIATION:
+        return new HyphenateVariation(HyphenateVariation.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_MAIDEN_FIRST_NAME_HYPHENATE_VARIATION:
+        return new HyphenateVariation(HyphenateVariation.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case ADDRESS_STREET_HYPHENATE_VARIATION:
+        return new HyphenateVariation(HyphenateVariation.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_HYPHENATE_VARIATION:
+        return new HyphenateVariation(HyphenateVariation.Field.ADDRESS_CITY);
+      case EMAIL_HYPHENATE_VARIATION:
+        return new HyphenateVariation(HyphenateVariation.Field.EMAIL);
 
       // remove aira suffix
       case FIRST_NAME_REMOVE_AIRA_SUFFIX:

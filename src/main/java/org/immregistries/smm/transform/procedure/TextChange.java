@@ -92,14 +92,10 @@ public class TextChange extends ProcedureCommon implements ProcedureInterface {
 
     switch (field) {
       case FIRST_NAME:
-        value = transformer.getRandomValue(random.nextBoolean() ? "GIRL" : "BOY");
-        break;
       case MIDDLE_NAME:
         value = transformer.getRandomValue(random.nextBoolean() ? "GIRL" : "BOY");
         break;
       case LAST_NAME:
-        value = transformer.getRandomValue("LAST_NAME");
-        break;
       case MOTHERS_MAIDEN_NAME:
         value = transformer.getRandomValue("LAST_NAME");
         break;

@@ -6,7 +6,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class AddVariation extends ProcedureCommon implements ProcedureInterface {
+public class HyphenateVariation extends ProcedureCommon implements ProcedureInterface {
 
   public enum Field {
                      FIRST_NAME(5, 2, false),
@@ -30,21 +30,21 @@ public class AddVariation extends ProcedureCommon implements ProcedureInterface 
   }
 
   private Field field;
+  private Transformer transformer;
 
-  public AddVariation(Field field) {
+  public HyphenateVariation(Field field) {
     this.field = field;
   }
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
-
     for (String[] fields : fieldsList) {
       String segmentName = fields[0];
       if ("PID".equals(segmentName)) {
         if (!field.repeatedField) {
           String value = readValue(fields, field.fieldPos, field.subPos);
-          value = varyName(value);
+          value = varyName(value, transformer, field);
           updateValue(value, fields, field.fieldPos, field.subPos);
         } else {
           int fieldPos = 13;
@@ -55,7 +55,7 @@ public class AddVariation extends ProcedureCommon implements ProcedureInterface 
 
             String email = readRepeatValue(value, subPos);
             if (email.indexOf('@') > 0) {
-              email = varyName(email);
+              email = varyName(email, transformer, field);
               updateRepeat(email, repeatFields, pos, subPos);
             }
             pos++;
@@ -65,40 +65,72 @@ public class AddVariation extends ProcedureCommon implements ProcedureInterface 
         }
       }
     }
-
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
-  protected static String varyName(String name) {
-    if (name.startsWith("'") || name.endsWith("'")) {
+  protected static String varyName(String name, Transformer transformer, Field field) {
+    String nameOriginal = name;
+
+    if (name.startsWith("-") || name.endsWith("-")) {
       return name;
     }
+
     boolean upperCase = name.toUpperCase().equals(name);
     boolean lowerCase = name.toLowerCase().equals(name);
 
-    int posApostrophe = name.indexOf('\'');
+    boolean isEmail = field == Field.EMAIL;
 
-    int posSpace = name.indexOf(' ');
-    boolean hasApostrophe = posApostrophe > 0 && (posApostrophe + 1) < name.length();
-    boolean hasSpace = posSpace > 0 && (posSpace + 1) < name.length();
-    if (hasApostrophe) {
-      name = name.substring(0, posApostrophe) + capitalizeFirst(name.substring(posApostrophe + 1));
-    } else if (hasSpace) {
-      name = name.substring(0, posSpace) + capitalizeFirst(name.substring(posSpace + 1));
+    int pos = name.indexOf('-');
+    if (!isEmail && pos > 0 && (pos + 1) < name.length()) {
+      name =
+          capitalizeFirst(name.substring(0, pos)) + " " + capitalizeFirst(name.substring(pos + 1));
     } else {
-      int pos = findAnotherCapital(name);
-      if (pos == -1) {
-        pos = findFirstConsonantAfterVowel(name);
-      }
-      if (pos > 0 && pos < name.length()) {
-        if (System.currentTimeMillis() % 2 == 0) {
-          name = name.substring(0, pos) + "'" + capitalizeFirst(name.substring(pos));
-        } else {
-          name = name.substring(0, pos) + " " + capitalizeFirst(name.substring(pos));
+      pos = name.indexOf(' ');
+      if (!isEmail && pos > 0 && (pos + 1) < name.length()) {
+        name = capitalizeFirst(name.substring(0, pos)) + "-"
+            + capitalizeFirst(name.substring(pos + 1));
+      } else {
+        try {
+          String randomValue;
+          switch (field) {
+            case FIRST_NAME:
+            case MIDDLE_NAME:
+              randomValue = transformer
+                  .getRandomValue(transformer.getRandom().nextBoolean() ? "BOY" : "GIRL");
+              break;
+            case MOTHERS_MAIDEN_FIRST_NAME:
+              randomValue = transformer.getRandomValue("GIRL");
+              break;
+            case ADDRESS_STREET:
+              randomValue = transformer.getRandomValue("STREET_NAME");
+              break;
+            case ADDRESS_CITY:
+              randomValue = transformer.getRandomValue("CITY");
+              break;
+            case EMAIL:
+              randomValue =
+                  transformer.getRandomValue("LAST_NAME").replaceAll("\\s+", "").toLowerCase();
+              break;
+            case LAST_NAME:
+            case MOTHERS_MAIDEN_NAME:
+            default:
+              randomValue = transformer.getRandomValue("LAST_NAME");
+              break;
+          }
+
+          if (field != Field.EMAIL) {
+            name = capitalizeFirst(name) + "-" + capitalizeFirst(randomValue);
+          } else {
+            String[] emailParts = name.split("\\@");
+            name = capitalizeFirst(emailParts[0]) + "-" + capitalizeFirst(randomValue) + "@"
+                + emailParts[1];
+            name = name.replaceAll("\\s+", "");
+          }
+        } catch (Throwable e) {
+          e.printStackTrace();
         }
       }
     }
-
     if (upperCase) {
       name = name.toUpperCase();
     } else if (lowerCase) {
@@ -107,38 +139,7 @@ public class AddVariation extends ProcedureCommon implements ProcedureInterface 
     return name;
   }
 
-  protected static int findFirstConsonantAfterVowel(String name) {
-    int pos = 0;
-    String fn = name.toUpperCase();
-    boolean foundVowel = false;
-    while (pos < fn.length()) {
-      char c = fn.charAt(pos);
-      if (c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
-        foundVowel = true;
-      } else if (foundVowel) {
-        return pos;
-      }
-      pos++;
-    }
-    return -1;
-  }
-
-  protected static int findAnotherCapital(String name) {
-    if (name.equals(name.toUpperCase())) {
-      return -1;
-    }
-    int pos = 1;
-    while (pos < name.length()) {
-      char c = name.charAt(pos);
-      if (c < 'a') {
-        return pos;
-      }
-      pos++;
-    }
-    return -1;
-  }
-
   public void setTransformer(Transformer transformer) {
-    // not needed
+    this.transformer = transformer;
   }
 }
