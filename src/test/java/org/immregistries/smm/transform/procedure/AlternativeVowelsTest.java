@@ -18,7 +18,7 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
             Arrays.asList("PID-5.2", ProcedureFactory.FIRST_NAME_ALTERNATIVE_VOWELS),
             Arrays.asList("PID-5.3", ProcedureFactory.MIDDLE_NAME_ALTERNATIVE_VOWELS),
             Arrays.asList("PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS),
-            Arrays.asList("PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS),
+            Arrays.asList("PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_ALTERNATIVE_VOWELS),
             Arrays.asList("PID-11.1", ProcedureFactory.ADDRESS_STREET_ALTERNATIVE_VOWELS),
             Arrays.asList("PID-11.3", ProcedureFactory.ADDRESS_CITY_ALTERNATIVE_VOWELS),
             Arrays.asList("PID-13.4", ProcedureFactory.EMAIL_ALTERNATIVE_VOWELS));

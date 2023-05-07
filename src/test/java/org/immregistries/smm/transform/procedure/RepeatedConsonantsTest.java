@@ -51,7 +51,7 @@ public class RepeatedConsonantsTest extends ProcedureCommonTest {
     testVariationDifferent("Pitts", location, procedure, transformer);
 
     location = "PID-6.2";
-    procedure = ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_REPEATED_CONSONANTS;
+    procedure = ProcedureFactory.MOTHERS_FIRST_NAME_REPEATED_CONSONANTS;
 
     testVariationDifferent("Daisy", location, procedure, transformer);
     testVariationDifferent("Mary", location, procedure, transformer);

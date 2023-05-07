@@ -14,7 +14,7 @@ public class TextChange extends ProcedureCommon implements ProcedureInterface {
                      MIDDLE_NAME(5, 3, false),
                      LAST_NAME(5, 1, false),
                      MOTHERS_MAIDEN_NAME(6, 1, false),
-                     MOTHERS_MAIDEN_FIRST_NAME(6, 2, false),
+                     MOTHERS_FIRST_NAME(6, 2, false),
                      ADDRESS_CITY(11, 3, false),
                      PHONE(13, 7, true),
                      EMAIL(13, 4, true);
@@ -99,7 +99,7 @@ public class TextChange extends ProcedureCommon implements ProcedureInterface {
       case MOTHERS_MAIDEN_NAME:
         value = transformer.getRandomValue("LAST_NAME");
         break;
-      case MOTHERS_MAIDEN_FIRST_NAME:
+      case MOTHERS_FIRST_NAME:
         value = transformer.getRandomValue("GIRL");
         break;
       case ADDRESS_CITY:

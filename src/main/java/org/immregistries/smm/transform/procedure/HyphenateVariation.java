@@ -13,7 +13,7 @@ public class HyphenateVariation extends ProcedureCommon implements ProcedureInte
                      MIDDLE_NAME(5, 3, false),
                      LAST_NAME(5, 1, false),
                      MOTHERS_MAIDEN_NAME(6, 1, false),
-                     MOTHERS_MAIDEN_FIRST_NAME(6, 2, false),
+                     MOTHERS_FIRST_NAME(6, 2, false),
                      ADDRESS_STREET(11, 1, false),
                      ADDRESS_CITY(11, 3, false),
                      EMAIL(13, 4, true);
@@ -69,8 +69,6 @@ public class HyphenateVariation extends ProcedureCommon implements ProcedureInte
   }
 
   protected static String varyName(String name, Transformer transformer, Field field) {
-    String nameOriginal = name;
-
     if (name.startsWith("-") || name.endsWith("-")) {
       return name;
     }
@@ -98,7 +96,7 @@ public class HyphenateVariation extends ProcedureCommon implements ProcedureInte
               randomValue = transformer
                   .getRandomValue(transformer.getRandom().nextBoolean() ? "BOY" : "GIRL");
               break;
-            case MOTHERS_MAIDEN_FIRST_NAME:
+            case MOTHERS_FIRST_NAME:
               randomValue = transformer.getRandomValue("GIRL");
               break;
             case ADDRESS_STREET:

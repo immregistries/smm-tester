@@ -14,7 +14,7 @@ public class AlternativeEndings extends ProcedureCommon implements ProcedureInte
                      MIDDLE_NAME(5, 3, false),
                      LAST_NAME(5, 1, false),
                      MOTHERS_MAIDEN_NAME(6, 1, false),
-                     MOTHERS_MAIDEN_FIRST_NAME(6, 2, false),
+                     MOTHERS_FIRST_NAME(6, 2, false),
                      ADDRESS_STREET(11, 1, false),
                      ADDRESS_CITY(11, 3, false),
                      EMAIL(13, 4, true);

@@ -40,13 +40,13 @@ public class TextTypoTest extends ProcedureCommonTest {
     testVariationDifferent("Threepwood", "PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO,
         transformer);
 
-    testVariationDifferent("Sandra", "PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_TYPO,
+    testVariationDifferent("Sandra", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_TYPO,
         transformer);
-    testVariationDifferent("Emily", "PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_TYPO,
+    testVariationDifferent("Emily", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_TYPO,
         transformer);
-    testVariationDifferent("Mary Sue", "PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_TYPO,
+    testVariationDifferent("Mary Sue", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_TYPO,
         transformer);
-    testVariationDifferent("Ye Sune", "PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_TYPO,
+    testVariationDifferent("Ye Sune", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_TYPO,
         transformer);
 
     testVariationDifferent("4356180", "PID-13.7", ProcedureFactory.PHONE_TYPO, transformer);
@@ -76,7 +76,7 @@ public class TextTypoTest extends ProcedureCommonTest {
     testWrongHookup("Robert", "PID-5.2", ProcedureFactory.FIRST_NAME_TYPO, transformer);
     testWrongHookup("Middleditch", "PID-5.3", ProcedureFactory.MIDDLE_NAME_TYPO, transformer);
     testWrongHookup("Madre", "PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO, transformer);
-    testWrongHookup("Judy", "PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_TYPO,
+    testWrongHookup("Judy", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_TYPO,
         transformer);
     testWrongHookup("4356180", "PID-13.7", ProcedureFactory.PHONE_TYPO, transformer);
     testWrongHookup("5678 Wooster Ln", "PID-11.1", ProcedureFactory.ADDRESS_STREET_TYPO,
@@ -97,7 +97,7 @@ public class TextTypoTest extends ProcedureCommonTest {
       Transformer transformer) {
     List<String> procedures = new ArrayList<>(Arrays.asList(ProcedureFactory.FIRST_NAME_TYPO,
         ProcedureFactory.MIDDLE_NAME_TYPO, ProcedureFactory.LAST_NAME_TYPO,
-        ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO, ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_TYPO,
+        ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO, ProcedureFactory.MOTHERS_FIRST_NAME_TYPO,
         ProcedureFactory.ADDRESS_STREET_TYPO, ProcedureFactory.ADDRESS_CITY_TYPO,
         ProcedureFactory.PHONE_TYPO, ProcedureFactory.EMAIL_TYPO));
 

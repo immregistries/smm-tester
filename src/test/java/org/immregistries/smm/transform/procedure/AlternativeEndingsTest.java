@@ -63,7 +63,7 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
     testVariation("Forrest", "Forreon", location, procedure);
 
     location = "PID-6.2";
-    procedure = ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_ENDINGS;
+    procedure = ProcedureFactory.MOTHERS_FIRST_NAME_ALTERNATIVE_ENDINGS;
 
     testVariation("Olivia", "Oliviay", location, procedure);
     testVariation("Emma", "Emmay", location, procedure);

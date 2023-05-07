@@ -11,8 +11,8 @@ public class ProcedureFactory {
   public static final String LAST_NAME_ALTERNATIVE_VOWELS = "LAST_NAME_ALTERNATIVE_VOWELS";
   public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS =
       "MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS";
-  public static final String MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS =
-      "MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS";
+  public static final String MOTHERS_FIRST_NAME_ALTERNATIVE_VOWELS =
+      "MOTHERS_FIRST_NAME_ALTERNATIVE_VOWELS";
   public static final String ADDRESS_STREET_ALTERNATIVE_VOWELS =
       "ADDRESS_STREET_ALTERNATIVE_VOWELS";
   public static final String ADDRESS_CITY_ALTERNATIVE_VOWELS = "ADDRESS_CITY_ALTERNATIVE_VOWELS";
@@ -26,8 +26,8 @@ public class ProcedureFactory {
   public static final String LAST_NAME_ALTERNATIVE_BEGINNINGS = "LAST_NAME_ALTERNATIVE_BEGINNINGS";
   public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS =
       "MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS";
-  public static final String MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_BEGINNINGS =
-      "MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_BEGINNINGS";
+  public static final String MOTHERS_FIRST_NAME_ALTERNATIVE_BEGINNINGS =
+      "MOTHERS_FIRST_NAME_ALTERNATIVE_BEGINNINGS";
   public static final String ADDRESS_STREET_ALTERNATIVE_BEGINNINGS =
       "ADDRESS_STREET_ALTERNATIVE_BEGINNINGS";
   public static final String ADDRESS_CITY_ALTERNATIVE_BEGINNINGS =
@@ -40,8 +40,8 @@ public class ProcedureFactory {
   public static final String LAST_NAME_ALTERNATIVE_ENDINGS = "LAST_NAME_ALTERNATIVE_ENDINGS";
   public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS =
       "MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS";
-  public static final String MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_ENDINGS =
-      "OTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_ENDINGS";
+  public static final String MOTHERS_FIRST_NAME_ALTERNATIVE_ENDINGS =
+      "MOTHERS_FIRST_NAME_ALTERNATIVE_ENDINGS";
   public static final String ADDRESS_STREET_ALTERNATIVE_ENDINGS =
       "ADDRESS_STREET_ALTERNATIVE_ENDINGS";
   public static final String ADDRESS_CITY_ALTERNATIVE_ENDINGS = "ADDRESS_CITY_ALTERNATIVE_ENDINGS";
@@ -53,8 +53,7 @@ public class ProcedureFactory {
   public static final String LAST_NAME_ADD_VARIATION = "LAST_NAME_ADD_VARIATION";
   public static final String MOTHERS_MAIDEN_NAME_ADD_VARIATION =
       "MOTHERS_MAIDEN_NAME_ADD_VARIATION";
-  public static final String MOTHERS_MAIDEN_FIRST_NAME_ADD_VARIATION =
-      "MOTHERS_MAIDEN_FIRST_NAME_ADD_VARIATION";
+  public static final String MOTHERS_FIRST_NAME_ADD_VARIATION = "MOTHERS_FIRST_NAME_ADD_VARIATION";
   public static final String ADDRESS_STREET_ADD_VARIATION = "ADDRESS_STREET_ADD_VARIATION";
   public static final String ADDRESS_CITY_ADD_VARIATION = "ADDRESS_CITY_ADD_VARIATION";
   public static final String EMAIL_ADD_VARIATION = "EMAIL_ADD_VARIATION";
@@ -64,7 +63,7 @@ public class ProcedureFactory {
   public static final String MIDDLE_NAME_TYPO = "MIDDLE_NAME_TYPO";
   public static final String LAST_NAME_TYPO = "LAST_NAME_TYPO";
   public static final String MOTHERS_MAIDEN_NAME_TYPO = "MOTHERS_MAIDEN_NAME_TYPO";
-  public static final String MOTHERS_MAIDEN_FIRST_NAME_TYPO = "MOTHERS_MAIDEN_FIRST_NAME_TYPO";
+  public static final String MOTHERS_FIRST_NAME_TYPO = "MOTHERS_FIRST_NAME_TYPO";
   public static final String ADDRESS_STREET_TYPO = "ADDRESS_STREET_TYPO";
   public static final String ADDRESS_CITY_TYPO = "ADDRESS_CITY_TYPO";
   public static final String PHONE_TYPO = "PHONE_TYPO";
@@ -75,7 +74,7 @@ public class ProcedureFactory {
   public static final String MIDDLE_NAME_CHANGE = "MIDDLE_NAME_CHANGE";
   public static final String LAST_NAME_CHANGE = "LAST_NAME_CHANGE";
   public static final String MOTHERS_MAIDEN_NAME_CHANGE = "MOTHERS_MAIDEN_NAME_CHANGE";
-  public static final String MOTHERS_MAIDEN_FIRST_NAME_CHANGE = "MOTHERS_MAIDEN_FIRST_NAME_CHANGE";
+  public static final String MOTHERS_FIRST_NAME_CHANGE = "MOTHERS_FIRST_NAME_CHANGE";
   public static final String ADDRESS_STREET_CHANGE = "ADDRESS_STREET_CHANGE";
   public static final String ADDRESS_CITY_CHANGE = "ADDRESS_CITY_CHANGE";
   public static final String EMAIL_CHANGE = "EMAIL_CHANGE";
@@ -87,8 +86,8 @@ public class ProcedureFactory {
   public static final String LAST_NAME_REPEATED_CONSONANTS = "LAST_NAME_REPEATED_CONSONANTS";
   public static final String MOTHERS_MAIDEN_NAME_REPEATED_CONSONANTS =
       "MOTHERS_MAIDEN_NAME_REPEATED_CONSONANTS";
-  public static final String MOTHERS_MAIDEN_FIRST_NAME_REPEATED_CONSONANTS =
-      "MOTHERS_MAIDEN_FIRST_NAME_REPEATED_CONSONANTS";
+  public static final String MOTHERS_FIRST_NAME_REPEATED_CONSONANTS =
+      "MOTHERS_FIRST_NAME_REPEATED_CONSONANTS";
   public static final String ADDRESS_STREET_REPEATED_CONSONANTS =
       "ADDRESS_STREET_REPEATED_CONSONANTS";
   public static final String ADDRESS_CITY_REPEATED_CONSONANTS = "ADDRESS_CITY_REPEATED_CONSONANTS";
@@ -100,8 +99,8 @@ public class ProcedureFactory {
   public static final String LAST_NAME_HYPHENATE_VARIATION = "LAST_NAME_HYPHENATE_VARIATION";
   public static final String MOTHERS_MAIDEN_NAME_HYPHENATE_VARIATION =
       "MOTHERS_MAIDEN_NAME_HYPHENATE_VARIATION";
-  public static final String MOTHERS_MAIDEN_FIRST_NAME_HYPHENATE_VARIATION =
-      "MOTHERS_MAIDEN_FIRST_NAME_HYPHENATE_VARIATION";
+  public static final String MOTHERS_FIRST_NAME_HYPHENATE_VARIATION =
+      "MOTHERS_FIRST_NAME_HYPHENATE_VARIATION";
   public static final String ADDRESS_STREET_HYPHENATE_VARIATION =
       "ADDRESS_STREET_HYPHENATE_VARIATION";
   public static final String ADDRESS_CITY_HYPHENATE_VARIATION = "ADDRESS_CITY_HYPHENATE_VARIATION";
@@ -172,8 +171,8 @@ public class ProcedureFactory {
         return new AlternativeVowels(AlternativeVowels.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_ALTERNATIVE_VOWELS:
         return new AlternativeVowels(AlternativeVowels.Field.MOTHERS_MAIDEN_NAME);
-      case MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_VOWELS:
-        return new AlternativeVowels(AlternativeVowels.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case MOTHERS_FIRST_NAME_ALTERNATIVE_VOWELS:
+        return new AlternativeVowels(AlternativeVowels.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_ALTERNATIVE_VOWELS:
         return new AlternativeVowels(AlternativeVowels.Field.ADDRESS_STREET);
       case ADDRESS_CITY_ALTERNATIVE_VOWELS:
@@ -190,8 +189,8 @@ public class ProcedureFactory {
         return new AlternativeBeginnings(AlternativeBeginnings.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS:
         return new AlternativeBeginnings(AlternativeBeginnings.Field.MOTHERS_MAIDEN_NAME);
-      case MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_BEGINNINGS:
-        return new AlternativeBeginnings(AlternativeBeginnings.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case MOTHERS_FIRST_NAME_ALTERNATIVE_BEGINNINGS:
+        return new AlternativeBeginnings(AlternativeBeginnings.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_ALTERNATIVE_BEGINNINGS:
         return new AlternativeBeginnings(AlternativeBeginnings.Field.ADDRESS_STREET);
       case ADDRESS_CITY_ALTERNATIVE_BEGINNINGS:
@@ -208,8 +207,8 @@ public class ProcedureFactory {
         return new AlternativeEndings(AlternativeEndings.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS:
         return new AlternativeEndings(AlternativeEndings.Field.MOTHERS_MAIDEN_NAME);
-      case MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_ENDINGS:
-        return new AlternativeEndings(AlternativeEndings.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case MOTHERS_FIRST_NAME_ALTERNATIVE_ENDINGS:
+        return new AlternativeEndings(AlternativeEndings.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_ALTERNATIVE_ENDINGS:
         return new AlternativeEndings(AlternativeEndings.Field.ADDRESS_STREET);
       case ADDRESS_CITY_ALTERNATIVE_ENDINGS:
@@ -226,8 +225,8 @@ public class ProcedureFactory {
         return new AddVariation(AddVariation.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_ADD_VARIATION:
         return new AddVariation(AddVariation.Field.MOTHERS_MAIDEN_NAME);
-      case MOTHERS_MAIDEN_FIRST_NAME_ADD_VARIATION:
-        return new AddVariation(AddVariation.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case MOTHERS_FIRST_NAME_ADD_VARIATION:
+        return new AddVariation(AddVariation.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_ADD_VARIATION:
         return new AddVariation(AddVariation.Field.ADDRESS_STREET);
       case ADDRESS_CITY_ADD_VARIATION:
@@ -244,8 +243,8 @@ public class ProcedureFactory {
         return new TextTypo(TextTypo.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_TYPO:
         return new TextTypo(TextTypo.Field.MOTHERS_MAIDEN_NAME);
-      case MOTHERS_MAIDEN_FIRST_NAME_TYPO:
-        return new TextTypo(TextTypo.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case MOTHERS_FIRST_NAME_TYPO:
+        return new TextTypo(TextTypo.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_TYPO:
         return new TextTypo(TextTypo.Field.ADDRESS_STREET);
       case ADDRESS_CITY_TYPO:
@@ -264,8 +263,8 @@ public class ProcedureFactory {
         return new TextChange(TextChange.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_CHANGE:
         return new TextChange(TextChange.Field.MOTHERS_MAIDEN_NAME);
-      case MOTHERS_MAIDEN_FIRST_NAME_CHANGE:
-        return new TextChange(TextChange.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case MOTHERS_FIRST_NAME_CHANGE:
+        return new TextChange(TextChange.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_CHANGE:
         return new AddressStreetVariation();
       case ADDRESS_CITY_CHANGE:
@@ -284,8 +283,8 @@ public class ProcedureFactory {
         return new RepeatedConsonants(RepeatedConsonants.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_REPEATED_CONSONANTS:
         return new RepeatedConsonants(RepeatedConsonants.Field.MOTHERS_MAIDEN_NAME);
-      case MOTHERS_MAIDEN_FIRST_NAME_REPEATED_CONSONANTS:
-        return new RepeatedConsonants(RepeatedConsonants.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case MOTHERS_FIRST_NAME_REPEATED_CONSONANTS:
+        return new RepeatedConsonants(RepeatedConsonants.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_REPEATED_CONSONANTS:
         return new RepeatedConsonants(RepeatedConsonants.Field.ADDRESS_STREET);
       case ADDRESS_CITY_REPEATED_CONSONANTS:
@@ -302,8 +301,8 @@ public class ProcedureFactory {
         return new HyphenateVariation(HyphenateVariation.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_HYPHENATE_VARIATION:
         return new HyphenateVariation(HyphenateVariation.Field.MOTHERS_MAIDEN_NAME);
-      case MOTHERS_MAIDEN_FIRST_NAME_HYPHENATE_VARIATION:
-        return new HyphenateVariation(HyphenateVariation.Field.MOTHERS_MAIDEN_FIRST_NAME);
+      case MOTHERS_FIRST_NAME_HYPHENATE_VARIATION:
+        return new HyphenateVariation(HyphenateVariation.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_HYPHENATE_VARIATION:
         return new HyphenateVariation(HyphenateVariation.Field.ADDRESS_STREET);
       case ADDRESS_CITY_HYPHENATE_VARIATION:

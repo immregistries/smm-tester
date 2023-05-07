@@ -15,7 +15,7 @@ public class AddVariationTest extends ProcedureCommonTest {
             Arrays.asList("PID-5.2", ProcedureFactory.FIRST_NAME_ADD_VARIATION),
             Arrays.asList("PID-5.3", ProcedureFactory.MIDDLE_NAME_ADD_VARIATION),
             Arrays.asList("PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_ADD_VARIATION),
-            Arrays.asList("PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_ADD_VARIATION),
+            Arrays.asList("PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_ADD_VARIATION),
             Arrays.asList("PID-11.1", ProcedureFactory.ADDRESS_STREET_ADD_VARIATION),
             Arrays.asList("PID-11.3", ProcedureFactory.ADDRESS_CITY_ADD_VARIATION));
 

@@ -82,7 +82,7 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testVariation("Zozo", "Sozo", location, procedure);
 
     location = "PID-6.2";
-    procedure = ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_ALTERNATIVE_BEGINNINGS;
+    procedure = ProcedureFactory.MOTHERS_FIRST_NAME_ALTERNATIVE_BEGINNINGS;
 
     testVariation("Olivia", "Alivia", location, procedure);
     testVariation("Emma", "Amma", location, procedure);

@@ -39,12 +39,12 @@ public class TextChangeTest extends ProcedureCommonTest {
     testVariationDifferent("Raphael", "PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_CHANGE,
         TextChange.Field.MOTHERS_MAIDEN_NAME, transformer);
 
-    testVariationDifferent("Zabelle", "PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_CHANGE,
-        TextChange.Field.MOTHERS_MAIDEN_FIRST_NAME, transformer);
-    testVariationDifferent("Lucille", "PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_CHANGE,
-        TextChange.Field.MOTHERS_MAIDEN_FIRST_NAME, transformer);
-    testVariationDifferent("Martha", "PID-6.2", ProcedureFactory.MOTHERS_MAIDEN_FIRST_NAME_CHANGE,
-        TextChange.Field.MOTHERS_MAIDEN_FIRST_NAME, transformer);
+    testVariationDifferent("Zabelle", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_CHANGE,
+        TextChange.Field.MOTHERS_FIRST_NAME, transformer);
+    testVariationDifferent("Lucille", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_CHANGE,
+        TextChange.Field.MOTHERS_FIRST_NAME, transformer);
+    testVariationDifferent("Martha", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_CHANGE,
+        TextChange.Field.MOTHERS_FIRST_NAME, transformer);
 
     testVariationDifferent("New York City", "PID-11.3", ProcedureFactory.ADDRESS_CITY_CHANGE,
         TextChange.Field.ADDRESS_CITY, transformer);
