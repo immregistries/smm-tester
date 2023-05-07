@@ -57,18 +57,23 @@ public class HyphenateVariationTest extends ProcedureCommonTest {
         assertTrue(varied.length() > email.length());
         assertTrue(varied.startsWith("bob-"));
         assertTrue(varied.endsWith("@gmail.com"));
-        continue;
+      } else if (group == TestingGroup.ADDRESS_STREET) {
+        String address = "123 Main St.";
+        String varied = HyphenateVariation.varyName(address, transformer, field);
+        assertTrue(varied.length() > address.length());
+        assertTrue(varied.startsWith("123 Main-"));
+        assertTrue(varied.endsWith(" St."));
+      } else {
+        testVariation("Smith-Jones", "Smith Jones", transformer, location, field, procedure);
+        testVariation("Smith Jones", "Smith-Jones", transformer, location, field, procedure);
+        testVariation("Smith-jones", "Smith Jones", transformer, location, field, procedure);
+        testVariation("smith-jones", "smith jones", transformer, location, field, procedure);
+        assertEquals("Smith-Jones", HyphenateVariation.varyName(
+            HyphenateVariation.varyName("Smith-Jones", transformer, field), transformer, field));
+        testVariationDifferent("Smith", transformer, location, field, procedure);
+        testVariationDifferent("JONES", transformer, location, field, procedure);
+        testVariationDifferent("carpenter", transformer, location, field, procedure);
       }
-
-      testVariation("Smith-Jones", "Smith Jones", transformer, location, field, procedure);
-      testVariation("Smith Jones", "Smith-Jones", transformer, location, field, procedure);
-      testVariation("Smith-jones", "Smith Jones", transformer, location, field, procedure);
-      testVariation("smith-jones", "smith jones", transformer, location, field, procedure);
-      assertEquals("Smith-Jones", HyphenateVariation.varyName(
-          HyphenateVariation.varyName("Smith-Jones", transformer, field), transformer, field));
-      testVariationDifferent("Smith", transformer, location, field, procedure);
-      testVariationDifferent("JONES", transformer, location, field, procedure);
-      testVariationDifferent("carpenter", transformer, location, field, procedure);
     }
   }
 

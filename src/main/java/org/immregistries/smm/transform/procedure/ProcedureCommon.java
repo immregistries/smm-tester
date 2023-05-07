@@ -245,5 +245,30 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     return dob;
   }
 
+  protected static String getAddressStreetName(String address) {
+    if (!address.contains(" ")) {
+      return address;
+    }
 
+    return address.split("\\ ")[1];
+  }
+
+  protected static String replaceAddressStreet(String address, String newStreetAddress) {
+    boolean upperCase = address.toUpperCase().equals(address);
+    boolean lowerCase = address.toLowerCase().equals(address);
+    int posStart = address.indexOf(' ');
+    if (posStart > 0) {
+      int posEnd = address.indexOf(' ', posStart + 1);
+      if (posEnd > 0) {
+        address =
+            address.substring(0, posStart) + " " + newStreetAddress + address.substring(posEnd);
+      }
+    }
+    if (upperCase) {
+      address = address.toUpperCase();
+    } else if (lowerCase) {
+      address = address.toLowerCase();
+    }
+    return address;
+  }
 }

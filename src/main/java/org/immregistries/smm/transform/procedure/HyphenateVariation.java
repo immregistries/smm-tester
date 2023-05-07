@@ -76,15 +76,15 @@ public class HyphenateVariation extends ProcedureCommon implements ProcedureInte
     boolean upperCase = name.toUpperCase().equals(name);
     boolean lowerCase = name.toLowerCase().equals(name);
 
-    boolean isEmail = field == Field.EMAIL;
+    boolean isSpecialCase = field == Field.EMAIL || field == Field.ADDRESS_STREET;
 
     int pos = name.indexOf('-');
-    if (!isEmail && pos > 0 && (pos + 1) < name.length()) {
+    if (!isSpecialCase && pos > 0 && (pos + 1) < name.length()) {
       name =
           capitalizeFirst(name.substring(0, pos)) + " " + capitalizeFirst(name.substring(pos + 1));
     } else {
       pos = name.indexOf(' ');
-      if (!isEmail && pos > 0 && (pos + 1) < name.length()) {
+      if (!isSpecialCase && pos > 0 && (pos + 1) < name.length()) {
         name = capitalizeFirst(name.substring(0, pos)) + "-"
             + capitalizeFirst(name.substring(pos + 1));
       } else {
@@ -116,13 +116,16 @@ public class HyphenateVariation extends ProcedureCommon implements ProcedureInte
               break;
           }
 
-          if (field != Field.EMAIL) {
-            name = capitalizeFirst(name) + "-" + capitalizeFirst(randomValue);
-          } else {
+          if (field == Field.EMAIL) {
             String[] emailParts = name.split("\\@");
             name = capitalizeFirst(emailParts[0]) + "-" + capitalizeFirst(randomValue) + "@"
                 + emailParts[1];
             name = name.replaceAll("\\s+", "");
+          } else if (field == Field.ADDRESS_STREET) {
+            String original = getAddressStreetName(name);
+            name = capitalizeFirst(replaceAddressStreet(name, original + "-" + randomValue));
+          } else {
+            name = capitalizeFirst(name) + "-" + capitalizeFirst(randomValue);
           }
         } catch (Throwable e) {
           e.printStackTrace();
