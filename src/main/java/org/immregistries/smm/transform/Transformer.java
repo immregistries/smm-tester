@@ -97,6 +97,7 @@ public class Transformer {
   private static final String INSERT_SEGMENT_IF_MISSING_FROM_MESSAGE = "if missing from message";
 
   private static final String RUN_PROCEDURE = "run procedure";
+  private static final String SET = "set";
 
   private static final String REMOVE_REPEAT = "remove repeat"; // remove repeat
                                                                // PID-5.5 valued
@@ -141,6 +142,8 @@ public class Transformer {
   private static Map<String, List<String[]>> conceptMap = null;
   private static Map<String, List<String[]>> testDataMap = null;
   private static Random random = new Random();
+
+  private static final Map<String, String> VARIABLES = new HashMap<>();
 
   public Transformer() {
     // default
@@ -1091,6 +1094,8 @@ public class Transformer {
             doClear(transformRequest);
           } else if (transformCommand.toLowerCase().trim().startsWith(RUN_PROCEDURE)) {
             doRunProcedure(transformRequest);
+          } else if (transformCommand.toLowerCase().trim().startsWith(SET)) {
+            doSetVariable(transformRequest);
           } else {
             doSetField(transformRequest);
           }
@@ -1175,6 +1180,27 @@ public class Transformer {
       }
     }
     transformRequest.setResultText(resultText);
+  }
+
+  public void doSetVariable(TransformRequest transformRequest) throws IOException {
+    String line = transformRequest.getLine();
+
+    int posEqual = line.indexOf("=");
+    if (posEqual < 1) {
+      return;
+    }
+
+    String command = line.substring(SET.length()).trim();
+    String[] parts = command.split("\\=");
+    String name = parts[0];
+
+    transformRequest.setLine(parts[1]);
+    Transform transform = readHL7Reference(line, 0);
+    transform.value = parts[1];
+    doReplacements(transform, transformRequest);
+    String value = transform.value;
+
+    VARIABLES.put(name, value);
   }
 
   public void doClear(TransformRequest transformRequest) throws IOException {
@@ -2632,7 +2658,12 @@ public class Transformer {
       // do nothing
     } else if (t.value.startsWith("[") && t.value.endsWith("]")) {
       String v = t.value.substring(1, t.value.length() - 1);
-      t.valueTransform = readHL7Reference(v, v.length());
+      if (VARIABLES.containsKey(v)) {
+        t.value = VARIABLES.get(v);
+        doReplacements(t, transformRequest);
+      } else {
+        t.valueTransform = readHL7Reference(v, v.length());
+      }
     }
     if (t.valueTransform != null) {
       if (t.valueTransform.getSegment().equals(t.segment)
