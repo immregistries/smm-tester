@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import org.apache.commons.lang3.StringUtils;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.transform.IssueCreator;
 import org.immregistries.smm.tester.transform.Patient;
@@ -209,6 +210,31 @@ public class Transformer {
       }
     }
     return values;
+  }
+
+  public boolean doesValueExist(String concept, String value) {
+    if (StringUtils.isBlank(value)) {
+      return false;
+    }
+
+    if (conceptMap == null) {
+      init();
+    }
+    List<String[]> valueList = null;
+    if (testDataMap != null) {
+      valueList = testDataMap.get(concept);
+    }
+    if (valueList == null) {
+      valueList = conceptMap.get(concept);
+    }
+
+    for (String[] arr : valueList) {
+      if (value.equalsIgnoreCase(arr[0])) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   protected boolean alsoHas(TestCaseMessage testCaseMessage, String checkString) {
