@@ -181,7 +181,6 @@ public class TestAckAnalyzer {
     assertEquals("AR", ackAnalyzer.getAckCode());
 
     for (AckAnalyzer.AckType ackType : AckAnalyzer.AckType.values()) {
-      System.out.println("--> ackType = " + ackType);
       ackAnalyzer = new AckAnalyzer(WI_TEST_01, ackType);
       assertTrue(ackAnalyzer.isAckMessage());
       assertTrue(ackAnalyzer.isPositive());

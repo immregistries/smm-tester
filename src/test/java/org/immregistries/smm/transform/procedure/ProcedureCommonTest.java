@@ -51,13 +51,22 @@ public class ProcedureCommonTest extends TestCase {
 
   protected void testProcedureChangesMessageAndDoesNotContain(String om, String fieldText,
       String procedure) {
+    assertEquals(-1, testProcedureChangesMessage(om, fieldText, procedure).indexOf(fieldText));
+  }
+
+  protected void testProcedureChangesMessageAndDoesContain(String om, String fieldText,
+      String procedure) {
+    assertNotEquals(-1, testProcedureChangesMessage(om, fieldText, procedure).indexOf(fieldText));
+  }
+
+  private String testProcedureChangesMessage(String om, String fieldText, String procedure) {
     TestCaseMessage testCaseMessage = new TestCaseMessage();
     testCaseMessage.setOriginalMessage(om);
     testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
     Transformer transformer = new Transformer();
     transformer.transform(testCaseMessage);
     assertNotEquals(om, testCaseMessage.getMessageText());
-    assertTrue(testCaseMessage.getMessageText().indexOf(fieldText) == -1);
+    return testCaseMessage.getMessageText();
   }
 
   protected String transform(String om, String transform) {
@@ -68,7 +77,7 @@ public class ProcedureCommonTest extends TestCase {
     transformer.transform(testCaseMessage);
     return testCaseMessage.getMessageText();
   }
-  
+
   protected String processProcedureChangesMessage(String om, String procedure) {
     TestCaseMessage testCaseMessage = new TestCaseMessage();
     testCaseMessage.setOriginalMessage(om);

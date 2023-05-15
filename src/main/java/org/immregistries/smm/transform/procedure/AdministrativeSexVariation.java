@@ -20,7 +20,7 @@ public class AdministrativeSexVariation extends ProcedureCommon implements Proce
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
           int fieldPos = 8;
           int subPos = 1;
           String administrativeSex = readValue(fields, fieldPos, subPos).trim();
@@ -76,18 +76,7 @@ public class AdministrativeSexVariation extends ProcedureCommon implements Proce
     return -1;
   }
 
-  protected static String capitalizeFirst(String namePart) {
-    if (namePart.length() <= 1) {
-      return namePart.toUpperCase();
-    }
-    return namePart.substring(0, 1).toUpperCase() + namePart.substring(1);
-  }
-
-
   public void setTransformer(Transformer transformer) {
     // not needed
   }
-
-
-
 }

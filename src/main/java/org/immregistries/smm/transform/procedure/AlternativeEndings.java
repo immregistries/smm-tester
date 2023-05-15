@@ -9,13 +9,27 @@ import org.immregistries.smm.transform.Transformer;
 
 public class AlternativeEndings extends ProcedureCommon implements ProcedureInterface {
 
-  public static enum Field {
-    FIRST_NAME,
-    MIDDLE_NAME,
-    LAST_NAME,
-    MOTHERS_MAIDEN_NAME
+  public enum Field {
+                     FIRST_NAME(5, 2, false),
+                     MIDDLE_NAME(5, 3, false),
+                     LAST_NAME(5, 1, false),
+                     MOTHERS_MAIDEN_NAME(6, 1, false),
+                     MOTHERS_FIRST_NAME(6, 2, false),
+                     ADDRESS_STREET(11, 1, false),
+                     ADDRESS_CITY(11, 3, false),
+                     EMAIL(13, 4, true);
+
+    int fieldPos;
+    int subPos;
+    boolean repeatedField;
+
+    private Field(int fieldPos, int subPos, boolean repeatedField) {
+      this.fieldPos = fieldPos;
+      this.subPos = subPos;
+      this.repeatedField = repeatedField;
+    }
   }
-  
+
   private Field field;
 
   public AlternativeEndings(Field field) {
@@ -25,35 +39,34 @@ public class AlternativeEndings extends ProcedureCommon implements ProcedureInte
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
-    {
-      for (String[] fields : fieldsList) {
-        String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
-          if (field == Field.LAST_NAME
-            || field == Field.FIRST_NAME
-            || field == Field.MIDDLE_NAME
-            || field == Field.MOTHERS_MAIDEN_NAME) {
-            
-            int fieldPos = 5;
-            int subPos = 1;
-            if (field == Field.LAST_NAME) {
-              subPos = 1;
-            } else if (field == Field.FIRST_NAME) {
-              subPos = 2;
-            } else if (field == Field.MIDDLE_NAME) {
-              subPos = 3;
-            } else if (field == Field.MOTHERS_MAIDEN_NAME) {
-              fieldPos = 6;
-              subPos = 1;
+
+    for (String[] fields : fieldsList) {
+      String segmentName = fields[0];
+      if ("PID".equals(segmentName)) {
+        if (!field.repeatedField) {
+          String value = readValue(fields, field.fieldPos, field.subPos);
+          value = varyName(value);
+          updateValue(value, fields, field.fieldPos, field.subPos);
+        } else {
+          int fieldPos = 13;
+          String[] repeatFields = readRepeats(fields, fieldPos);
+          int pos = 0;
+          for (String value : repeatFields) {
+            int subPos = 4;
+
+            String email = readRepeatValue(value, subPos);
+            if (email.indexOf('@') > 0) {
+              email = varyName(email);
+              updateRepeat(email, repeatFields, pos, subPos);
             }
-            
-            String value = readValue(fields, fieldPos, subPos);
-            value = varyName(value);
-            updateValue(value, fields, fieldPos, subPos);
+            pos++;
           }
+          String fieldFinal = createRepeatValue(repeatFields);
+          updateContent(fieldFinal, fields, fieldPos);
         }
       }
     }
+
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
@@ -61,18 +74,18 @@ public class AlternativeEndings extends ProcedureCommon implements ProcedureInte
     boolean upperCase = name.toUpperCase().equals(name);
     boolean lowerCase = name.toLowerCase().equals(name);
 
-    String nameLower = name.trim().toLowerCase();
+    String nameLower = name.trim().toLowerCase().replaceAll("[^a-zA-Z]+$", "");
+    String punctuation = name.substring(nameLower.length());
+
     for (String[] consonantClusterMap : consonantClusterMapList) {
       String lookingFor = consonantClusterMap[0];
       String replacingWith = consonantClusterMap[1];
       if (nameLower.endsWith(lookingFor)) {
-        name = nameLower.substring(0, nameLower.length() - lookingFor.length())
-            + replacingWith;
+        name = nameLower.substring(0, nameLower.length() - lookingFor.length()) + replacingWith
+            + punctuation;
         break;
       }
     }
-
-
 
     if (upperCase) {
       name = name.toUpperCase();
@@ -83,7 +96,6 @@ public class AlternativeEndings extends ProcedureCommon implements ProcedureInte
     }
     return name;
   }
-
 
   private static List<String[]> consonantClusterMapList = new ArrayList<>();
 
@@ -133,16 +145,9 @@ public class AlternativeEndings extends ProcedureCommon implements ProcedureInte
     consonantClusterMapList.add(new String[] {"x", "cks"});
     consonantClusterMapList.add(new String[] {"y", "ie"});
     consonantClusterMapList.add(new String[] {"z", "ss"});
-
-
   }
-
-
 
   public void setTransformer(Transformer transformer) {
     // not needed
   }
-
-
-
 }

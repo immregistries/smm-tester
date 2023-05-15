@@ -71,7 +71,7 @@ public class AnonymizeAndUpdateRecord extends ProcedureCommon implements Procedu
         if (segmentName.equals("MSH")) {
           determineMessageDate(fields);
           shiftDate(fields, 7);
-        } else if (segmentName.equals("PID")) {
+        } else if ("PID".equals(segmentName)) {
           shiftDate(fields, 7);
           update(fields, 3, 1, patient.getMedicalRecordNumber());
           isGirl = !readValue(fields, 8).equals("M");

@@ -2084,7 +2084,7 @@ public class Transformer {
                     endPos = endPosAmper;
                   }
                 }
-                
+
                 // if we're concatenating ("PID-5.1+=MORE" for example
                 // we want to include the existing 5.1 text in the substring
                 String lineNew = lineResult.substring(0, t.concatenate ? endPos : pos);
@@ -2466,14 +2466,14 @@ public class Transformer {
 
   public static Transform readHL7Reference(String line, int endOfInput) {
     Transform t = null;
-    
+
     int posPlusEquals = line.indexOf("+=");
     boolean concatenate = false;
     if (posPlusEquals != -1 && posPlusEquals + 1 == endOfInput) {
       endOfInput--;
       concatenate = true;
     }
-    
+
     String testCaseId = null;
     {
       int posColons = line.indexOf("::");

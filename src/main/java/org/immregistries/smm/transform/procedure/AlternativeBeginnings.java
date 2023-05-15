@@ -8,16 +8,30 @@ import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
 public class AlternativeBeginnings extends ProcedureCommon implements ProcedureInterface {
-  
-  public static enum Field {
-    FIRST_NAME,
-    MIDDLE_NAME,
-    LAST_NAME,
-    MOTHERS_MAIDEN_NAME
+
+  public enum Field {
+                     FIRST_NAME(5, 2, false),
+                     MIDDLE_NAME(5, 3, false),
+                     LAST_NAME(5, 1, false),
+                     MOTHERS_MAIDEN_NAME(6, 1, false),
+                     MOTHERS_FIRST_NAME(6, 2, false),
+                     ADDRESS_STREET(11, 1, false),
+                     ADDRESS_CITY(11, 3, false),
+                     EMAIL(13, 4, true);
+
+    int fieldPos;
+    int subPos;
+    boolean repeatedField;
+
+    private Field(int fieldPos, int subPos, boolean repeatedField) {
+      this.fieldPos = fieldPos;
+      this.subPos = subPos;
+      this.repeatedField = repeatedField;
+    }
   }
-	
+
   private Field field;
-  
+
   public AlternativeBeginnings(Field field) {
     this.field = field;
   }
@@ -25,42 +39,40 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
-    {
-      for (String[] fields : fieldsList) {
-        String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
-          if (field == Field.LAST_NAME
-            || field == Field.FIRST_NAME
-            || field == Field.MIDDLE_NAME
-            || field == Field.MOTHERS_MAIDEN_NAME) {
-            
-            int fieldPos = 5;
-            int subPos = 1;
-            if (field == Field.LAST_NAME) {
-              subPos = 1;
-            } else if (field == Field.FIRST_NAME) {
-              subPos = 2;
-            } else if (field == Field.MIDDLE_NAME) {
-              subPos = 3;
-            } else if (field == Field.MOTHERS_MAIDEN_NAME) {
-              fieldPos = 6;
-              subPos = 1;
+
+    for (String[] fields : fieldsList) {
+      String segmentName = fields[0];
+      if ("PID".equals(segmentName)) {
+        if (!field.repeatedField) {
+          String value = readValue(fields, field.fieldPos, field.subPos);
+          value = varyName(value);
+          updateValue(value, fields, field.fieldPos, field.subPos);
+        } else {
+          int fieldPos = 13;
+          String[] repeatFields = readRepeats(fields, fieldPos);
+          int pos = 0;
+          for (String value : repeatFields) {
+            int subPos = 4;
+
+            String email = readRepeatValue(value, subPos);
+            if (email.indexOf('@') > 0) {
+              email = varyName(email);
+              updateRepeat(email, repeatFields, pos, subPos);
             }
-            
-            String value = readValue(fields, fieldPos, subPos);
-            value = varyName(value);
-            updateValue(value, fields, fieldPos, subPos);
+            pos++;
           }
+          String fieldFinal = createRepeatValue(repeatFields);
+          updateContent(fieldFinal, fields, fieldPos);
         }
       }
     }
+
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
   protected static String varyName(String name) {
     boolean upperCase = name.toUpperCase().equals(name);
     boolean lowerCase = name.toLowerCase().equals(name);
-
 
     String nameLower = name.trim().toLowerCase();
     for (String[] consonantClusterMap : consonantClusterMapList) {
@@ -71,8 +83,6 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
         break;
       }
     }
-
-
 
     if (upperCase) {
       name = name.toUpperCase();
@@ -147,15 +157,19 @@ public class AlternativeBeginnings extends ProcedureCommon implements ProcedureI
     consonantClusterMapList.add(new String[] {"x", "ek"});
     consonantClusterMapList.add(new String[] {"y", "w"});
     consonantClusterMapList.add(new String[] {"z", "s"});
-
+    consonantClusterMapList.add(new String[] {"1", "2"});
+    consonantClusterMapList.add(new String[] {"2", "3"});
+    consonantClusterMapList.add(new String[] {"3", "4"});
+    consonantClusterMapList.add(new String[] {"4", "5"});
+    consonantClusterMapList.add(new String[] {"5", "6"});
+    consonantClusterMapList.add(new String[] {"6", "7"});
+    consonantClusterMapList.add(new String[] {"7", "8"});
+    consonantClusterMapList.add(new String[] {"8", "9"});
+    consonantClusterMapList.add(new String[] {"9", "0"});
+    consonantClusterMapList.add(new String[] {"0", "1"});
   }
-
-
 
   public void setTransformer(Transformer transformer) {
     // not needed
   }
-
-
-
 }

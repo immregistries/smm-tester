@@ -24,7 +24,7 @@ public class FirstNameConvertNickname extends ProcedureCommon implements Procedu
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
           int fieldPos = 5;
           int subPos = 2;
           String firstName = readValue(fields, fieldPos, subPos);

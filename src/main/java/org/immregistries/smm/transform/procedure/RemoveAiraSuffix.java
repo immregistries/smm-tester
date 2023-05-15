@@ -32,7 +32,7 @@ public class RemoveAiraSuffix extends ProcedureCommon implements ProcedureInterf
     {
       for (String[] fields : fieldsList) {
         String segmentName = fields[0];
-        if (segmentName.equals("PID")) {
+        if ("PID".equals(segmentName)) {
           int fieldPos = 5;
           int subPos = 1;
           if (field == Field.LAST_NAME) {
