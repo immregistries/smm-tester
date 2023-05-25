@@ -2660,7 +2660,8 @@ public class Transformer {
     } else if (t.value.toLowerCase().startsWith("[modify") && t.value.endsWith("]")) {
       // do nothing
     } else if (t.value.startsWith("[") && t.value.endsWith("]")) {
-      String variableName = t.value.substring(1, t.value.length() - 1);
+      String v = t.value.substring(1, t.value.length() - 1);
+      String variableName = v;
 
       TestCaseMessage tcm = null;
       if (variableName.contains("::")) {
@@ -2678,8 +2679,10 @@ public class Transformer {
           t.value = variables.get(variableName);
           doReplacements(t, transformRequest);
         } else {
-          t.valueTransform = readHL7Reference(variableName, variableName.length());
+          t.valueTransform = readHL7Reference(v, v.length());
         }
+      } else {
+        t.valueTransform = readHL7Reference(v, v.length());
       }
     }
 
