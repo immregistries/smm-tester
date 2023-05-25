@@ -60,30 +60,26 @@ public class TextTypo extends ProcedureCommon implements ProcedureInterface {
           value = varyText(value, transformer);
           updateValue(value, fields, field.fieldPos, field.subPos);
         } else {
-          int fieldPos = 13;
-          String[] repeatFields = readRepeats(fields, fieldPos);
+          String[] repeatFields = readRepeats(fields, field.fieldPos);
           int pos = 0;
           for (String value : repeatFields) {
             if (field == Field.PHONE) {
-              int subPos = 7;
-              String phone = readRepeatValue(value, subPos);
+              String phone = readRepeatValue(value, field.subPos);
               if (phone.length() >= 4) {
                 phone = varyText(phone, transformer);
-                updateRepeat(phone, repeatFields, pos, subPos);
+                updateRepeat(phone, repeatFields, pos, field.subPos);
               }
             } else if (field == Field.EMAIL) {
-              int subPos = 4;
-
-              String email = readRepeatValue(value, subPos);
+              String email = readRepeatValue(value, field.subPos);
               if (email.indexOf('@') > 0) {
                 email = varyText(email, transformer);
-                updateRepeat(email, repeatFields, pos, subPos);
+                updateRepeat(email, repeatFields, pos, field.subPos);
               }
             }
             pos++;
           }
           String fieldFinal = createRepeatValue(repeatFields);
-          updateContent(fieldFinal, fields, fieldPos);
+          updateContent(fieldFinal, fields, field.fieldPos);
         }
       }
     }
