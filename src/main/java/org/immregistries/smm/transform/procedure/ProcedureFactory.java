@@ -69,6 +69,17 @@ public class ProcedureFactory {
   public static final String PHONE_TYPO = "PHONE_TYPO";
   public static final String EMAIL_TYPO = "EMAIL_TYPO";
 
+  // transpose
+  public static final String FIRST_NAME_TRANSPOSE = "FIRST_NAME_TRANSPOSE";
+  public static final String MIDDLE_NAME_TRANSPOSE = "MIDDLE_NAME_TRANSPOSE";
+  public static final String LAST_NAME_TRANSPOSE = "LAST_NAME_TRANSPOSE";
+  public static final String MOTHERS_MAIDEN_NAME_TRANSPOSE = "MOTHERS_MAIDEN_NAME_TRANSPOSE";
+  public static final String MOTHERS_FIRST_NAME_TRANSPOSE = "MOTHERS_FIRST_NAME_TRANSPOSE";
+  public static final String ADDRESS_STREET_TRANSPOSE = "ADDRESS_STREET_TRANSPOSE";
+  public static final String ADDRESS_CITY_TRANSPOSE = "ADDRESS_CITY_TRANSPOSE";
+  public static final String PHONE_TRANSPOSE = "PHONE_TRANSPOSE";
+  public static final String EMAIL_TRANSPOSE = "EMAIL_TRANSPOSE";
+
   // change
   public static final String FIRST_NAME_CHANGE = "FIRST_NAME_CHANGE";
   public static final String MIDDLE_NAME_CHANGE = "MIDDLE_NAME_CHANGE";
@@ -253,6 +264,26 @@ public class ProcedureFactory {
         return new TextTypo(TextTypo.Field.EMAIL);
       case PHONE_TYPO:
         return new TextTypo(TextTypo.Field.PHONE);
+
+      // transpose
+      case FIRST_NAME_TRANSPOSE:
+        return new TextTranspose(TextTranspose.Field.FIRST_NAME);
+      case MIDDLE_NAME_TRANSPOSE:
+        return new TextTranspose(TextTranspose.Field.MIDDLE_NAME);
+      case LAST_NAME_TRANSPOSE:
+        return new TextTranspose(TextTranspose.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_TRANSPOSE:
+        return new TextTranspose(TextTranspose.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_FIRST_NAME_TRANSPOSE:
+        return new TextTranspose(TextTranspose.Field.MOTHERS_FIRST_NAME);
+      case ADDRESS_STREET_TRANSPOSE:
+        return new TextTranspose(TextTranspose.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_TRANSPOSE:
+        return new TextTranspose(TextTranspose.Field.ADDRESS_CITY);
+      case EMAIL_TRANSPOSE:
+        return new TextTranspose(TextTranspose.Field.EMAIL);
+      case PHONE_TRANSPOSE:
+        return new TextTranspose(TextTranspose.Field.PHONE);
 
       // change
       case FIRST_NAME_CHANGE:
