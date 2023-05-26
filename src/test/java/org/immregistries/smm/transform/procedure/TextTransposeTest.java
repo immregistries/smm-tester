@@ -13,16 +13,19 @@ public class TextTransposeTest extends ProcedureCommonTest {
   public void test() {
     Transformer transformer = new Transformer();
 
-    assertEquals("A", TextTranspose.varyText("A", transformer));
-    assertEquals("a", TextTranspose.varyText("a", transformer));
+    assertEquals("A", new TextTranspose(null).varyText("A", transformer));
+    assertEquals("a", new TextTranspose(null).varyText("a", transformer));
 
-    assertEquals("Bo", TextTranspose.varyText("Bo", transformer));
-    assertEquals("BO", TextTranspose.varyText("BO", transformer));
-    assertEquals("bo", TextTranspose.varyText("bo", transformer));
+    assertEquals("Bo", new TextTranspose(null).varyText("Bo", transformer));
+    assertEquals("BO", new TextTranspose(null).varyText("BO", transformer));
+    assertEquals("bo", new TextTranspose(null).varyText("bo", transformer));
 
-    assertEquals("Aym", TextTranspose.varyText("Amy", transformer));
-    assertEquals("CLA", TextTranspose.varyText("CAL", transformer));
-    assertEquals("jmi", TextTranspose.varyText("jim", transformer));
+    assertEquals("Aym", new TextTranspose(null).varyText("Amy", transformer));
+    assertEquals("CLA", new TextTranspose(null).varyText("CAL", transformer));
+    assertEquals("jmi", new TextTranspose(null).varyText("jim", transformer));
+
+    assertEquals("Boo", new TextTranspose(null).varyText("Boo", transformer));
+    assertEquals("Lolo", new TextTranspose(null).varyText("Lool", transformer));
 
     testVariationDifferent("CARPENTER", "PID-5.1", ProcedureFactory.LAST_NAME_TRANSPOSE,
         transformer);
@@ -104,7 +107,7 @@ public class TextTransposeTest extends ProcedureCommonTest {
 
   private void testVariationDifferent(String startValue, String location, String procedure,
       Transformer transformer) {
-    assertNotEquals(startValue, TextTranspose.varyText(startValue, transformer));
+    assertNotEquals(startValue, new TextTranspose(null).varyText(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     testProcedureChangesMessageAndDoesNotContain(testStart, startValue, procedure);
   }
@@ -123,7 +126,7 @@ public class TextTransposeTest extends ProcedureCommonTest {
     procedures.remove(procedure);
 
     for (String proc : procedures) {
-      assertNotEquals(startValue, TextTranspose.varyText(startValue, transformer));
+      assertNotEquals(startValue, new TextTranspose(null).varyText(startValue, transformer));
       String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
       testProcedureChangesMessageAndDoesContain(testStart, startValue, proc);
     }

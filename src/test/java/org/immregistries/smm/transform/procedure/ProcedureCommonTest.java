@@ -40,26 +40,26 @@ public class ProcedureCommonTest extends TestCase {
     assertTrue(fm1.equals(messageText) || fm2.equals(messageText));
   }
 
-  protected void testProcedureChangesMessage(String om, String procedure) {
+  protected void testProcedureDoesNotChangeMessage(String om, String fieldText, String procedure) {
     TestCaseMessage testCaseMessage = new TestCaseMessage();
     testCaseMessage.setOriginalMessage(om);
     testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
     Transformer transformer = new Transformer();
     transformer.transform(testCaseMessage);
-    assertNotEquals(om, testCaseMessage.getMessageText());
+    assertEquals(om, testCaseMessage.getMessageText());
   }
 
   protected void testProcedureChangesMessageAndDoesNotContain(String om, String fieldText,
       String procedure) {
-    assertEquals(-1, testProcedureChangesMessage(om, fieldText, procedure).indexOf(fieldText));
+    assertEquals(-1, testProcedureChangesMessage(om, procedure).indexOf(fieldText));
   }
 
   protected void testProcedureChangesMessageAndDoesContain(String om, String fieldText,
       String procedure) {
-    assertNotEquals(-1, testProcedureChangesMessage(om, fieldText, procedure).indexOf(fieldText));
+    assertNotEquals(-1, testProcedureChangesMessage(om, procedure).indexOf(fieldText));
   }
 
-  private String testProcedureChangesMessage(String om, String fieldText, String procedure) {
+  protected String testProcedureChangesMessage(String om, String procedure) {
     TestCaseMessage testCaseMessage = new TestCaseMessage();
     testCaseMessage.setOriginalMessage(om);
     testCaseMessage.appendCustomTransformation(" run procedure " + procedure);

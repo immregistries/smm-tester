@@ -80,6 +80,19 @@ public class ProcedureFactory {
   public static final String PHONE_TRANSPOSE = "PHONE_TRANSPOSE";
   public static final String EMAIL_TRANSPOSE = "EMAIL_TRANSPOSE";
 
+  // letter to number
+  public static final String FIRST_NAME_LETTER_TO_NUMBER = "FIRST_NAME_LETTER_TO_NUMBER";
+  public static final String MIDDLE_NAME_LETTER_TO_NUMBER = "MIDDLE_NAME_LETTER_TO_NUMBER";
+  public static final String LAST_NAME_LETTER_TO_NUMBER = "LAST_NAME_LETTER_TO_NUMBER";
+  public static final String MOTHERS_MAIDEN_NAME_LETTER_TO_NUMBER =
+      "MOTHERS_MAIDEN_NAME_LETTER_TO_NUMBER";
+  public static final String MOTHERS_FIRST_NAME_LETTER_TO_NUMBER =
+      "MOTHERS_FIRST_NAME_LETTER_TO_NUMBER";
+  public static final String ADDRESS_STREET_LETTER_TO_NUMBER = "ADDRESS_STREET_LETTER_TO_NUMBER";
+  public static final String ADDRESS_CITY_LETTER_TO_NUMBER = "ADDRESS_CITY_LETTER_TO_NUMBER";
+  public static final String PHONE_LETTER_TO_NUMBER = "PHONE_LETTER_TO_NUMBER";
+  public static final String EMAIL_LETTER_TO_NUMBER = "EMAIL_LETTER_TO_NUMBER";
+
   // change
   public static final String FIRST_NAME_CHANGE = "FIRST_NAME_CHANGE";
   public static final String MIDDLE_NAME_CHANGE = "MIDDLE_NAME_CHANGE";
@@ -284,6 +297,26 @@ public class ProcedureFactory {
         return new TextTranspose(TextTranspose.Field.EMAIL);
       case PHONE_TRANSPOSE:
         return new TextTranspose(TextTranspose.Field.PHONE);
+
+      // letter to number
+      case FIRST_NAME_LETTER_TO_NUMBER:
+        return new TextLetterToNumber(TextLetterToNumber.Field.FIRST_NAME);
+      case MIDDLE_NAME_LETTER_TO_NUMBER:
+        return new TextLetterToNumber(TextLetterToNumber.Field.MIDDLE_NAME);
+      case LAST_NAME_LETTER_TO_NUMBER:
+        return new TextLetterToNumber(TextLetterToNumber.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_LETTER_TO_NUMBER:
+        return new TextLetterToNumber(TextLetterToNumber.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_FIRST_NAME_LETTER_TO_NUMBER:
+        return new TextLetterToNumber(TextLetterToNumber.Field.MOTHERS_FIRST_NAME);
+      case ADDRESS_STREET_LETTER_TO_NUMBER:
+        return new TextLetterToNumber(TextLetterToNumber.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_LETTER_TO_NUMBER:
+        return new TextLetterToNumber(TextLetterToNumber.Field.ADDRESS_CITY);
+      case EMAIL_LETTER_TO_NUMBER:
+        return new TextLetterToNumber(TextLetterToNumber.Field.EMAIL);
+      case PHONE_LETTER_TO_NUMBER:
+        return new TextLetterToNumber(TextLetterToNumber.Field.PHONE);
 
       // change
       case FIRST_NAME_CHANGE:

@@ -1,93 +1,16 @@
 package org.immregistries.smm.transform.procedure;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class TextTypo extends ProcedureCommon implements ProcedureInterface {
-
-
-
-  public enum Field {
-                     FIRST_NAME(5, 2, false),
-                     MIDDLE_NAME(5, 3, false),
-                     LAST_NAME(5, 1, false),
-                     MOTHERS_MAIDEN_NAME(6, 1, false),
-                     MOTHERS_FIRST_NAME(6, 2, false),
-                     ADDRESS_STREET(11, 1, false),
-                     ADDRESS_CITY(11, 3, false),
-                     PHONE(13, 7, true),
-                     EMAIL(13, 4, true);
-
-    int fieldPos;
-    int subPos;
-    boolean repeatedField;
-
-    private Field(int fieldPos, int subPos, boolean repeatedField) {
-      this.fieldPos = fieldPos;
-      this.subPos = subPos;
-      this.repeatedField = repeatedField;
-    }
-  }
-
-
-  private Transformer transformer;
-
-  public void setTransformer(Transformer transformer) {
-    this.transformer = transformer;
-  }
-
-  private Field field;
-
+public class TextTypo extends AbstractTypoProcedure {
 
   public TextTypo(Field field) {
-    this.field = field;
+    super(field);
   }
 
-  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
-      throws IOException {
-    List<String[]> fieldsList = readMessage(transformRequest);
-
-    for (String[] fields : fieldsList) {
-      String segmentName = fields[0];
-      if ("PID".equals(segmentName)) {
-        if (!field.repeatedField) {
-          String value = readValue(fields, field.fieldPos, field.subPos);
-          value = varyText(value, transformer);
-          updateValue(value, fields, field.fieldPos, field.subPos);
-        } else {
-          String[] repeatFields = readRepeats(fields, field.fieldPos);
-          int pos = 0;
-          for (String value : repeatFields) {
-            if (field == Field.PHONE) {
-              String phone = readRepeatValue(value, field.subPos);
-              if (phone.length() >= 4) {
-                phone = varyText(phone, transformer);
-                updateRepeat(phone, repeatFields, pos, field.subPos);
-              }
-            } else if (field == Field.EMAIL) {
-              String email = readRepeatValue(value, field.subPos);
-              if (email.indexOf('@') > 0) {
-                email = varyText(email, transformer);
-                updateRepeat(email, repeatFields, pos, field.subPos);
-              }
-            }
-            pos++;
-          }
-          String fieldFinal = createRepeatValue(repeatFields);
-          updateContent(fieldFinal, fields, field.fieldPos);
-        }
-      }
-    }
-
-    putMessageBackTogether(transformRequest, fieldsList);
-  }
-
-  protected static String varyText(String name, Transformer transformer) {
+  protected String varyText(String name, Transformer transformer) {
     boolean upperCase = name.toUpperCase().equals(name);
     boolean lowerCase = name.toLowerCase().equals(name);
 

@@ -76,8 +76,7 @@ public class TextTypoTest extends ProcedureCommonTest {
     testWrongHookup("Robert", "PID-5.2", ProcedureFactory.FIRST_NAME_TYPO, transformer);
     testWrongHookup("Middleditch", "PID-5.3", ProcedureFactory.MIDDLE_NAME_TYPO, transformer);
     testWrongHookup("Madre", "PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO, transformer);
-    testWrongHookup("Judy", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_TYPO,
-        transformer);
+    testWrongHookup("Judy", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_TYPO, transformer);
     testWrongHookup("4356180", "PID-13.7", ProcedureFactory.PHONE_TYPO, transformer);
     testWrongHookup("5678 Wooster Ln", "PID-11.1", ProcedureFactory.ADDRESS_STREET_TYPO,
         transformer);
@@ -86,7 +85,7 @@ public class TextTypoTest extends ProcedureCommonTest {
 
   private void testVariationDifferent(String startValue, String location, String procedure,
       Transformer transformer) {
-    assertNotEquals(startValue, TextTypo.varyText(startValue, transformer));
+    assertNotEquals(startValue, new TextTypo(null).varyText(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     testProcedureChangesMessageAndDoesNotContain(testStart, startValue, procedure);
   }
@@ -104,7 +103,7 @@ public class TextTypoTest extends ProcedureCommonTest {
     procedures.remove(procedure);
 
     for (String proc : procedures) {
-      assertNotEquals(startValue, TextTypo.varyText(startValue, transformer));
+      assertNotEquals(startValue, new TextTypo(null).varyText(startValue, transformer));
       String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
       testProcedureChangesMessageAndDoesContain(testStart, startValue, proc);
     }
