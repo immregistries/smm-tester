@@ -23,10 +23,21 @@ public class TextLetterToNumber extends AbstractTypoProcedure {
     String letter = "";
     int counter = 0;
 
+    // randomly look for a letter
     while (!typoesMap.containsKey(letter) && counter < 50) {
       pos = transformer.getRandom().nextInt(name.length() - 1) + 1;
       letter = name.substring(pos, pos + 1).toUpperCase();
       counter++;
+    }
+
+    // try really hard to find a letter, somewhere
+    if (!typoesMap.containsKey(letter)) {
+      for (pos = 1; pos < name.length(); pos++) {
+        letter = name.substring(pos, pos + 1);
+        if (typoesMap.containsKey(letter)) {
+          break;
+        }
+      }
     }
 
     if (typoesMap.containsKey(letter)) {

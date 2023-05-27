@@ -71,9 +71,9 @@ public class TextLetterToNumberTest extends ProcedureCommonTest {
     testVariationDifferent("555-5555 ext. 555", "PID-13.7", ProcedureFactory.PHONE_LETTER_TO_NUMBER,
         transformer);
 
-    testVariationDifferent("something@gmail.com", "PID-13#2.7",
+    testVariationDifferent("something@gmail.com", "PID-13.4",
         ProcedureFactory.EMAIL_LETTER_TO_NUMBER, transformer);
-    testVariationDifferent("plus+sign@apple.net", "PID-13#2.7",
+    testVariationDifferent("plus+sign@apple.net", "PID-13.4",
         ProcedureFactory.EMAIL_LETTER_TO_NUMBER, transformer);
 
     testVariationDifferent("5678 Wooster Ln", "PID-11.1",
