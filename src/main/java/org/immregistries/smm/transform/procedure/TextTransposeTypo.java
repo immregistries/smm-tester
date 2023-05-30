@@ -2,9 +2,9 @@ package org.immregistries.smm.transform.procedure;
 
 import org.immregistries.smm.transform.Transformer;
 
-public class TextTranspose extends AbstractTypoProcedure {
+public class TextTransposeTypo extends AbstractTypoProcedure {
 
-  public TextTranspose(Field field) {
+  public TextTransposeTypo(Field field) {
     super(field);
   }
 

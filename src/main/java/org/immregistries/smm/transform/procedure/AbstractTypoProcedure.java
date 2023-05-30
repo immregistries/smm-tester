@@ -38,7 +38,7 @@ public abstract class AbstractTypoProcedure extends ProcedureCommon implements P
 
   private Field field;
 
-  public AbstractTypoProcedure(Field field) {
+  protected AbstractTypoProcedure(Field field) {
     this.field = field;
   }
 

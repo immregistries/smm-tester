@@ -7,18 +7,18 @@ import java.util.List;
 import org.immregistries.smm.transform.Transformer;
 import org.junit.Test;
 
-public class TextLetterToNumberTest extends ProcedureCommonTest {
+public class TextLetterToNumberTypoTest extends ProcedureCommonTest {
 
   @Test
   public void test() {
     Transformer transformer = new Transformer();
 
-    assertEquals("A", new TextLetterToNumber(null).varyText("A", transformer));
-    assertEquals("a", new TextLetterToNumber(null).varyText("a", transformer));
+    assertEquals("A", new TextLetterToNumberTypo(null).varyText("A", transformer));
+    assertEquals("a", new TextLetterToNumberTypo(null).varyText("a", transformer));
 
-    assertEquals("O3", new TextLetterToNumber(null).varyText("Ox", transformer));
-    assertEquals("d4", new TextLetterToNumber(null).varyText("da", transformer));
-    assertEquals("E0", new TextLetterToNumber(null).varyText("ED", transformer));
+    assertEquals("O3", new TextLetterToNumberTypo(null).varyText("Ox", transformer));
+    assertEquals("d4", new TextLetterToNumberTypo(null).varyText("da", transformer));
+    assertEquals("E0", new TextLetterToNumberTypo(null).varyText("ED", transformer));
 
     testVariationDifferent("CARPENTER", "PID-5.1", ProcedureFactory.LAST_NAME_LETTER_TO_NUMBER,
         transformer);
@@ -108,14 +108,14 @@ public class TextLetterToNumberTest extends ProcedureCommonTest {
 
   private void testVariationDifferent(String startValue, String location, String procedure,
       Transformer transformer) {
-    assertNotEquals(startValue, new TextLetterToNumber(null).varyText(startValue, transformer));
+    assertNotEquals(startValue, new TextLetterToNumberTypo(null).varyText(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     testProcedureChangesMessageAndDoesNotContain(testStart, startValue, procedure);
   }
 
   private void testVariationSame(String startValue, String location, String procedure,
       Transformer transformer) {
-    assertEquals(startValue, new TextLetterToNumber(null).varyText(startValue, transformer));
+    assertEquals(startValue, new TextLetterToNumberTypo(null).varyText(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     testProcedureDoesNotChangeMessage(testStart, startValue, procedure);
   }
@@ -135,7 +135,7 @@ public class TextLetterToNumberTest extends ProcedureCommonTest {
     procedures.remove(procedure);
 
     for (String proc : procedures) {
-      assertNotEquals(startValue, new TextLetterToNumber(null).varyText(startValue, transformer));
+      assertNotEquals(startValue, new TextLetterToNumberTypo(null).varyText(startValue, transformer));
       String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
       testProcedureChangesMessageAndDoesContain(testStart, startValue, proc);
     }

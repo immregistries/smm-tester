@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import org.immregistries.smm.transform.Transformer;
 
-public class TextLetterToNumber extends AbstractTypoProcedure {
+public class TextLetterToNumberTypo extends AbstractTypoProcedure {
 
-  public TextLetterToNumber(Field field) {
+  public TextLetterToNumberTypo(Field field) {
     super(field);
   }
 

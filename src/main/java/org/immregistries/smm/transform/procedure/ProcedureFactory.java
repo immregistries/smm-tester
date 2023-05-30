@@ -69,7 +69,7 @@ public class ProcedureFactory {
   public static final String PHONE_TYPO = "PHONE_TYPO";
   public static final String EMAIL_TYPO = "EMAIL_TYPO";
 
-  // transpose
+  // transpose typo
   public static final String FIRST_NAME_TRANSPOSE = "FIRST_NAME_TRANSPOSE";
   public static final String MIDDLE_NAME_TRANSPOSE = "MIDDLE_NAME_TRANSPOSE";
   public static final String LAST_NAME_TRANSPOSE = "LAST_NAME_TRANSPOSE";
@@ -80,7 +80,7 @@ public class ProcedureFactory {
   public static final String PHONE_TRANSPOSE = "PHONE_TRANSPOSE";
   public static final String EMAIL_TRANSPOSE = "EMAIL_TRANSPOSE";
 
-  // letter to number
+  // letter to number typo
   public static final String FIRST_NAME_LETTER_TO_NUMBER = "FIRST_NAME_LETTER_TO_NUMBER";
   public static final String MIDDLE_NAME_LETTER_TO_NUMBER = "MIDDLE_NAME_LETTER_TO_NUMBER";
   public static final String LAST_NAME_LETTER_TO_NUMBER = "LAST_NAME_LETTER_TO_NUMBER";
@@ -93,7 +93,7 @@ public class ProcedureFactory {
   public static final String PHONE_LETTER_TO_NUMBER = "PHONE_LETTER_TO_NUMBER";
   public static final String EMAIL_LETTER_TO_NUMBER = "EMAIL_LETTER_TO_NUMBER";
 
-  // number to letter
+  // number to letter typo
   public static final String FIRST_NAME_NUMBER_TO_LETTER = "FIRST_NAME_NUMBER_TO_LETTER";
   public static final String MIDDLE_NAME_NUMBER_TO_LETTER = "MIDDLE_NAME_NUMBER_TO_LETTER";
   public static final String LAST_NAME_NUMBER_TO_LETTER = "LAST_NAME_NUMBER_TO_LETTER";
@@ -105,6 +105,17 @@ public class ProcedureFactory {
   public static final String ADDRESS_CITY_NUMBER_TO_LETTER = "ADDRESS_CITY_NUMBER_TO_LETTER";
   public static final String PHONE_NUMBER_TO_LETTER = "PHONE_NUMBER_TO_LETTER";
   public static final String EMAIL_NUMBER_TO_LETTER = "EMAIL_NUMBER_TO_LETTER";
+
+  // random typo
+  public static final String FIRST_NAME_RANDOM_TYPO = "FIRST_NAME_RANDOM_TYPO";
+  public static final String MIDDLE_NAME_RANDOM_TYPO = "MIDDLE_NAME_RANDOM_TYPO";
+  public static final String LAST_NAME_RANDOM_TYPO = "LAST_NAME_RANDOM_TYPO";
+  public static final String MOTHERS_MAIDEN_NAME_RANDOM_TYPO = "MOTHERS_MAIDEN_NAME_RANDOM_TYPO";
+  public static final String MOTHERS_FIRST_NAME_RANDOM_TYPO = "MOTHERS_FIRST_NAME_RANDOM_TYPO";
+  public static final String ADDRESS_STREET_RANDOM_TYPO = "ADDRESS_STREET_RANDOM_TYPO";
+  public static final String ADDRESS_CITY_RANDOM_TYPO = "ADDRESS_CITY_RANDOM_TYPO";
+  public static final String PHONE_RANDOM_TYPO = "PHONE_RANDOM_TYPO";
+  public static final String EMAIL_RANDOM_TYPO = "EMAIL_RANDOM_TYPO";
 
   // change
   public static final String FIRST_NAME_CHANGE = "FIRST_NAME_CHANGE";
@@ -291,66 +302,85 @@ public class ProcedureFactory {
       case PHONE_TYPO:
         return new TextTypo(AbstractTypoProcedure.Field.PHONE);
 
-      // transpose
+      // transpose typo
       case FIRST_NAME_TRANSPOSE:
-        return new TextTranspose(AbstractTypoProcedure.Field.FIRST_NAME);
+        return new TextTransposeTypo(AbstractTypoProcedure.Field.FIRST_NAME);
       case MIDDLE_NAME_TRANSPOSE:
-        return new TextTranspose(AbstractTypoProcedure.Field.MIDDLE_NAME);
+        return new TextTransposeTypo(AbstractTypoProcedure.Field.MIDDLE_NAME);
       case LAST_NAME_TRANSPOSE:
-        return new TextTranspose(AbstractTypoProcedure.Field.LAST_NAME);
+        return new TextTransposeTypo(AbstractTypoProcedure.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_TRANSPOSE:
-        return new TextTranspose(AbstractTypoProcedure.Field.MOTHERS_MAIDEN_NAME);
+        return new TextTransposeTypo(AbstractTypoProcedure.Field.MOTHERS_MAIDEN_NAME);
       case MOTHERS_FIRST_NAME_TRANSPOSE:
-        return new TextTranspose(AbstractTypoProcedure.Field.MOTHERS_FIRST_NAME);
+        return new TextTransposeTypo(AbstractTypoProcedure.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_TRANSPOSE:
-        return new TextTranspose(AbstractTypoProcedure.Field.ADDRESS_STREET);
+        return new TextTransposeTypo(AbstractTypoProcedure.Field.ADDRESS_STREET);
       case ADDRESS_CITY_TRANSPOSE:
-        return new TextTranspose(AbstractTypoProcedure.Field.ADDRESS_CITY);
+        return new TextTransposeTypo(AbstractTypoProcedure.Field.ADDRESS_CITY);
       case EMAIL_TRANSPOSE:
-        return new TextTranspose(AbstractTypoProcedure.Field.EMAIL);
+        return new TextTransposeTypo(AbstractTypoProcedure.Field.EMAIL);
       case PHONE_TRANSPOSE:
-        return new TextTranspose(AbstractTypoProcedure.Field.PHONE);
+        return new TextTransposeTypo(AbstractTypoProcedure.Field.PHONE);
 
-      // letter to number
+      // letter to number typo
       case FIRST_NAME_LETTER_TO_NUMBER:
-        return new TextLetterToNumber(AbstractTypoProcedure.Field.FIRST_NAME);
+        return new TextLetterToNumberTypo(AbstractTypoProcedure.Field.FIRST_NAME);
       case MIDDLE_NAME_LETTER_TO_NUMBER:
-        return new TextLetterToNumber(AbstractTypoProcedure.Field.MIDDLE_NAME);
+        return new TextLetterToNumberTypo(AbstractTypoProcedure.Field.MIDDLE_NAME);
       case LAST_NAME_LETTER_TO_NUMBER:
-        return new TextLetterToNumber(AbstractTypoProcedure.Field.LAST_NAME);
+        return new TextLetterToNumberTypo(AbstractTypoProcedure.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_LETTER_TO_NUMBER:
-        return new TextLetterToNumber(AbstractTypoProcedure.Field.MOTHERS_MAIDEN_NAME);
+        return new TextLetterToNumberTypo(AbstractTypoProcedure.Field.MOTHERS_MAIDEN_NAME);
       case MOTHERS_FIRST_NAME_LETTER_TO_NUMBER:
-        return new TextLetterToNumber(AbstractTypoProcedure.Field.MOTHERS_FIRST_NAME);
+        return new TextLetterToNumberTypo(AbstractTypoProcedure.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_LETTER_TO_NUMBER:
-        return new TextLetterToNumber(AbstractTypoProcedure.Field.ADDRESS_STREET);
+        return new TextLetterToNumberTypo(AbstractTypoProcedure.Field.ADDRESS_STREET);
       case ADDRESS_CITY_LETTER_TO_NUMBER:
-        return new TextLetterToNumber(AbstractTypoProcedure.Field.ADDRESS_CITY);
+        return new TextLetterToNumberTypo(AbstractTypoProcedure.Field.ADDRESS_CITY);
       case EMAIL_LETTER_TO_NUMBER:
-        return new TextLetterToNumber(AbstractTypoProcedure.Field.EMAIL);
+        return new TextLetterToNumberTypo(AbstractTypoProcedure.Field.EMAIL);
       case PHONE_LETTER_TO_NUMBER:
-        return new TextLetterToNumber(AbstractTypoProcedure.Field.PHONE);
+        return new TextLetterToNumberTypo(AbstractTypoProcedure.Field.PHONE);
 
-      // number to letter
+      // number to letter typo
       case FIRST_NAME_NUMBER_TO_LETTER:
-        return new TextNumberToLetter(AbstractTypoProcedure.Field.FIRST_NAME);
+        return new TextNumberToLetterTypo(AbstractTypoProcedure.Field.FIRST_NAME);
       case MIDDLE_NAME_NUMBER_TO_LETTER:
-        return new TextNumberToLetter(AbstractTypoProcedure.Field.MIDDLE_NAME);
+        return new TextNumberToLetterTypo(AbstractTypoProcedure.Field.MIDDLE_NAME);
       case LAST_NAME_NUMBER_TO_LETTER:
-        return new TextNumberToLetter(AbstractTypoProcedure.Field.LAST_NAME);
+        return new TextNumberToLetterTypo(AbstractTypoProcedure.Field.LAST_NAME);
       case MOTHERS_MAIDEN_NAME_NUMBER_TO_LETTER:
-        return new TextNumberToLetter(AbstractTypoProcedure.Field.MOTHERS_MAIDEN_NAME);
+        return new TextNumberToLetterTypo(AbstractTypoProcedure.Field.MOTHERS_MAIDEN_NAME);
       case MOTHERS_FIRST_NAME_NUMBER_TO_LETTER:
-        return new TextNumberToLetter(AbstractTypoProcedure.Field.MOTHERS_FIRST_NAME);
+        return new TextNumberToLetterTypo(AbstractTypoProcedure.Field.MOTHERS_FIRST_NAME);
       case ADDRESS_STREET_NUMBER_TO_LETTER:
-        return new TextNumberToLetter(AbstractTypoProcedure.Field.ADDRESS_STREET);
+        return new TextNumberToLetterTypo(AbstractTypoProcedure.Field.ADDRESS_STREET);
       case ADDRESS_CITY_NUMBER_TO_LETTER:
-        return new TextNumberToLetter(AbstractTypoProcedure.Field.ADDRESS_CITY);
+        return new TextNumberToLetterTypo(AbstractTypoProcedure.Field.ADDRESS_CITY);
       case EMAIL_NUMBER_TO_LETTER:
-        return new TextNumberToLetter(AbstractTypoProcedure.Field.EMAIL);
+        return new TextNumberToLetterTypo(AbstractTypoProcedure.Field.EMAIL);
       case PHONE_NUMBER_TO_LETTER:
-        return new TextNumberToLetter(AbstractTypoProcedure.Field.PHONE);
+        return new TextNumberToLetterTypo(AbstractTypoProcedure.Field.PHONE);
 
+      // random typo
+      case FIRST_NAME_RANDOM_TYPO:
+        return new TextRandomTypo(AbstractTypoProcedure.Field.FIRST_NAME);
+      case MIDDLE_NAME_RANDOM_TYPO:
+        return new TextRandomTypo(AbstractTypoProcedure.Field.MIDDLE_NAME);
+      case LAST_NAME_RANDOM_TYPO:
+        return new TextRandomTypo(AbstractTypoProcedure.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_RANDOM_TYPO:
+        return new TextRandomTypo(AbstractTypoProcedure.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_FIRST_NAME_RANDOM_TYPO:
+        return new TextRandomTypo(AbstractTypoProcedure.Field.MOTHERS_FIRST_NAME);
+      case ADDRESS_STREET_RANDOM_TYPO:
+        return new TextRandomTypo(AbstractTypoProcedure.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_RANDOM_TYPO:
+        return new TextRandomTypo(AbstractTypoProcedure.Field.ADDRESS_CITY);
+      case EMAIL_RANDOM_TYPO:
+        return new TextRandomTypo(AbstractTypoProcedure.Field.EMAIL);
+      case PHONE_RANDOM_TYPO:
+        return new TextRandomTypo(AbstractTypoProcedure.Field.PHONE);
 
       // change
       case FIRST_NAME_CHANGE:
