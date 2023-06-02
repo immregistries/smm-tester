@@ -46,6 +46,8 @@ public class ProcedureCommonTest extends TestCase {
     testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
     Transformer transformer = new Transformer();
     transformer.transform(testCaseMessage);
+    System.out.println("om = " + om);
+    System.out.println("tc = " + testCaseMessage.getMessageText());
     assertNotEquals(om, testCaseMessage.getMessageText());
   }
 
@@ -65,6 +67,8 @@ public class ProcedureCommonTest extends TestCase {
     testCaseMessage.appendCustomTransformation(" run procedure " + procedure);
     Transformer transformer = new Transformer();
     transformer.transform(testCaseMessage);
+    System.out.println("om = " + om);
+    System.out.println("tc = " + testCaseMessage.getMessageText());
     assertNotEquals(om, testCaseMessage.getMessageText());
     return testCaseMessage.getMessageText();
   }

@@ -47,6 +47,23 @@ public class ProcedureFactory {
   public static final String ADDRESS_CITY_ALTERNATIVE_ENDINGS = "ADDRESS_CITY_ALTERNATIVE_ENDINGS";
   public static final String EMAIL_ALTERNATIVE_ENDINGS = "EMAIL_ALTERNATIVE_ENDINGS";
 
+  // alternative ending vowels
+  public static final String FIRST_NAME_ALTERNATIVE_ENDING_VOWELS =
+      "FIRST_NAME_ALTERNATIVE_ENDING_VOWELS";
+  public static final String MIDDLE_NAME_ALTERNATIVE_ENDING_VOWELS =
+      "MIDDLE_NAME_ALTERNATIVE_ENDING_VOWELS";
+  public static final String LAST_NAME_ALTERNATIVE_ENDING_VOWELS =
+      "LAST_NAME_ALTERNATIVE_ENDING_VOWELS";
+  public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDING_VOWELS =
+      "MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDING_VOWELS";
+  public static final String MOTHERS_FIRST_NAME_ALTERNATIVE_ENDING_VOWELS =
+      "MOTHERS_FIRST_NAME_ALTERNATIVE_ENDING_VOWELS";
+  public static final String ADDRESS_STREET_ALTERNATIVE_ENDING_VOWELS =
+      "ADDRESS_STREET_ALTERNATIVE_ENDING_VOWELS";
+  public static final String ADDRESS_CITY_ALTERNATIVE_ENDING_VOWELS =
+      "ADDRESS_CITY_ALTERNATIVE_ENDING_VOWELS";
+  public static final String EMAIL_ALTERNATIVE_ENDING_VOWELS = "EMAIL_ALTERNATIVE_ENDING_VOWELS";
+
   // add variation
   public static final String FIRST_NAME_ADD_VARIATION = "FIRST_NAME_ADD_VARIATION";
   public static final String MIDDLE_NAME_ADD_VARIATION = "MIDDLE_NAME_ADD_VARIATION";
@@ -215,6 +232,24 @@ public class ProcedureFactory {
         return new AlternativeEndings(AlternativeEndings.Field.ADDRESS_CITY);
       case EMAIL_ALTERNATIVE_ENDINGS:
         return new AlternativeEndings(AlternativeEndings.Field.EMAIL);
+
+      // alternative ending vowels
+      case FIRST_NAME_ALTERNATIVE_ENDING_VOWELS:
+        return new AlternativeEndingVowels(AlternativeEndingVowels.Field.FIRST_NAME);
+      case MIDDLE_NAME_ALTERNATIVE_ENDING_VOWELS:
+        return new AlternativeEndingVowels(AlternativeEndingVowels.Field.MIDDLE_NAME);
+      case LAST_NAME_ALTERNATIVE_ENDING_VOWELS:
+        return new AlternativeEndingVowels(AlternativeEndingVowels.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDING_VOWELS:
+        return new AlternativeEndingVowels(AlternativeEndingVowels.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_FIRST_NAME_ALTERNATIVE_ENDING_VOWELS:
+        return new AlternativeEndingVowels(AlternativeEndingVowels.Field.MOTHERS_FIRST_NAME);
+      case ADDRESS_STREET_ALTERNATIVE_ENDING_VOWELS:
+        return new AlternativeEndingVowels(AlternativeEndingVowels.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_ALTERNATIVE_ENDING_VOWELS:
+        return new AlternativeEndingVowels(AlternativeEndingVowels.Field.ADDRESS_CITY);
+      case EMAIL_ALTERNATIVE_ENDING_VOWELS:
+        return new AlternativeEndingVowels(AlternativeEndingVowels.Field.EMAIL);
 
       // add variation
       case FIRST_NAME_ADD_VARIATION:
