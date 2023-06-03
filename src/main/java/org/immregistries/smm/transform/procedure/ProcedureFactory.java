@@ -58,6 +58,37 @@ public class ProcedureFactory {
   public static final String ADDRESS_CITY_ADD_VARIATION = "ADDRESS_CITY_ADD_VARIATION";
   public static final String EMAIL_ADD_VARIATION = "EMAIL_ADD_VARIATION";
 
+  // special characters
+  public static final String FIRST_NAME_SPECIAL_CHARACTERS = "FIRST_NAME_SPECIAL_CHARACTERS";
+  public static final String MIDDLE_NAME_SPECIAL_CHARACTERS = "MIDDLE_NAME_SPECIAL_CHARACTERS";
+  public static final String LAST_NAME_SPECIAL_CHARACTERS = "LAST_NAME_SPECIAL_CHARACTERS";
+  public static final String MOTHERS_MAIDEN_NAME_SPECIAL_CHARACTERS =
+      "MOTHERS_MAIDEN_NAME_SPECIAL_CHARACTERS";
+  public static final String MOTHERS_FIRST_NAME_SPECIAL_CHARACTERS =
+      "MOTHERS_FIRST_NAME_SPECIAL_CHARACTERS";
+  public static final String ADDRESS_STREET_SPECIAL_CHARACTERS =
+      "ADDRESS_STREET_SPECIAL_CHARACTERS";
+  public static final String ADDRESS_CITY_SPECIAL_CHARACTERS = "ADDRESS_CITY_SPECIAL_CHARACTERS";
+  public static final String EMAIL_SPECIAL_CHARACTERS = "EMAIL_SPECIAL_CHARACTERS";
+
+  // special characters extended
+  public static final String FIRST_NAME_SPECIAL_CHARACTERS_EXTENDED =
+      "FIRST_NAME_SPECIAL_CHARACTERS_EXTENDED";
+  public static final String MIDDLE_NAME_SPECIAL_CHARACTERS_EXTENDED =
+      "MIDDLE_NAME_SPECIAL_CHARACTERS_EXTENDED";
+  public static final String LAST_NAME_SPECIAL_CHARACTERS_EXTENDED =
+      "LAST_NAME_SPECIAL_CHARACTERS_EXTENDED";
+  public static final String MOTHERS_MAIDEN_NAME_SPECIAL_CHARACTERS_EXTENDED =
+      "MOTHERS_MAIDEN_NAME_SPECIAL_CHARACTERS_EXTENDED";
+  public static final String MOTHERS_FIRST_NAME_SPECIAL_CHARACTERS_EXTENDED =
+      "MOTHERS_FIRST_NAME_SPECIAL_CHARACTERS_EXTENDED";
+  public static final String ADDRESS_STREET_SPECIAL_CHARACTERS_EXTENDED =
+      "ADDRESS_STREET_SPECIAL_CHARACTERS_EXTENDED";
+  public static final String ADDRESS_CITY_SPECIAL_CHARACTERS_EXTENDED =
+      "ADDRESS_CITY_SPECIAL_CHARACTERS_EXTENDED";
+  public static final String EMAIL_SPECIAL_CHARACTERS_EXTENDED =
+      "EMAIL_SPECIAL_CHARACTERS_EXTENDED";
+
   // typo
   public static final String FIRST_NAME_TYPO = "FIRST_NAME_TYPO";
   public static final String MIDDLE_NAME_TYPO = "MIDDLE_NAME_TYPO";
@@ -233,6 +264,42 @@ public class ProcedureFactory {
         return new AddVariation(AddVariation.Field.ADDRESS_CITY);
       case EMAIL_ADD_VARIATION:
         return new AddVariation(AddVariation.Field.EMAIL);
+
+      // special characters
+      case FIRST_NAME_SPECIAL_CHARACTERS:
+        return new SpecialCharacters(SpecialCharacters.Field.FIRST_NAME);
+      case MIDDLE_NAME_SPECIAL_CHARACTERS:
+        return new SpecialCharacters(SpecialCharacters.Field.MIDDLE_NAME);
+      case LAST_NAME_SPECIAL_CHARACTERS:
+        return new SpecialCharacters(SpecialCharacters.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_SPECIAL_CHARACTERS:
+        return new SpecialCharacters(SpecialCharacters.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_FIRST_NAME_SPECIAL_CHARACTERS:
+        return new SpecialCharacters(SpecialCharacters.Field.MOTHERS_FIRST_NAME);
+      case ADDRESS_STREET_SPECIAL_CHARACTERS:
+        return new SpecialCharacters(SpecialCharacters.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_SPECIAL_CHARACTERS:
+        return new SpecialCharacters(SpecialCharacters.Field.ADDRESS_CITY);
+      case EMAIL_SPECIAL_CHARACTERS:
+        return new SpecialCharacters(SpecialCharacters.Field.EMAIL);
+
+      // special characters extended
+      case FIRST_NAME_SPECIAL_CHARACTERS_EXTENDED:
+        return new SpecialCharactersExtended(SpecialCharacters.Field.FIRST_NAME);
+      case MIDDLE_NAME_SPECIAL_CHARACTERS_EXTENDED:
+        return new SpecialCharactersExtended(SpecialCharacters.Field.MIDDLE_NAME);
+      case LAST_NAME_SPECIAL_CHARACTERS_EXTENDED:
+        return new SpecialCharactersExtended(SpecialCharacters.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_SPECIAL_CHARACTERS_EXTENDED:
+        return new SpecialCharactersExtended(SpecialCharacters.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_FIRST_NAME_SPECIAL_CHARACTERS_EXTENDED:
+        return new SpecialCharactersExtended(SpecialCharacters.Field.MOTHERS_FIRST_NAME);
+      case ADDRESS_STREET_SPECIAL_CHARACTERS_EXTENDED:
+        return new SpecialCharactersExtended(SpecialCharacters.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_SPECIAL_CHARACTERS_EXTENDED:
+        return new SpecialCharactersExtended(SpecialCharacters.Field.ADDRESS_CITY);
+      case EMAIL_SPECIAL_CHARACTERS_EXTENDED:
+        return new SpecialCharactersExtended(SpecialCharacters.Field.EMAIL);
 
       // typo
       case FIRST_NAME_TYPO:
