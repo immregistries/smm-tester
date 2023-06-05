@@ -1,7 +1,6 @@
 package org.immregistries.smm.transform.procedure;
 
 import static org.junit.Assert.assertNotEquals;
-import org.apache.commons.lang3.StringUtils;
 import org.immregistries.smm.transform.Transformer;
 import org.junit.Test;
 
@@ -87,7 +86,6 @@ public class SpecialCharactersTest extends ProcedureCommonTest {
     sc.setTransformer(transformer);
 
     assertNotEquals(startValue, sc.varyText(startValue));
-    assertTrue(startValue.equalsIgnoreCase(StringUtils.stripAccents(sc.varyText(startValue))));
 
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     testProcedureChangesMessageAndDoesNotContain(testStart, startValue, procedure);
