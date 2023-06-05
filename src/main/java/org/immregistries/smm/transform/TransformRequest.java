@@ -26,6 +26,7 @@ public class TransformRequest {
   private Map<String, TestCaseMessage> testCaseMessageMap = null;
   private boolean hasException = false;
   private Throwable exception = null;
+  private TestCaseMessage currentTestCaseMessage;
 
   public Map<String, TestCaseMessage> getTestCaseMessageMap() {
     return testCaseMessageMap;
@@ -215,4 +216,11 @@ public class TransformRequest {
     this.line = line;
   }
 
+  public TestCaseMessage getCurrentTestCaseMessage() {
+    return currentTestCaseMessage;
+  }
+
+  public void setCurrentTestCaseMessage(TestCaseMessage currentTestCaseMessage) {
+    this.currentTestCaseMessage = currentTestCaseMessage;
+  }
 }

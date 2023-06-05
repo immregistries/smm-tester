@@ -97,6 +97,7 @@ public class Transformer {
   private static final String INSERT_SEGMENT_IF_MISSING_FROM_MESSAGE = "if missing from message";
 
   private static final String RUN_PROCEDURE = "run procedure";
+  private static final String SET = "set";
 
   private static final String REMOVE_REPEAT = "remove repeat"; // remove repeat
                                                                // PID-5.5 valued
@@ -523,14 +524,12 @@ public class Transformer {
         transforms += customTransformations + "\n";
       }
     }
-    if (scenarioTransformations != null)
 
-    {
+    if (scenarioTransformations != null) {
       transforms += scenarioTransformations;
     }
-    if (additionalTransformations != null)
 
-    {
+    if (additionalTransformations != null) {
       transforms += additionalTransformations;
     }
 
@@ -610,6 +609,7 @@ public class Transformer {
     transformRequest.setTransformText(transforms);
     transformRequest.setSegmentSeparator(testCaseMessage.getLineEnding());
     transformRequest.setTestCaseMessageMap(testCaseMessage.getTestCaseMessageMap());
+    transformRequest.setCurrentTestCaseMessage(testCaseMessage);
     transform(transformRequest);
     String result = transformRequest.getResultText();
     testCaseMessage.setMessageText(result);
@@ -626,6 +626,7 @@ public class Transformer {
     transformRequest.setTransformText(additionTransformations);
     transformRequest.setSegmentSeparator(testCaseMessage.getLineEnding());
     transformRequest.setTestCaseMessageMap(testCaseMessage.getTestCaseMessageMap());
+    transformRequest.setCurrentTestCaseMessage(testCaseMessage);
     transform(transformRequest);
     testCaseMessage.setHasIssue(transformRequest.hasException());
     testCaseMessage.setException(transformRequest.getException());
@@ -1067,12 +1068,11 @@ public class Transformer {
         transformRequest.setLine(transformCommand);
 
         if (transformCommand.length() > 0) {
-          {
-            boolean shouldSkipTransform = checkForAgeSkip(transformRequest);
-            if (shouldSkipTransform) {
-              continue;
-            }
+          boolean shouldSkipTransform = checkForAgeSkip(transformRequest);
+          if (shouldSkipTransform) {
+            continue;
           }
+
           if (transformCommand.toLowerCase().startsWith(INSERT_SEGMENT)) {
             doInsertSegment(transformRequest);
           } else if (transformCommand.toLowerCase().startsWith(REMOVE_SEGMENT)) {
@@ -1091,6 +1091,8 @@ public class Transformer {
             doClear(transformRequest);
           } else if (transformCommand.toLowerCase().trim().startsWith(RUN_PROCEDURE)) {
             doRunProcedure(transformRequest);
+          } else if (transformCommand.toLowerCase().trim().startsWith(SET)) {
+            doSetVariable(transformRequest);
           } else {
             doSetField(transformRequest);
           }
@@ -1175,6 +1177,33 @@ public class Transformer {
       }
     }
     transformRequest.setResultText(resultText);
+  }
+
+  public void doSetVariable(TransformRequest transformRequest) throws IOException {
+    if (transformRequest.getCurrentTestCaseMessage() == null) {
+      // do nothing if test case message is null
+      return;
+    }
+
+    String line = transformRequest.getLine();
+
+    int posEqual = line.indexOf("=");
+    if (posEqual < 1) {
+      return;
+    }
+
+    String command = line.substring(SET.length()).trim();
+    String[] parts = command.split("\\=");
+    String name = parts[0];
+
+    transformRequest.setLine(parts[1]);
+    Transform transform = readHL7Reference(line, 0);
+    transform.value = parts[1];
+    doReplacements(transform, transformRequest);
+    String value = transform.value;
+
+    Map<String, String> variables = transformRequest.getCurrentTestCaseMessage().getVariables();
+    variables.put(name, value);
   }
 
   public void doClear(TransformRequest transformRequest) throws IOException {
@@ -2632,8 +2661,31 @@ public class Transformer {
       // do nothing
     } else if (t.value.startsWith("[") && t.value.endsWith("]")) {
       String v = t.value.substring(1, t.value.length() - 1);
-      t.valueTransform = readHL7Reference(v, v.length());
+      String variableName = v;
+
+      TestCaseMessage tcm = null;
+      if (variableName.contains("::")) {
+        String[] split = variableName.split("\\:\\:");
+        tcm = transformRequest.getTestCaseMessageMap().get(split[0]);
+        variableName = split[1];
+      } else {
+        tcm = transformRequest.getCurrentTestCaseMessage();
+      }
+
+      if (tcm != null) {
+        Map<String, String> variables = tcm.getVariables();
+
+        if (variables.containsKey(variableName)) {
+          t.value = variables.get(variableName);
+          doReplacements(t, transformRequest);
+        } else {
+          t.valueTransform = readHL7Reference(v, v.length());
+        }
+      } else {
+        t.valueTransform = readHL7Reference(v, v.length());
+      }
     }
+
     if (t.valueTransform != null) {
       if (t.valueTransform.getSegment().equals(t.segment)
           && !t.valueTransform.isSegmentRepeatSet()) {
