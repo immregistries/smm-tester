@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
@@ -177,15 +178,16 @@ public class TestCaseMessage {
   private long totalRunTime = 0;
   private StringBuilder log = new StringBuilder();
   private String scenarioTransforms = null;
+  private Map<String, String> variables = new HashMap<>();
 
   public String getOriginalTestCaseNumber() {
     return originalTestCaseNumber;
   }
-  
+
   public void setOriginalTestCaseNumber(String originalTestCaseNumber) {
     this.originalTestCaseNumber = originalTestCaseNumber;
   }
-  
+
   public void log(String s) {
     log.append(s);
     log.append("\n");
@@ -229,6 +231,10 @@ public class TestCaseMessage {
 
   public Map<String, TestCaseMessage> getTestCaseMessageMap() {
     return testCaseMessageMap;
+  }
+
+  public Map<String, String> getVariables() {
+    return variables;
   }
 
   public TestCaseMode getTestCaseMode() {
@@ -986,12 +992,10 @@ public class TestCaseMessage {
       if (!scenario.equals("")) {
         stringOut.println(SCENARIO + " " + scenario);
       }
-      if (!testType.equals(""))
-      {
+      if (!testType.equals("")) {
         stringOut.println(TEST_TYPE + " " + testType);
       }
-      if (testCaseMode != TestCaseMode.DEFAULT)
-      {
+      if (testCaseMode != TestCaseMode.DEFAULT) {
         stringOut.println(TEST_CASE_MODE + " " + testCaseMode);
       }
       stringOut.println(

@@ -47,21 +47,18 @@ public class HyphenateVariation extends ProcedureCommon implements ProcedureInte
           value = varyName(value, transformer, field);
           updateValue(value, fields, field.fieldPos, field.subPos);
         } else {
-          int fieldPos = 13;
-          String[] repeatFields = readRepeats(fields, fieldPos);
+          String[] repeatFields = readRepeats(fields, field.fieldPos);
           int pos = 0;
           for (String value : repeatFields) {
-            int subPos = 4;
-
-            String email = readRepeatValue(value, subPos);
+            String email = readRepeatValue(value, field.subPos);
             if (email.indexOf('@') > 0) {
               email = varyName(email, transformer, field);
-              updateRepeat(email, repeatFields, pos, subPos);
+              updateRepeat(email, repeatFields, pos, field.subPos);
             }
             pos++;
           }
           String fieldFinal = createRepeatValue(repeatFields);
-          updateContent(fieldFinal, fields, fieldPos);
+          updateContent(fieldFinal, fields, field.fieldPos);
         }
       }
     }

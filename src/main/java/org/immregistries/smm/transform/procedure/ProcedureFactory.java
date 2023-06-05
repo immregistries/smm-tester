@@ -154,6 +154,20 @@ public class ProcedureFactory {
   public static final String ADDRESS_CITY_HYPHENATE_VARIATION = "ADDRESS_CITY_HYPHENATE_VARIATION";
   public static final String EMAIL_HYPHENATE_VARIATION = "EMAIL_HYPHENATE_VARIATION";
 
+  // alternative spellings
+  public static final String FIRST_NAME_ALTERNATIVE_SPELLINGS = "FIRST_NAME_ALTERNATIVE_SPELLINGS";
+  public static final String MIDDLE_NAME_ALTERNATIVE_SPELLINGS =
+      "MIDDLE_NAME_ALTERNATIVE_SPELLINGS";
+  public static final String LAST_NAME_ALTERNATIVE_SPELLINGS = "LAST_NAME_ALTERNATIVE_SPELLINGS";
+  public static final String MOTHERS_MAIDEN_NAME_ALTERNATIVE_SPELLINGS =
+      "MOTHERS_MAIDEN_NAME_ALTERNATIVE_SPELLINGS";
+  public static final String MOTHERS_FIRST_NAME_ALTERNATIVE_SPELLINGS =
+      "MOTHERS_FIRST_NAME_ALTERNATIVE_SPELLINGS";
+  public static final String ADDRESS_STREET_ALTERNATIVE_SPELLINGS =
+      "ADDRESS_STREET_ALTERNATIVE_SPELLINGS";
+  public static final String ADDRESS_CITY_ALTERNATIVE_SPELLINGS =
+      "ADDRESS_CITY_ALTERNATIVE_SPELLINGS";
+
   // remove aira suffix
   public static final String FIRST_NAME_REMOVE_AIRA_SUFFIX = "FIRST_NAME_REMOVE_AIRA_SUFFIX";
   public static final String LAST_NAME_REMOVE_AIRA_SUFFIX = "LAST_NAME_REMOVE_AIRA_SUFFIX";
@@ -437,6 +451,22 @@ public class ProcedureFactory {
         return new HyphenateVariation(HyphenateVariation.Field.ADDRESS_CITY);
       case EMAIL_HYPHENATE_VARIATION:
         return new HyphenateVariation(HyphenateVariation.Field.EMAIL);
+
+      // alternative spellings
+      case FIRST_NAME_ALTERNATIVE_SPELLINGS:
+        return new AlternativeSpellings(AlternativeSpellings.Field.FIRST_NAME);
+      case MIDDLE_NAME_ALTERNATIVE_SPELLINGS:
+        return new AlternativeSpellings(AlternativeSpellings.Field.MIDDLE_NAME);
+      case LAST_NAME_ALTERNATIVE_SPELLINGS:
+        return new AlternativeSpellings(AlternativeSpellings.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_ALTERNATIVE_SPELLINGS:
+        return new AlternativeSpellings(AlternativeSpellings.Field.MOTHERS_MAIDEN_NAME);
+      case MOTHERS_FIRST_NAME_ALTERNATIVE_SPELLINGS:
+        return new AlternativeSpellings(AlternativeSpellings.Field.MOTHERS_FIRST_NAME);
+      case ADDRESS_STREET_ALTERNATIVE_SPELLINGS:
+        return new AlternativeSpellings(AlternativeSpellings.Field.ADDRESS_STREET);
+      case ADDRESS_CITY_ALTERNATIVE_SPELLINGS:
+        return new AlternativeSpellings(AlternativeSpellings.Field.ADDRESS_CITY);
 
       // remove aira suffix
       case FIRST_NAME_REMOVE_AIRA_SUFFIX:
