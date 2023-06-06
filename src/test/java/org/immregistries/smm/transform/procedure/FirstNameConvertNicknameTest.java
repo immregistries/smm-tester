@@ -16,8 +16,14 @@ public class FirstNameConvertNicknameTest extends ProcedureCommonTest {
     assertEquals("Carolina", FirstNameConvertNickname.varyText("Caro", transformer));
     assertEquals("Caro", FirstNameConvertNickname.varyText("Carolina", transformer));
     assertEquals("Ignacio", FirstNameConvertNickname.varyText("Nacho", transformer));
+
     assertEquals("Shaquille", FirstNameConvertNickname.varyText("Shaq", transformer));
+    assertEquals("shaquille", FirstNameConvertNickname.varyText("shaq", transformer));
+    assertEquals("SHAQUILLE", FirstNameConvertNickname.varyText("SHAQ", transformer));
+
     assertEquals("Shaq", FirstNameConvertNickname.varyText("Shaquille", transformer));
+    assertEquals("shaq", FirstNameConvertNickname.varyText("shaquille", transformer));
+    assertEquals("SHAQ", FirstNameConvertNickname.varyText("SHAQUILLE", transformer));
 
     testVariationDifferent("Avery", "PID-5.2", ProcedureFactory.FIRST_NAME_CONVERT_TO_NICKNAME,
         transformer);
