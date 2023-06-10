@@ -140,6 +140,8 @@ public class Transformer {
   private static final int VACCINE_VIS3_PUB_CODE = 16;
   private static final int VACCINE_VIS3_PUB_DATE = 17;
 
+  private static final String REPEAT_REF = "-?";
+
   private static Map<String, List<String[]>> conceptMap = null;
   private static Map<String, List<String[]>> testDataMap = null;
   private static Random random = new Random();
@@ -2360,22 +2362,13 @@ public class Transformer {
 
   protected static String getValueFromHL7(final String resultText, Transform t,
       TransformRequest transformRequest) throws IOException {
-    BufferedReader inResult;
-    {
-      if (t.testCaseId != null) {
-        if (transformRequest == null) {
-          return "";
-        }
-        Map<String, TestCaseMessage> testCaseMessageMap = transformRequest.getTestCaseMessageMap();
-        if (testCaseMessageMap == null || !testCaseMessageMap.containsKey(t.testCaseId)) {
-          return "";
-        }
-        inResult = new BufferedReader(
-            new StringReader(testCaseMessageMap.get(t.testCaseId).getMessageText()));
-      } else {
-        inResult = new BufferedReader(new StringReader(resultText));
-      }
+
+    BufferedReader inResult = getMessageText(resultText, t, transformRequest);
+
+    if (inResult == null) {
+      return "";
     }
+
     boolean foundBoundStart = false;
     boolean foundBoundEnd = false;
     int boundCount = 0;
@@ -2513,6 +2506,62 @@ public class Transformer {
       }
     }
     return "";
+  }
+
+  protected static BufferedReader getMessageText(final String resultText, Transform t,
+      TransformRequest transformRequest) {
+
+    if (t.testCaseId == null) {
+      return new BufferedReader(new StringReader(resultText));
+    }
+
+    if (transformRequest == null || transformRequest.getTestCaseMessageMap() == null) {
+      return null;
+    }
+
+    String testCaseId = t.testCaseId;
+
+    Map<String, TestCaseMessage> testCaseMessageMap = transformRequest.getTestCaseMessageMap();
+
+    TestCaseMessage matchingMessage = null;
+
+    // REPEAT_REF is the repeat set of characters
+    // indicating we want to try and match up the current repeat number against the same number of the reference
+    // so if test case ID is 1.1REPEAT_REF (right now 1.1-?), and the current test is 1.2-1, then we will try and match against 1.1-1
+    if (testCaseId.endsWith(REPEAT_REF)) {
+      // drop the ~ for now, we know it's there
+      testCaseId = testCaseId.substring(0, testCaseId.length() - REPEAT_REF.length());
+
+      if (transformRequest.getCurrentTestCaseMessage() == null) {
+        // we don't know what the current test is, so set the test case ID without the REPEAT_REF
+        matchingMessage = testCaseMessageMap.get(testCaseId);
+      } else {
+        // we do know what the current test case is, see if it's ends in -1, -2, etc.
+        String currentTestCaseId = transformRequest.getCurrentTestCaseMessage().getTestCaseNumber();
+        if (currentTestCaseId.matches(".*-\\d+$")) {
+          // the current test case ID ends in -1, -2, etc.
+          int repeatIndex = currentTestCaseId.lastIndexOf("-");
+          String repeat = currentTestCaseId.substring(repeatIndex);
+
+          // look up the message with the -1, -2, etc.
+          matchingMessage = testCaseMessageMap.get(testCaseId + repeat);
+
+          // if it's not there for whatever reason, just use the original test case ID
+          if (matchingMessage == null) {
+            matchingMessage = testCaseMessageMap.get(testCaseId);
+          }
+        } else {
+          // the current test case is not a repeat, just look up the non-repeat version
+          matchingMessage = testCaseMessageMap.get(testCaseId);
+        }
+      }
+    }
+
+    if (matchingMessage == null) {
+      return null;
+    }
+
+    return new BufferedReader(new StringReader(matchingMessage.getMessageText()));
   }
 
   public static Transform readHL7Reference(String ref) {
