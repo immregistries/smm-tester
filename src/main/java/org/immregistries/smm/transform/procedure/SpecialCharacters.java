@@ -102,9 +102,9 @@ public class SpecialCharacters extends ProcedureCommon implements ProcedureInter
     }
 
     if (getDiacritics().containsKey(letter)) {
-      List<String> diacritics = getDiacritics().get(letter);
-      String diacritic = diacritics.get(transformer.getRandom().nextInt(diacritics.size()));
-      name = name.substring(0, pos) + (diacritic).toLowerCase() + name.substring(pos + 1);
+      List<Character> diacritics = getDiacritics().get(letter);
+      Character diacritic = diacritics.get(transformer.getRandom().nextInt(diacritics.size()));
+      name = name.substring(0, pos) + diacritic + name.substring(pos + 1);
     }
 
     if (upperCase) {
@@ -115,22 +115,23 @@ public class SpecialCharacters extends ProcedureCommon implements ProcedureInter
     return name;
   }
 
-  protected Map<String, List<String>> getDiacritics() {
+  protected Map<String, List<Character>> getDiacritics() {
     return DIACRITICS;
   }
 
-  private static final Map<String, List<String>> DIACRITICS =
+  private static final Map<String, List<Character>> DIACRITICS =
       new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
   static {
     // https://en.wikipedia.org/wiki/Diacritic
+    // https://www.rapidtables.com/code/text/ascii-table.html
 
-    DIACRITICS.put("a", Arrays.asList("á"));
-    DIACRITICS.put("e", Arrays.asList("é"));
-    DIACRITICS.put("i", Arrays.asList("í"));
-    DIACRITICS.put("n", Arrays.asList("ñ"));
-    DIACRITICS.put("o", Arrays.asList("ó"));
-    DIACRITICS.put("u", Arrays.asList("ú", "ü"));
+    DIACRITICS.put("a", Arrays.asList((char) 0xE1)); // á
+    DIACRITICS.put("e", Arrays.asList((char) 0xE9)); // é
+    DIACRITICS.put("i", Arrays.asList((char) 0xED)); // í
+    DIACRITICS.put("n", Arrays.asList((char) 0xF1)); // ñ
+    DIACRITICS.put("o", Arrays.asList((char) 0xF3)); // ó
+    DIACRITICS.put("u", Arrays.asList((char) 0xFA, (char) 0xFC)); // ú, ü
   }
 
   public void setTransformer(Transformer transformer) {
