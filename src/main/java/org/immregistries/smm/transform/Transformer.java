@@ -89,6 +89,8 @@ public class Transformer {
   private static final String REP_CON_FILENAME = "[FILENAME]";
   private static final String REP_CON_OTHERID = "[OTHERID]";
 
+  private static final String REP_SPACE = "[SPACE]";
+
   private static final String INSERT_SEGMENT = "insert segment ";
   private static final String INSERT_SEGMENT_FIRST = "first";
   private static final String INSERT_SEGMENT_BEFORE = "before";
@@ -2679,6 +2681,8 @@ public class Transformer {
       t.value = transformRequest.getThreeDaysAgo();
     } else if (t.value.equalsIgnoreCase("[CONTROL_ID]")) {
       t.value = connector.getCurrentControlId();
+    } else if (t.value.equalsIgnoreCase(REP_SPACE)) {
+      t.value = " ";
     } else if (t.value.toLowerCase().startsWith("[map") && t.value.endsWith("]")) {
       // do nothing
     } else if (t.value.toLowerCase().startsWith("[trunc") && t.value.endsWith("]")) {
