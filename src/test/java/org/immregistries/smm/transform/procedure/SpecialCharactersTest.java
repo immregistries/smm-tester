@@ -24,23 +24,25 @@ public class SpecialCharactersTest extends ProcedureCommonTest {
     assertEquals("Odd", sc.varyText("Odd"));
     assertEquals("Ed", sc.varyText("Ed"));
 
-    assertEquals("Oñ", sc.varyText("On"));
-    assertEquals("Tád", sc.varyText("Tad"));
-    assertEquals("Téd", sc.varyText("Ted"));
-    assertEquals("Pít", sc.varyText("Pit"));
-    assertEquals("Ród", sc.varyText("Rod"));
+    assertEquals("O" + (char) 0xF1, sc.varyText("On"));
+    assertEquals("T" + (char) 0xE1 + "d", sc.varyText("Tad"));
+    assertEquals("T" + (char) 0xE9 + "d", sc.varyText("Ted"));
+    assertEquals("P" + (char) 0xED + "t", sc.varyText("Pit"));
+    assertEquals("R" + (char) 0xF3 + "d", sc.varyText("Rod"));
 
     String lower = sc.varyText("Tug");
-    assertTrue(lower, "Túg".equals(lower) || "Tüg".equals(lower));
+    assertTrue(lower,
+        ("T" + (char) 0xFA + "g").equals(lower) || ("T" + (char) 0xFC + "g").equals(lower));
 
-    assertEquals("OÑ", sc.varyText("ON"));
-    assertEquals("TÁD", sc.varyText("TAD"));
-    assertEquals("TÉD", sc.varyText("TED"));
-    assertEquals("PÍT", sc.varyText("PIT"));
-    assertEquals("RÓD", sc.varyText("ROD"));
+    assertEquals("O" + (char) 0xD1, sc.varyText("ON"));
+    assertEquals("T" + (char) 0xC1 + "D", sc.varyText("TAD"));
+    assertEquals("T" + (char) 0xC9 + "D", sc.varyText("TED"));
+    assertEquals("P" + (char) 0xCD + "T", sc.varyText("PIT"));
+    assertEquals("R" + (char) 0xD3 + "D", sc.varyText("ROD"));
 
     String upper = sc.varyText("TUG");
-    assertTrue(upper, "TÚG".equals(upper) || "TÜG".equals(upper));
+    assertTrue(upper,
+        ("T" + (char) 0xDA + "G").equals(upper) || ("T" + (char) 0xDC + "G").equals(upper));
 
     testVariationDifferent("Samuel", "PID-5.2", ProcedureFactory.FIRST_NAME_SPECIAL_CHARACTERS,
         transformer);
