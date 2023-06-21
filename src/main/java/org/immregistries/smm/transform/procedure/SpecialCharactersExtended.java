@@ -12,36 +12,41 @@ public class SpecialCharactersExtended extends SpecialCharacters {
   }
 
   @Override
-  protected Map<String, List<String>> getDiacritics() {
+  protected Map<String, List<Character>> getDiacritics() {
     return DIACRITICS;
   }
 
-  private static final Map<String, List<String>> DIACRITICS =
+  private static final Map<String, List<Character>> DIACRITICS =
       new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
   static {
     // https://en.wikipedia.org/wiki/Diacritic
+    // https://www.rapidtables.com/code/text/ascii-table.html
 
-    DIACRITICS.put("a", Arrays.asList("ā", "â", "ä", "á", "à", "ą", "å", "ǟ", "æ", "ă", "ạ", "ã",
-        "ả", "ấ", "ắ", "ặ"));
-    DIACRITICS.put("c", Arrays.asList("č", "ç", "ć", "ĉ"));
-    DIACRITICS.put("d", Arrays.asList("ḑ", "đ", "ď"));
-    DIACRITICS.put("e", Arrays.asList("ē", "ê", "ë", "é", "è", "ę", "ė", "ě", "ё", "ề"));
-    DIACRITICS.put("g", Arrays.asList("ģ", "ğ", "ĝ"));
-    DIACRITICS.put("h", Arrays.asList("ĥ"));
-    DIACRITICS.put("i", Arrays.asList("ī", "î", "ï", "í", "ì", "į"));
-    DIACRITICS.put("j", Arrays.asList("ĵ"));
-    DIACRITICS.put("k", Arrays.asList("ķ", "ќ"));
-    DIACRITICS.put("l", Arrays.asList("ļ", "ł", "ĺ"));
-    DIACRITICS.put("n", Arrays.asList("ņ", "ñ", "ŉ", "ň", "ń"));
+    // à, á, â, ã, ä, å, æ
+    DIACRITICS.put("a", Arrays.asList((char) 0xE0, (char) 0xE1, (char) 0xE2, (char) 0xE3,
+        (char) 0xE4, (char) 0xE5, (char) 0xE6));
+
+    // ç
+    DIACRITICS.put("c", Arrays.asList((char) 0xE7));
+
+    // è, é, ê, ë
+    DIACRITICS.put("e", Arrays.asList((char) 0xE8, (char) 0xE9, (char) 0xEA, (char) 0xEB));
+
+    // ì, í, î, ï
+    DIACRITICS.put("i", Arrays.asList((char) 0xEC, (char) 0xED, (char) 0xEE, (char) 0xEF));
+
+    // ñ
+    DIACRITICS.put("n", Arrays.asList((char) 0xF1));
+
+    // ò, ó, ô, õ, ö
     DIACRITICS.put("o",
-        Arrays.asList("ô", "ö", "ó", "ò", "õ", "ő", "ō", "ȯ", "ȱ", "ȭ", "ø", "ơ", "ỏ"));
-    DIACRITICS.put("r", Arrays.asList("ŗ", "ř", "ŕ", "ґ"));
-    DIACRITICS.put("s", Arrays.asList("š", "ś", "ş", "ș", "ŝ"));
-    DIACRITICS.put("t", Arrays.asList("ț", "ť"));
-    DIACRITICS.put("u", Arrays.asList("ū", "û", "ü", "ú", "ù", "ų", "ū", "ű", "ŭ", "ư"));
-    DIACRITICS.put("w", Arrays.asList("ŵ", "ẅ", "ẃ", "ẁ"));
-    DIACRITICS.put("y", Arrays.asList("ŷ", "ÿ", "ý", "ỳ", "ў"));
-    DIACRITICS.put("z", Arrays.asList("ž", "ź", "ż"));
+        Arrays.asList((char) 0xF2, (char) 0xF3, (char) 0xF4, (char) 0xF5, (char) 0xF6));
+
+    // ù, ú, û, ü
+    DIACRITICS.put("u", Arrays.asList((char) 0xF9, (char) 0xFA, (char) 0xFB, (char) 0xFC));
+
+    // ý, ÿ
+    DIACRITICS.put("y", Arrays.asList((char) 0xFD, (char) 0xFF));
   }
 }
