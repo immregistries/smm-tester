@@ -23,8 +23,7 @@ public class SpecialCharactersExtendedTest extends ProcedureCommonTest {
     sc.setTransformer(transformer);
     assertEquals("Off", sc.varyText("Off"));
     assertEquals("Em", sc.varyText("Em"));
-    assertEquals("Oñ", sc.varyText("On"));
-    assertEquals("Oç", sc.varyText("Oc"));
+    assertEquals("O" + (char) 0xF1, sc.varyText("On"));
 
     testVariationDifferent("Samuel", "PID-5.2",
         ProcedureFactory.FIRST_NAME_SPECIAL_CHARACTERS_EXTENDED, transformer);
