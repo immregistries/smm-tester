@@ -2557,6 +2557,8 @@ public class Transformer {
           matchingMessage = testCaseMessageMap.get(testCaseId);
         }
       }
+    } else {
+      matchingMessage = testCaseMessageMap.get(testCaseId);
     }
 
     if (matchingMessage == null) {
