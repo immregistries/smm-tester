@@ -1,6 +1,10 @@
 package org.immregistries.smm.transform;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.junit.Test;
 import junit.framework.TestCase;
 
@@ -565,6 +569,65 @@ public class TransformerTest extends TestCase {
     tcm = new TestCaseMessage();
     tcm.getVariables().putAll(variables);
     tcm = testTransform("PID-5.1=[FIRST_NAME]", VAR1_FINAL, VAR2_FINAL, tcm);
+  }
+
+  @Test
+  public void testGetMessageText() throws IOException {
+    Transform t = new Transform();
+    TransformRequest tr = new TransformRequest(VAR1_ORIGINAL);
+
+    t.testCaseId = "GM-1.1-?";
+
+    tr.setTestCaseMessageMap(new HashMap<String, TestCaseMessage>());
+
+    TestCaseMessage tcm1 = new TestCaseMessage();
+    tcm1.setMessageText(VAR1_FINAL);
+    tcm1.setTestCaseNumber("GM-1.1-3");
+    tr.getTestCaseMessageMap().put("GM-1.1-3", tcm1);
+
+    TestCaseMessage tcm2 = new TestCaseMessage();
+    tcm2.setMessageText(VAR1_ORIGINAL);
+    tcm2.setTestCaseNumber("GM-1.2-3");
+    tr.setCurrentTestCaseMessage(tcm2);
+    tr.getTestCaseMessageMap().put("GM-1.2-3", tcm2);
+
+    TestCaseMessage tcm3 = new TestCaseMessage();
+    tcm3.setMessageText(VAR2_FINAL);
+    tcm3.setTestCaseNumber("GM-1.1");
+    tr.getTestCaseMessageMap().put("GM-1.1", tcm3);
+
+    TestCaseMessage tcm4 = new TestCaseMessage();
+    tcm4.setMessageText(VAR1_ORIGINAL);
+    tcm4.setTestCaseNumber("GM-1.2-4");
+    tr.getTestCaseMessageMap().put("GM-1.2-4", tcm4);
+
+    TestCaseMessage tcm5 = new TestCaseMessage();
+    tcm5.setMessageText(VAR1_ORIGINAL);
+    tcm5.setTestCaseNumber("GM-1.2");
+    tr.getTestCaseMessageMap().put("GM-1.2", tcm5);
+
+    // happy path
+    BufferedReader br = Transformer.getMessageText(null, t, tr);
+    String result = br.lines().collect(Collectors.joining("\r")) + "\r";
+    assertEquals(VAR1_FINAL, result);
+
+    // no current test case
+    tr.setCurrentTestCaseMessage(null);
+    br = Transformer.getMessageText(null, t, tr);
+    result = br.lines().collect(Collectors.joining("\r")) + "\r";
+    assertEquals(VAR2_FINAL, result);
+
+    // no corresponding -x test case
+    tr.setCurrentTestCaseMessage(tcm4);
+    br = Transformer.getMessageText(null, t, tr);
+    result = br.lines().collect(Collectors.joining("\r")) + "\r";
+    assertEquals(VAR2_FINAL, result);
+
+    // current test case is not a repeat itself
+    tr.setCurrentTestCaseMessage(tcm5);
+    br = Transformer.getMessageText(null, t, tr);
+    result = br.lines().collect(Collectors.joining("\r")) + "\r";
+    assertEquals(VAR2_FINAL, result);
   }
 
   private static final String VAR1_ORIGINAL =
