@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
@@ -46,13 +47,13 @@ public class PopulateQueryFromUpdate implements ProcedureInterface {
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     TestCaseMessage testCaseMessage = null;
-    if (tokenList.size() > 0) {
+    if (!tokenList.isEmpty()) {
       String token = tokenList.removeFirst();
-      if (token != null && !token.equals("")) {
+      if (StringUtils.isNotBlank(token)) {
         Map<String, TestCaseMessage> testCaseMessageMap = transformRequest.getTestCaseMessageMap();
-        if (testCaseMessageMap != null) {
-          testCaseMessage = testCaseMessageMap.get(token);
-        }
+
+        testCaseMessage = Transformer.getRepeatReferenceTestCaseMessage(transformRequest, token,
+            testCaseMessageMap);
       }
     }
     if (testCaseMessage != null) {

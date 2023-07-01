@@ -624,7 +624,7 @@ public class Transformer {
 
   public String transform(TestCaseMessage testCaseMessage, Connector connector) {
     String actualTestCase = testCaseMessage.getTestCaseNumber();
-    if (actualTestCase.equals("")) {
+    if ("".equals(actualTestCase)) {
       actualTestCase = REP_PAT_MRN;
     }
     String quickTransforms = convertQuickTransforms(testCaseMessage, actualTestCase);
@@ -2527,11 +2527,29 @@ public class Transformer {
 
     TestCaseMessage matchingMessage = null;
 
+    matchingMessage =
+        getRepeatReferenceTestCaseMessage(transformRequest, testCaseId, testCaseMessageMap);
+
+    if (matchingMessage == null) {
+      return null;
+    }
+
+    return new BufferedReader(new StringReader(matchingMessage.getMessageText()));
+  }
+
+  public static TestCaseMessage getRepeatReferenceTestCaseMessage(TransformRequest transformRequest,
+      String testCaseId, Map<String, TestCaseMessage> testCaseMessageMap) {
+
+    if (testCaseMessageMap == null) {
+      return null;
+    }
+
+    TestCaseMessage matchingMessage;
     // REPEAT_REF is the repeat set of characters
     // indicating we want to try and match up the current repeat number against the same number of the reference
     // so if test case ID is 1.1REPEAT_REF (right now 1.1-?), and the current test is 1.2-1, then we will try and match against 1.1-1
     if (testCaseId.endsWith(REPEAT_REF)) {
-      // drop the ~ for now, we know it's there
+      // drop the REPEAT_REF for now, we know it's there
       testCaseId = testCaseId.substring(0, testCaseId.length() - REPEAT_REF.length());
 
       if (transformRequest.getCurrentTestCaseMessage() == null) {
@@ -2540,6 +2558,7 @@ public class Transformer {
       } else {
         // we do know what the current test case is, see if it's ends in -1, -2, etc.
         String currentTestCaseId = transformRequest.getCurrentTestCaseMessage().getTestCaseNumber();
+
         if (currentTestCaseId.matches(".*-\\d+$")) {
           // the current test case ID ends in -1, -2, etc.
           int repeatIndex = currentTestCaseId.lastIndexOf("-");
@@ -2561,11 +2580,7 @@ public class Transformer {
       matchingMessage = testCaseMessageMap.get(testCaseId);
     }
 
-    if (matchingMessage == null) {
-      return null;
-    }
-
-    return new BufferedReader(new StringReader(matchingMessage.getMessageText()));
+    return matchingMessage;
   }
 
   public static Transform readHL7Reference(String ref) {
