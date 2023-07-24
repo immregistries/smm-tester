@@ -19,6 +19,7 @@ public class AlternativeSpellingsTest extends ProcedureCommonTest {
     assertEquals("Zach", AlternativeSpellings.varyText("Zack", t, field));
     assertEquals("Elena", AlternativeSpellings.varyText("Elaina", t, field));
     assertEquals("Elaina", AlternativeSpellings.varyText("Elena", t, field));
+    assertNotEquals("", AlternativeSpellings.varyText("", t, field));
 
     // test 3+ alt spelling groups
     for (int i = 0; i < 1000; i++) {
@@ -50,6 +51,7 @@ public class AlternativeSpellingsTest extends ProcedureCommonTest {
     assertNotEquals("Brad", AlternativeSpellings.varyText("Brad", t, field));
     assertEquals("sky", AlternativeSpellings.varyText("skye", t, field));
     assertEquals("FREYA", AlternativeSpellings.varyText("FREYJA", t, field));
+    assertNotEquals("", AlternativeSpellings.varyText("", t, field));
 
     field = AlternativeSpellings.Field.MIDDLE_NAME;
 
@@ -59,6 +61,7 @@ public class AlternativeSpellingsTest extends ProcedureCommonTest {
     assertEquals("Stephen", AlternativeSpellings.varyText("Steven", t, field));
     assertEquals("Elle", AlternativeSpellings.varyText("Ell", t, field));
     assertEquals("Ell", AlternativeSpellings.varyText("Elle", t, field));
+    assertNotEquals("Ell", AlternativeSpellings.varyText("", t, field));
 
     field = AlternativeSpellings.Field.MOTHERS_FIRST_NAME;
 
@@ -69,6 +72,7 @@ public class AlternativeSpellingsTest extends ProcedureCommonTest {
     assertEquals("Nowell", AlternativeSpellings.varyText("Noel", t, field));
     assertNotEquals("Steven", AlternativeSpellings.varyText("Stephen", t, field));
     assertNotEquals("Stephen", AlternativeSpellings.varyText("Steven", t, field));
+    assertNotEquals("", AlternativeSpellings.varyText("", t, field));
 
     field = AlternativeSpellings.Field.LAST_NAME;
 
@@ -77,7 +81,7 @@ public class AlternativeSpellingsTest extends ProcedureCommonTest {
 
     assertEquals("Turner", AlternativeSpellings.varyText("Terner", t, field));
     assertEquals("Terner", AlternativeSpellings.varyText("Turner", t, field));
-    assertNotEquals("White", AlternativeSpellings.varyText("White", t, field));
+    assertNotEquals("", AlternativeSpellings.varyText("White", t, field));
 
     field = AlternativeSpellings.Field.MOTHERS_MAIDEN_NAME;
 
@@ -87,6 +91,7 @@ public class AlternativeSpellingsTest extends ProcedureCommonTest {
     assertEquals("Coleman", AlternativeSpellings.varyText("Kuhlman", t, field));
     assertEquals("Kuhlman", AlternativeSpellings.varyText("Coleman", t, field));
     assertNotEquals("Black", AlternativeSpellings.varyText("Black", t, field));
+    assertNotEquals("", AlternativeSpellings.varyText("", t, field));
 
     field = AlternativeSpellings.Field.ADDRESS_STREET;
 
@@ -108,6 +113,7 @@ public class AlternativeSpellingsTest extends ProcedureCommonTest {
     assertEquals("Golfport", AlternativeSpellings.varyText("Gulfport", t, field));
     assertEquals("Gulfport", AlternativeSpellings.varyText("Golfport", t, field));
     assertNotEquals("Madison", AlternativeSpellings.varyText("Madison", t, field));
+    assertNotEquals("", AlternativeSpellings.varyText("", t, field));
   }
 
   private void testVariationDifferent(String startValue, String location, String procedure,

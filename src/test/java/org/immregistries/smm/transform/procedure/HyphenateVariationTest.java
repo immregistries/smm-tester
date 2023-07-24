@@ -70,6 +70,8 @@ public class HyphenateVariationTest extends ProcedureCommonTest {
         testVariation("smith-jones", "smith jones", transformer, location, field, procedure);
         assertEquals("Smith-Jones", HyphenateVariation.varyName(
             HyphenateVariation.varyName("Smith-Jones", transformer, field), transformer, field));
+        assertNotEquals("", HyphenateVariation
+            .varyName(HyphenateVariation.varyName("", transformer, field), transformer, field));
         testVariationDifferent("Smith", transformer, location, field, procedure);
         testVariationDifferent("JONES", transformer, location, field, procedure);
         testVariationDifferent("carpenter", transformer, location, field, procedure);

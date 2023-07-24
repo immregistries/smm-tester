@@ -13,80 +13,81 @@ public class TextNumberToLetterTypoTest extends ProcedureCommonTest {
   public void test() {
     Transformer transformer = new Transformer();
 
-    //    assertEquals("A", new TextNumberToLetterTypo(null).varyText("A", transformer));
-    //    assertEquals("a", new TextNumberToLetterTypo(null).varyText("a", transformer));
-    //    assertEquals("0", new TextNumberToLetterTypo(null).varyText("0", transformer));
-    //
-    //    assertEquals("1st Son", new TextNumberToLetterTypo(null).varyText("1st Son", transformer));
-    //
-    //    assertEquals("Bob", new TextNumberToLetterTypo(null).varyText("Bob", transformer));
-    //    assertEquals("Robert Paulson",
-    //        new TextNumberToLetterTypo(null).varyText("Robert Paulson", transformer));
-    //    assertEquals("Grant-Bob", new TextNumberToLetterTypo(null).varyText("Grant-Bob", transformer));
-    //
-    //    testVariationDifferent("CARPENTER5", "PID-5.1", ProcedureFactory.LAST_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationDifferent("Washington 16", "PID-5.1", ProcedureFactory.LAST_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationDifferent("Hyphen-n8d", "PID-5.1", ProcedureFactory.LAST_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationSame("Twolast Names", "PID-5.1", ProcedureFactory.LAST_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //
-    //    testVariationDifferent("Samu3l", "PID-5.2", ProcedureFactory.FIRST_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationDifferent("Emily the 2nd", "PID-5.2", ProcedureFactory.FIRST_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationDifferent("Mary 9ue", "PID-5.2", ProcedureFactory.FIRST_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationSame("Ye Sune", "PID-5.2", ProcedureFactory.FIRST_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //
-    //    testVariationDifferent("Jenn1fer", "PID-5.3", ProcedureFactory.MIDDLE_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationDifferent("Ryan the 7th", "PID-5.3", ProcedureFactory.MIDDLE_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationDifferent("F5rederick Dempsey", "PID-5.3",
-    //        ProcedureFactory.MIDDLE_NAME_NUMBER_TO_LETTER, transformer);
-    //    testVariationSame("Stan", "PID-5.3", ProcedureFactory.MIDDLE_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //
-    //    testVariationDifferent("Grace 3", "PID-6.1",
-    //        ProcedureFactory.MOTHERS_MAIDEN_NAME_NUMBER_TO_LETTER, transformer);
-    //    testVariationDifferent("Patrick 4", "PID-6.1",
-    //        ProcedureFactory.MOTHERS_MAIDEN_NAME_NUMBER_TO_LETTER, transformer);
-    //    testVariationDifferent("Ziegfried 5", "PID-6.1",
-    //        ProcedureFactory.MOTHERS_MAIDEN_NAME_NUMBER_TO_LETTER, transformer);
-    //    testVariationSame("Threepwood", "PID-6.1",
-    //        ProcedureFactory.MOTHERS_MAIDEN_NAME_NUMBER_TO_LETTER, transformer);
-    //
-    //    testVariationDifferent("Sandra 7", "PID-6.2",
-    //        ProcedureFactory.MOTHERS_FIRST_NAME_NUMBER_TO_LETTER, transformer);
-    //    testVariationDifferent("Emily 8", "PID-6.2",
-    //        ProcedureFactory.MOTHERS_FIRST_NAME_NUMBER_TO_LETTER, transformer);
-    //    testVariationDifferent("Mary Sue 9", "PID-6.2",
-    //        ProcedureFactory.MOTHERS_FIRST_NAME_NUMBER_TO_LETTER, transformer);
-    //    testVariationSame("Ye Sune", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_NUMBER_TO_LETTER,
-    //        transformer);
-    //
-    //    testVariationDifferent("4356180", "PID-13.7", ProcedureFactory.PHONE_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationDifferent("1234567", "PID-13.7", ProcedureFactory.PHONE_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationDifferent("555-5555", "PID-13.7", ProcedureFactory.PHONE_NUMBER_TO_LETTER,
-    //        transformer);
-    //    testVariationDifferent("555-5555 ext. 555", "PID-13.7", ProcedureFactory.PHONE_NUMBER_TO_LETTER,
-    //        transformer);
-    //
-    //    testVariationDifferent("something64@gmail.com", "PID-13.4",
-    //        ProcedureFactory.EMAIL_NUMBER_TO_LETTER, transformer);
-    //    testVariationDifferent("plus1+1sign@apple.net", "PID-13.4",
-    //        ProcedureFactory.EMAIL_NUMBER_TO_LETTER, transformer);
-    //
-    //    testVariationDifferent("5678 Wooster Ln", "PID-11.1",
-    //        ProcedureFactory.ADDRESS_STREET_NUMBER_TO_LETTER, transformer);
-    //    testVariationDifferent("1234 Howard Drive", "PID-11.1",
-    //        ProcedureFactory.ADDRESS_STREET_NUMBER_TO_LETTER, transformer);
+    assertEquals("A", new TextNumberToLetterTypo(null).varyText("A", transformer));
+    assertEquals("a", new TextNumberToLetterTypo(null).varyText("a", transformer));
+    assertEquals("0", new TextNumberToLetterTypo(null).varyText("0", transformer));
+    assertEquals("", new TextNumberToLetterTypo(null).varyText("", transformer));
+
+    assertEquals("1st Son", new TextNumberToLetterTypo(null).varyText("1st Son", transformer));
+
+    assertEquals("Bob", new TextNumberToLetterTypo(null).varyText("Bob", transformer));
+    assertEquals("Robert Paulson",
+        new TextNumberToLetterTypo(null).varyText("Robert Paulson", transformer));
+    assertEquals("Grant-Bob", new TextNumberToLetterTypo(null).varyText("Grant-Bob", transformer));
+
+    testVariationDifferent("CARPENTER5", "PID-5.1", ProcedureFactory.LAST_NAME_NUMBER_TO_LETTER,
+        transformer);
+    testVariationDifferent("Washington 16", "PID-5.1", ProcedureFactory.LAST_NAME_NUMBER_TO_LETTER,
+        transformer);
+    testVariationDifferent("Hyphen-n8d", "PID-5.1", ProcedureFactory.LAST_NAME_NUMBER_TO_LETTER,
+        transformer);
+    testVariationSame("Twolast Names", "PID-5.1", ProcedureFactory.LAST_NAME_NUMBER_TO_LETTER,
+        transformer);
+
+    testVariationDifferent("Samu3l", "PID-5.2", ProcedureFactory.FIRST_NAME_NUMBER_TO_LETTER,
+        transformer);
+    testVariationDifferent("Emily the 2nd", "PID-5.2", ProcedureFactory.FIRST_NAME_NUMBER_TO_LETTER,
+        transformer);
+    testVariationDifferent("Mary 9ue", "PID-5.2", ProcedureFactory.FIRST_NAME_NUMBER_TO_LETTER,
+        transformer);
+    testVariationSame("Ye Sune", "PID-5.2", ProcedureFactory.FIRST_NAME_NUMBER_TO_LETTER,
+        transformer);
+
+    testVariationDifferent("Jenn1fer", "PID-5.3", ProcedureFactory.MIDDLE_NAME_NUMBER_TO_LETTER,
+        transformer);
+    testVariationDifferent("Ryan the 7th", "PID-5.3", ProcedureFactory.MIDDLE_NAME_NUMBER_TO_LETTER,
+        transformer);
+    testVariationDifferent("F5rederick Dempsey", "PID-5.3",
+        ProcedureFactory.MIDDLE_NAME_NUMBER_TO_LETTER, transformer);
+    testVariationSame("Stan", "PID-5.3", ProcedureFactory.MIDDLE_NAME_NUMBER_TO_LETTER,
+        transformer);
+
+    testVariationDifferent("Grace 3", "PID-6.1",
+        ProcedureFactory.MOTHERS_MAIDEN_NAME_NUMBER_TO_LETTER, transformer);
+    testVariationDifferent("Patrick 4", "PID-6.1",
+        ProcedureFactory.MOTHERS_MAIDEN_NAME_NUMBER_TO_LETTER, transformer);
+    testVariationDifferent("Ziegfried 5", "PID-6.1",
+        ProcedureFactory.MOTHERS_MAIDEN_NAME_NUMBER_TO_LETTER, transformer);
+    testVariationSame("Threepwood", "PID-6.1",
+        ProcedureFactory.MOTHERS_MAIDEN_NAME_NUMBER_TO_LETTER, transformer);
+
+    testVariationDifferent("Sandra 7", "PID-6.2",
+        ProcedureFactory.MOTHERS_FIRST_NAME_NUMBER_TO_LETTER, transformer);
+    testVariationDifferent("Emily 8", "PID-6.2",
+        ProcedureFactory.MOTHERS_FIRST_NAME_NUMBER_TO_LETTER, transformer);
+    testVariationDifferent("Mary Sue 9", "PID-6.2",
+        ProcedureFactory.MOTHERS_FIRST_NAME_NUMBER_TO_LETTER, transformer);
+    testVariationSame("Ye Sune", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_NUMBER_TO_LETTER,
+        transformer);
+
+    testVariationDifferent("4356180", "PID-13.7", ProcedureFactory.PHONE_NUMBER_TO_LETTER,
+        transformer);
+    testVariationDifferent("1234567", "PID-13.7", ProcedureFactory.PHONE_NUMBER_TO_LETTER,
+        transformer);
+    testVariationDifferent("555-5555", "PID-13.7", ProcedureFactory.PHONE_NUMBER_TO_LETTER,
+        transformer);
+    testVariationDifferent("555-5555 ext. 555", "PID-13.7", ProcedureFactory.PHONE_NUMBER_TO_LETTER,
+        transformer);
+
+    testVariationDifferent("something64@gmail.com", "PID-13.4",
+        ProcedureFactory.EMAIL_NUMBER_TO_LETTER, transformer);
+    testVariationDifferent("plus1+1sign@apple.net", "PID-13.4",
+        ProcedureFactory.EMAIL_NUMBER_TO_LETTER, transformer);
+
+    testVariationDifferent("5678 Wooster Ln", "PID-11.1",
+        ProcedureFactory.ADDRESS_STREET_NUMBER_TO_LETTER, transformer);
+    testVariationDifferent("1234 Howard Drive", "PID-11.1",
+        ProcedureFactory.ADDRESS_STREET_NUMBER_TO_LETTER, transformer);
     testVariationDifferent("600 Denter St.", "PID-11.1",
         ProcedureFactory.ADDRESS_STREET_NUMBER_TO_LETTER, transformer);
 

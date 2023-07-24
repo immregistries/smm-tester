@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import org.apache.commons.lang3.StringUtils;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
@@ -90,7 +91,7 @@ public class AlternativeEndingVowels extends ProcedureCommon implements Procedur
     String originalName = name;
     if (field == Field.ADDRESS_STREET) {
       name = getAddressStreetName(name);
-    } else if (field == Field.EMAIL) {
+    } else if (field == Field.EMAIL && StringUtils.isNotBlank(name)) {
       name = name.substring(0, name.indexOf("@"));
     }
 
@@ -141,7 +142,7 @@ public class AlternativeEndingVowels extends ProcedureCommon implements Procedur
 
     if (field == Field.ADDRESS_STREET) {
       name = capitalizeFirst(replaceAddressStreet(originalName, name));
-    } else if (field == Field.EMAIL) {
+    } else if (field == Field.EMAIL && StringUtils.isNotBlank(originalName)) {
       name = name.replace(" ", ".").replace("'", ".")
           + originalName.substring(originalName.indexOf("@"));
     }

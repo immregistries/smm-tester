@@ -29,6 +29,7 @@ public class SpecialCharactersTest extends ProcedureCommonTest {
     assertEquals("T" + (char) 0xE9 + "d", sc.varyText("Ted"));
     assertEquals("P" + (char) 0xED + "t", sc.varyText("Pit"));
     assertEquals("R" + (char) 0xF3 + "d", sc.varyText("Rod"));
+    assertEquals("", sc.varyText(""));
 
     String lower = sc.varyText("Tug");
     assertTrue(lower,

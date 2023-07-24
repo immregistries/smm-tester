@@ -49,6 +49,7 @@ public class AddVariationTest extends ProcedureCommonTest {
       testVariation("1234 East Circle Dr.", "1234East Circle Dr.", location, procedure);
       testVariation("Martha's Vineyard", "MarthaS Vineyard", location, procedure);
       testVariation("Po'ipu", "PoIpu", location, procedure);
+      testVariation("", "", location, procedure);
     }
 
     testDifferent("bob@comcast.net", "bob'@comcast.net", "bob @comcast.net", "PID-13.4",
