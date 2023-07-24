@@ -81,6 +81,17 @@ public class TextTypoTest extends ProcedureCommonTest {
     testWrongHookup("5678 Wooster Ln", "PID-11.1", ProcedureFactory.ADDRESS_STREET_TYPO,
         transformer);
     testWrongHookup("New York City", "PID-11.3", ProcedureFactory.ADDRESS_CITY_TYPO, transformer);
+
+    // support empty string doesn't do anything
+    testVariationSame("", "PID-5.1", ProcedureFactory.LAST_NAME_TYPO, transformer);
+    testVariationSame("", "PID-5.2", ProcedureFactory.FIRST_NAME_TYPO, transformer);
+    testVariationSame("", "PID-5.3", ProcedureFactory.MIDDLE_NAME_TYPO, transformer);
+    testVariationSame("", "PID-6.1", ProcedureFactory.MOTHERS_MAIDEN_NAME_TYPO,
+        transformer);
+    testVariationSame("", "PID-6.2", ProcedureFactory.MOTHERS_FIRST_NAME_TYPO, transformer);
+    testVariationSame("", "PID-13.7", ProcedureFactory.PHONE_TYPO, transformer);
+    testVariationSame("", "PID-11.1", ProcedureFactory.ADDRESS_STREET_TYPO, transformer);
+    testVariationSame("", "PID-11.3", ProcedureFactory.ADDRESS_CITY_TYPO, transformer);
   }
 
   private void testVariationDifferent(String startValue, String location, String procedure,
@@ -88,6 +99,13 @@ public class TextTypoTest extends ProcedureCommonTest {
     assertNotEquals(startValue, new TextTypo(null).varyText(startValue, transformer));
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     testProcedureChangesMessageAndDoesNotContain(testStart, startValue, procedure);
+  }
+
+  private void testVariationSame(String startValue, String location, String procedure,
+      Transformer transformer) {
+    assertEquals(startValue, new TextTypo(null).varyText(startValue, transformer));
+    String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
+    testProcedureDoesNotChangeMessage(testStart, startValue, procedure);
   }
 
   // change the referenced PID

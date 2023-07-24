@@ -28,6 +28,7 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testVariation("Swartzman", "Wartzman", location, procedure);
     testVariation("Thaselton", "Faselton", location, procedure);
     testVariation("Twanbly", "Wanbly", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-5.2";
     procedure = ProcedureFactory.FIRST_NAME_ALTERNATIVE_BEGINNINGS;
@@ -52,6 +53,7 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testVariation("Mia", "Nia", location, procedure);
     testVariation("Evelyn", "Avelyn", location, procedure);
     testVariation("Harper", "Varper", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-5.3";
     procedure = ProcedureFactory.MIDDLE_NAME_ALTERNATIVE_BEGINNINGS;
@@ -71,6 +73,7 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testVariation("Trill", "Rill", location, procedure);
     testVariation("Wrtrykowski", "Rtrykowski", location, procedure);
     testVariation("Quinn", "Kinn", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-6.1";
     procedure = ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_BEGINNINGS;
@@ -80,6 +83,7 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testVariation("Xander", "Ekander", location, procedure);
     testVariation("Yennifer", "Wennifer", location, procedure);
     testVariation("Zozo", "Sozo", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-6.2";
     procedure = ProcedureFactory.MOTHERS_FIRST_NAME_ALTERNATIVE_BEGINNINGS;
@@ -94,6 +98,7 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testVariation("Mia", "Nia", location, procedure);
     testVariation("Evelyn", "Avelyn", location, procedure);
     testVariation("Harper", "Varper", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-11.1";
     procedure = ProcedureFactory.ADDRESS_STREET_ALTERNATIVE_BEGINNINGS;
@@ -108,6 +113,7 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testVariation("988112 Albany Street", "088112 Albany Street", location, procedure);
     testVariation("16 Abbey Rd.", "26 Abbey Rd.", location, procedure);
     testVariation("5 Shore Ave.", "6 Shore Ave.", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-11.3";
     procedure = ProcedureFactory.ADDRESS_CITY_ALTERNATIVE_BEGINNINGS;
@@ -122,6 +128,7 @@ public class AlternativeBeginningsTest extends ProcedureCommonTest {
     testVariation("North Hempstead", "Morth Hempstead", location, procedure);
     testVariation("Nashville-Davidson", "Mashville-Davidson", location, procedure);
     testVariation("Salt Lake City", "Tsalt Lake City", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-13.4";
     procedure = ProcedureFactory.EMAIL_ALTERNATIVE_BEGINNINGS;

@@ -43,6 +43,7 @@ public class AlternativeVowelsTest extends ProcedureCommonTest {
         testVariationDifferent("Bobby Lee", location, procedure, transformer);
         testVariationDifferent("Green Bay", location, procedure, transformer);
         testVariationDifferent("test.email@gmail.com", location, procedure, transformer);
+        testVariationDifferent("", location, procedure, transformer);
 
         // won't change first letter so "i" or "e" has to change
         assertTrue(AlternativeVowels.varyName("Annie", transformer).startsWith("Ann"));

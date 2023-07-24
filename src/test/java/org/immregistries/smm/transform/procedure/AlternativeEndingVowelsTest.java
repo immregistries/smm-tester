@@ -22,6 +22,8 @@ public class AlternativeEndingVowelsTest extends ProcedureCommonTest {
         t, field);
     testVariationDifferent("Richard", "PID-5.2",
         ProcedureFactory.FIRST_NAME_ALTERNATIVE_ENDING_VOWELS, t, field);
+    testVariationDifferent("", "PID-5.2", ProcedureFactory.FIRST_NAME_ALTERNATIVE_ENDING_VOWELS, t,
+        field);
 
     field = AlternativeEndingVowels.Field.MIDDLE_NAME;
     testVariationDifferent("Cathy", "PID-5.3",
@@ -34,6 +36,8 @@ public class AlternativeEndingVowelsTest extends ProcedureCommonTest {
         t, field);
     testVariationDifferent("Drew", "PID-5.3",
         ProcedureFactory.MIDDLE_NAME_ALTERNATIVE_ENDING_VOWELS, t, field);
+    testVariationDifferent("", "PID-5.3", ProcedureFactory.MIDDLE_NAME_ALTERNATIVE_ENDING_VOWELS, t,
+        field);
 
     field = AlternativeEndingVowels.Field.LAST_NAME;
     testVariationDifferent("Washington", "PID-5.1",
@@ -46,6 +50,8 @@ public class AlternativeEndingVowelsTest extends ProcedureCommonTest {
         t, field);
     testVariationDifferent("Zruh", "PID-5.1", ProcedureFactory.LAST_NAME_ALTERNATIVE_ENDING_VOWELS,
         t, field);
+    testVariationDifferent("", "PID-5.1", ProcedureFactory.LAST_NAME_ALTERNATIVE_ENDING_VOWELS, t,
+        field);
 
     field = AlternativeEndingVowels.Field.MOTHERS_FIRST_NAME;
     testVariationDifferent("Jess", "PID-6.2",
@@ -55,6 +61,8 @@ public class AlternativeEndingVowelsTest extends ProcedureCommonTest {
     testVariationDifferent("Yoyieu", "PID-6.2",
         ProcedureFactory.MOTHERS_FIRST_NAME_ALTERNATIVE_ENDING_VOWELS, t, field);
     testVariationDifferent("Diedrah", "PID-6.2",
+        ProcedureFactory.MOTHERS_FIRST_NAME_ALTERNATIVE_ENDING_VOWELS, t, field);
+    testVariationDifferent("", "PID-6.2",
         ProcedureFactory.MOTHERS_FIRST_NAME_ALTERNATIVE_ENDING_VOWELS, t, field);
 
     field = AlternativeEndingVowels.Field.MOTHERS_MAIDEN_NAME;
@@ -67,6 +75,8 @@ public class AlternativeEndingVowelsTest extends ProcedureCommonTest {
     testVariationDifferent("Shou", "PID-6.1",
         ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDING_VOWELS, t, field);
     testVariationDifferent("Stella", "PID-6.1",
+        ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDING_VOWELS, t, field);
+    testVariationDifferent("", "PID-6.1",
         ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDING_VOWELS, t, field);
 
     field = AlternativeEndingVowels.Field.ADDRESS_STREET;
@@ -92,6 +102,8 @@ public class AlternativeEndingVowelsTest extends ProcedureCommonTest {
         ProcedureFactory.ADDRESS_CITY_ALTERNATIVE_ENDING_VOWELS, t, field);
     testVariationDifferent("Tacomah", "PID-11.3",
         ProcedureFactory.ADDRESS_CITY_ALTERNATIVE_ENDING_VOWELS, t, field);
+    testVariationDifferent("", "PID-11.3", ProcedureFactory.ADDRESS_CITY_ALTERNATIVE_ENDING_VOWELS,
+        t, field);
 
     field = AlternativeEndingVowels.Field.EMAIL;
     testVariationDifferent("bob@gmail.com", "PID-13.4",
@@ -104,6 +116,8 @@ public class AlternativeEndingVowelsTest extends ProcedureCommonTest {
         ProcedureFactory.EMAIL_ALTERNATIVE_ENDING_VOWELS, t, field);
     testVariationDifferent("alameda@city.net", "PID-13.4",
         ProcedureFactory.EMAIL_ALTERNATIVE_ENDING_VOWELS, t, field);
+    testVariationDifferent("", "PID-13.4", ProcedureFactory.EMAIL_ALTERNATIVE_ENDING_VOWELS, t,
+        field);
   }
 
   private void testVariationDifferent(String startValue, String location, String procedure,

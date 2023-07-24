@@ -12,7 +12,9 @@ public class AddressStreetVariationTest extends ProcedureCommonTest {
     Transformer transformer = new Transformer();
     assertNotEquals("1562 Weerijnen Ln",
         AddressStreetVariation.varyAddress("1562 Weerijnen Ln", transformer));
-    
+
+    assertEquals("", AddressStreetVariation.varyAddress("", transformer));
+
     testProcedureChangesMessage(DEFAULT_TEST_MESSAGE, ProcedureFactory.ADDRESS_STREET_CHANGE);
 
   }

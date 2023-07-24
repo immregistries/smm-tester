@@ -20,6 +20,8 @@ public class TextLetterToNumberTypoTest extends ProcedureCommonTest {
     assertEquals("d4", new TextLetterToNumberTypo(null).varyText("da", transformer));
     assertEquals("E0", new TextLetterToNumberTypo(null).varyText("ED", transformer));
 
+    assertEquals("", new TextLetterToNumberTypo(null).varyText("", transformer));
+
     testVariationDifferent("CARPENTER", "PID-5.1", ProcedureFactory.LAST_NAME_LETTER_TO_NUMBER,
         transformer);
     testVariationDifferent("Washington", "PID-5.1", ProcedureFactory.LAST_NAME_LETTER_TO_NUMBER,
@@ -135,7 +137,8 @@ public class TextLetterToNumberTypoTest extends ProcedureCommonTest {
     procedures.remove(procedure);
 
     for (String proc : procedures) {
-      assertNotEquals(startValue, new TextLetterToNumberTypo(null).varyText(startValue, transformer));
+      assertNotEquals(startValue,
+          new TextLetterToNumberTypo(null).varyText(startValue, transformer));
       String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
       testProcedureChangesMessageAndDoesContain(testStart, startValue, proc);
     }

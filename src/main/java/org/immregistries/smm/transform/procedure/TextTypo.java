@@ -2,6 +2,7 @@ package org.immregistries.smm.transform.procedure;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.immregistries.smm.transform.Transformer;
 
 public class TextTypo extends AbstractTypoProcedure {
@@ -11,6 +12,10 @@ public class TextTypo extends AbstractTypoProcedure {
   }
 
   protected String varyText(String name, Transformer transformer) {
+    if (StringUtils.isBlank(name)) {
+      return name;
+    }
+
     boolean upperCase = name.toUpperCase().equals(name);
     boolean lowerCase = name.toLowerCase().equals(name);
 

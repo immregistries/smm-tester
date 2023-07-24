@@ -17,6 +17,7 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
     testVariation("Fairchild", "Fairchilder", location, procedure);
     testVariation("Gandalf", "Gandalfie", location, procedure);
     testVariation("Phelp", "Phelpy", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-5.2";
     procedure = ProcedureFactory.FIRST_NAME_ALTERNATIVE_ENDINGS;
@@ -41,6 +42,7 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
     testVariation("Mia", "Miay", location, procedure);
     testVariation("Evelyn", "Evelymm", location, procedure);
     testVariation("Harper", "Harperrie", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-5.3";
     procedure = ProcedureFactory.MIDDLE_NAME_ALTERNATIVE_ENDINGS;
@@ -52,6 +54,7 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
     testVariation("Egypt", "Egyptie", location, procedure);
     testVariation("Claiborn", "Claiborny", location, procedure);
     testVariation("Edelgard", "Edelgardy", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-6.1";
     procedure = ProcedureFactory.MOTHERS_MAIDEN_NAME_ALTERNATIVE_ENDINGS;
@@ -61,6 +64,7 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
     testVariation("Chasm", "Chasmon", location, procedure);
     testVariation("Whisp", "Whisper", location, procedure);
     testVariation("Forrest", "Forreon", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-6.2";
     procedure = ProcedureFactory.MOTHERS_FIRST_NAME_ALTERNATIVE_ENDINGS;
@@ -75,6 +79,7 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
     testVariation("Mia", "Miay", location, procedure);
     testVariation("Evelyn", "Evelymm", location, procedure);
     testVariation("Harper", "Harperrie", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-11.1";
     procedure = ProcedureFactory.ADDRESS_STREET_ALTERNATIVE_ENDINGS;
@@ -89,6 +94,7 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
     testVariation("988112 Albany Street", "988112 Albany Streets", location, procedure);
     testVariation("16 Abbey Rd.", "16 Abbey Rdy.", location, procedure);
     testVariation("5 Shore Ave.", "5 Shore Avee.", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-11.3";
     procedure = ProcedureFactory.ADDRESS_CITY_ALTERNATIVE_ENDINGS;
@@ -103,6 +109,7 @@ public class AlternativeEndingsTest extends ProcedureCommonTest {
     testVariation("North Hempstead", "North Hempsteadd", location, procedure);
     testVariation("Nashville-Davidson", "Nashville-Davidsomm", location, procedure);
     testVariation("Salt Lake City", "Salt Lake Citie", location, procedure);
+    testVariation("", "", location, procedure);
 
     location = "PID-13.4";
     procedure = ProcedureFactory.EMAIL_ALTERNATIVE_ENDINGS;
