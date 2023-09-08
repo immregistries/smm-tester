@@ -100,7 +100,7 @@ public class HyphenateVariation extends ProcedureCommon implements ProcedureInte
               randomValue = transformer.getRandomValue("STREET_NAME");
               break;
             case ADDRESS_CITY:
-              randomValue = transformer.getRandomValue("CITY");
+              randomValue = transformer.getRandomValue("ADDRESS");
               break;
             case EMAIL:
               randomValue =
