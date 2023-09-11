@@ -723,4 +723,101 @@ public class TransformerTest extends TestCase {
           + "OBX|2|CE|30956-7^Vaccine Type^LN|2|85^Hepatitis A^CVX||||||F|\r"
           + "OBX|3|TS|29768-9^Date vaccine information statement published^LN|2|20111025||||||F|\r"
           + "OBX|4|TS|29769-7^Date vaccine information statement presented^LN|2|20150303||||||F|\r";
+
+  @Test
+  public void testIsTestCaseIdRepeat() {
+    assertTrue(Transformer.isTestCaseIdRepeat("GM-1.1-1"));
+    assertTrue(Transformer.isTestCaseIdRepeat("GM-1.1-2"));
+    assertTrue(Transformer.isTestCaseIdRepeat("GM-1.1-3"));
+    assertTrue(Transformer.isTestCaseIdRepeat("GM-1.2-1"));
+    assertTrue(Transformer.isTestCaseIdRepeat("GM-1.2-2"));
+    assertTrue(Transformer.isTestCaseIdRepeat("GM-1.2-3"));
+    assertTrue(Transformer.isTestCaseIdRepeat("GM-2.1-1"));
+    assertTrue(Transformer.isTestCaseIdRepeat("GM-2.1-2"));
+    assertTrue(Transformer.isTestCaseIdRepeat("GM-2.1-3"));
+
+    assertFalse(Transformer.isTestCaseIdRepeat("GM-1.1"));
+    assertFalse(Transformer.isTestCaseIdRepeat("GM-1.2"));
+    assertFalse(Transformer.isTestCaseIdRepeat("GM-1.x"));
+    assertFalse(Transformer.isTestCaseIdRepeat("GM-x.1"));
+    assertFalse(Transformer.isTestCaseIdRepeat("GM-"));
+    assertFalse(Transformer.isTestCaseIdRepeat("GM-x"));
+    assertFalse(Transformer.isTestCaseIdRepeat("GM?"));
+    assertFalse(Transformer.isTestCaseIdRepeat("GM?-"));
+    assertFalse(Transformer.isTestCaseIdRepeat("GM-?"));
+    assertFalse(Transformer.isTestCaseIdRepeat("GM-1.1-x"));
+  }
+
+  @Test
+  public void testDoVariableReplacement() throws IOException {
+    Transform t = new Transform();
+
+    TransformRequest tr = new TransformRequest(VAR1_ORIGINAL);
+
+    // no variable to match against, print variable name
+    t.value = "[FIRST_NAME]";
+    new Transformer().doVariableReplacement(t, tr);
+    assertEquals("[FIRST_NAME]", t.value);
+
+    // add current test case message
+    // no variable to match against, print variable name
+    t.value = "[FIRST_NAME]";
+    TestCaseMessage current = new TestCaseMessage();
+    current.setTestCaseNumber("TM-1.1");
+    tr.setCurrentTestCaseMessage(current);
+    new Transformer().doVariableReplacement(t, tr);
+    assertEquals("[FIRST_NAME]", t.value);
+
+    // update current test case message with variable
+    // works for checking variable name against itself
+    t.value = "[FIRST_NAME]";
+    current.getVariables().put("FIRST_NAME", "[PID-5.2]");
+    new Transformer().doVariableReplacement(t, tr);
+    assertEquals("Callis", t.value);
+
+    // reference another test case
+    // no variable to match against, print variable name
+    t.value = "[GM-1.1::FIRST_NAME]";
+    current.getVariables().put("FIRST_NAME", "[PID-5.2]");
+    new Transformer().doVariableReplacement(t, tr);
+    assertEquals("[GM-1.1::FIRST_NAME]", t.value);
+
+    // load GM-1.1 into map but no variable
+    // no variable to match against, print variable name
+    t.value = "[GM-1.1::FIRST_NAME]";
+    TestCaseMessage gm11 = new TestCaseMessage();
+    gm11.setTestCaseNumber("GM-1.1");
+    tr.setTestCaseMessageMap(new HashMap<String, TestCaseMessage>());
+    tr.getTestCaseMessageMap().put("GM-1.1", gm11);
+    new Transformer().doVariableReplacement(t, tr);
+    assertEquals("[GM-1.1::FIRST_NAME]", t.value);
+
+    // set variable on GM-1.1 so it works
+    t.value = "[GM-1.1::FIRST_NAME]";
+    gm11.getVariables().put("FIRST_NAME", "[PID-5.1]");
+    new Transformer().doVariableReplacement(t, tr);
+    assertEquals("Burt", t.value);
+
+    // reference a repeatable test case
+    // this will work because since we're not in a repeat (TM-1.1), it will just ref GM-1.1
+    t.value = "[GM-1.1-?::FIRST_NAME]";
+    gm11.getVariables().put("FIRST_NAME", "[PID-6.1]");
+    new Transformer().doVariableReplacement(t, tr);
+    assertEquals("Copeland", t.value);
+
+    // this will also just work even though we're in a repeat test because there is no GM-1.1-2 ref
+    t.value = "[GM-1.1-?::FIRST_NAME]";
+    current.setTestCaseNumber("TM-1.1-2");
+    new Transformer().doVariableReplacement(t, tr);
+    assertEquals("Copeland", t.value);
+
+    // finally referencing the corresponding repeat reference test case that exists
+    t.value = "[GM-1.1-?::FIRST_NAME]";
+    TestCaseMessage gm112 = new TestCaseMessage();
+    gm112.setTestCaseNumber("GM-1.1-2");
+    tr.getTestCaseMessageMap().put("GM-1.1-2", gm112);
+    gm112.getVariables().put("FIRST_NAME", "[PID-6.2]");
+    new Transformer().doVariableReplacement(t, tr);
+    assertEquals("Lona", t.value);
+  }
 }
