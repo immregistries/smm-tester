@@ -15,12 +15,18 @@ public class RemoveLastNamePrefixTest extends ProcedureCommonTest {
 
     assertEquals("Smith", RemoveLastNamePrefix.varyName("Smith", transformer));
     assertEquals("Washington", RemoveLastNamePrefix.varyName("Washington", transformer));
+
     assertEquals("Smith", RemoveLastNamePrefix.varyName("Von Smith", transformer));
     assertEquals("Smith", RemoveLastNamePrefix.varyName("VonSmith", transformer));
     assertEquals("Donald", RemoveLastNamePrefix.varyName("McDonald", transformer));
     assertEquals("Donald", RemoveLastNamePrefix.varyName("Mc Donald", transformer));
     assertEquals("Hoya", RemoveLastNamePrefix.varyName("De La Hoya", transformer));
     assertEquals("Hoya", RemoveLastNamePrefix.varyName("DeLaHoya", transformer));
+
+    assertEquals("Smith", RemoveLastNamePrefix.varyName("Vonsmith", transformer));
+    assertEquals("Donald", RemoveLastNamePrefix.varyName("Mcdonald", transformer));
+    assertEquals("Hoya", RemoveLastNamePrefix.varyName("Delahoya", transformer));
+    assertEquals("G", RemoveLastNamePrefix.varyName("McG", transformer));
 
     assertEquals("smith", RemoveLastNamePrefix.varyName("smith", transformer));
     assertEquals("washington", RemoveLastNamePrefix.varyName("washington", transformer));

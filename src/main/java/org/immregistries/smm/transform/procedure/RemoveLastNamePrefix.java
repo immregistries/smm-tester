@@ -87,6 +87,9 @@ public class RemoveLastNamePrefix extends ProcedureCommon implements ProcedureIn
       name = name.toUpperCase();
     } else if (lowerCase) {
       name = name.toLowerCase();
+    } else if (name.length() > 0) {
+      // we want to make sure the first letter is capitalized like it was likely before
+      name = name.substring(0, 1).toUpperCase() + name.substring(1);
     }
 
     return name;
