@@ -229,6 +229,14 @@ public class ProcedureFactory {
   public static final String DATE_OF_BIRTH_RECTIFY = "DATE_OF_BIRTH_RECTIFY";
   public static final String DATE_OF_BIRTH_YEAR_SHIFT = "DATE_OF_BIRTH_YEAR_SHIFT";
 
+  // prefix variation
+  public static final String LAST_NAME_PREFIX_VARIATION = "LAST_NAME_PREFIX_VARIATION";
+  public static final String MOTHERS_MAIDEN_NAME_PREFIX_VARIATION =
+      "MOTHERS_MAIDEN_NAME_PREFIX_VARIATION";
+  public static final String REMOVE_LAST_NAME_PREFIX = "REMOVE_LAST_NAME_PREFIX";
+  public static final String REMOVE_MOTHERS_MAIDEN_NAME_PREFIX =
+      "REMOVE_MOTHERS_MAIDEN_NAME_PREFIX";
+
   // obx
   public static final String ADD_FUNDING_ELGIBILITY_TO_ALL_RXA =
       "ADD_FUNDING_ELGIBILITY_TO_ALL_RXA";
@@ -246,7 +254,6 @@ public class ProcedureFactory {
   public static final String ANONYMIZE_AND_UPDATE_RECORD = "ANONYMIZE_AND_UPDATE_RECORD";
   public static final String FIRST_NAME_CONVERT_TO_NICKNAME = "FIRST_NAME_CONVERT_TO_NICKNAME";
   public static final String LAST_NAME_HYPHENATE_OR_SWAP = "LAST_NAME_HYPHENATE_OR_SWAP";
-  public static final String LAST_NAME_PREFIX_VARIATION = "LAST_NAME_PREFIX_VARIATION";
   public static final String MIDDLE_NAME_IN_FIRST_NAME_VARIATION =
       "MIDDLE_NAME_IN_FIRST_NAME_VARIATION";
   public static final String POPULATE_QUERY_FROM_UPDATE = "POPULATE_QUERY_FROM_UPDATE";
@@ -590,6 +597,16 @@ public class ProcedureFactory {
       case DATE_OF_BIRTH_DAY_SHIFT:
         return new DateOfBirthDayShift();
 
+      // prefix variation
+      case LAST_NAME_PREFIX_VARIATION:
+        return new LastNamePrefixVariation(LastNamePrefixVariation.Field.LAST_NAME);
+      case MOTHERS_MAIDEN_NAME_PREFIX_VARIATION:
+        return new LastNamePrefixVariation(LastNamePrefixVariation.Field.MOTHERS_MAIDEN_NAME);
+      case REMOVE_LAST_NAME_PREFIX:
+        return new RemoveLastNamePrefix(RemoveLastNamePrefix.Field.LAST_NAME);
+      case REMOVE_MOTHERS_MAIDEN_NAME_PREFIX:
+        return new RemoveLastNamePrefix(RemoveLastNamePrefix.Field.MOTHERS_MAIDEN_NAME);
+
       // obx
       case ADD_OBX_FOR_FUNDING_ELIGIBILITY_TO_ALL_RXA:
         return new AddFundingToRxa(AddFundingToRxa.Type.ELIGIBILITY,
@@ -619,9 +636,6 @@ public class ProcedureFactory {
 
       case LAST_NAME_HYPHENATE_OR_SWAP:
         return new LastNameHyphenateOrSwap();
-
-      case LAST_NAME_PREFIX_VARIATION:
-        return new LastNamePrefixVariation();
 
       case MIDDLE_NAME_IN_FIRST_NAME_VARIATION:
         return new MiddleNameInFirstNameVariation();
