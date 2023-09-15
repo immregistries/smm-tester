@@ -2,7 +2,6 @@ package org.immregistries.smm.transform.procedure;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
@@ -10,41 +9,27 @@ import org.immregistries.smm.transform.Transformer;
 
 public class LastNamePrefixVariation extends ProcedureCommon implements ProcedureInterface {
 
-  public enum Field {
-                     LAST_NAME,
-                     MOTHERS_MAIDEN_NAME
-  }
 
-  private Field field;
-  private Transformer transformer;
 
-  public LastNamePrefixVariation(Field field) {
-    this.field = field;
+  public LastNamePrefixVariation() {
+
   }
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
-
-    for (String[] fields : fieldsList) {
-      String segmentName = fields[0];
-      if ("PID".equals(segmentName)) {
-        int fieldPos = 5;
-        int subPos = 1;
-
-        if (field == Field.LAST_NAME) {
-          subPos = 1;
-        } else if (field == Field.MOTHERS_MAIDEN_NAME) {
-          fieldPos = 6;
-          subPos = 1;
+    {
+      for (String[] fields : fieldsList) {
+        String segmentName = fields[0];
+        if ("PID".equals(segmentName)) {
+          int fieldPos = 5;
+          int subPos = 1;
+          String lastName = readValue(fields, fieldPos, subPos);
+          lastName = varyName(lastName, transformer);
+          updateValue(lastName, fields, fieldPos, subPos);
         }
-
-        String lastName = readValue(fields, fieldPos, subPos);
-        lastName = varyName(lastName, transformer);
-        updateValue(lastName, fields, fieldPos, subPos);
       }
     }
-
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
@@ -58,21 +43,17 @@ public class LastNamePrefixVariation extends ProcedureCommon implements Procedur
     for (Prefix prefix : prefixList) {
       if (lastNameCapitalized.equals(prefix.prefixNoSpaceCapitalized)
           || lastNameCapitalized.equals(prefix.prefixSpaceCapitalized)) {
-        // if the last name exactly matches a name in the prefix list
-        // then use the prefix with a space and add a random last name
         lastName = prefix.prefixSpace + transformer.getRandomValue("LAST_NAME");
         keepLooking = false;
         break;
       } else if (lastNameCapitalized.startsWith(prefix.prefixSpaceCapitalized)) {
-        // if the last name starts with a name in the prefix list with a space in it
-        // then replace with the non-space version
+        // take space away
         lastName =
             prefix.prefixNoSpace + lastName.substring(prefix.prefixSpaceCapitalized.length());
         keepLooking = false;
         break;
       } else if (lastNameCapitalized.startsWith(prefix.prefixNoSpaceCapitalized)) {
-        // if the last name starts with a name in the prefix list without a space in it
-        // then replace with the space version
+        // add space
         lastName =
             prefix.prefixSpace + lastName.substring(prefix.prefixNoSpaceCapitalized.length());
         keepLooking = false;
@@ -81,9 +62,6 @@ public class LastNamePrefixVariation extends ProcedureCommon implements Procedur
     }
 
     if (keepLooking) {
-      // if we didn't match the previous cases
-      // (the last name does not equal any of the prefixes or start with any of them)
-      // then prepend the existing last name with a random prefix
       lastName =
           prefixList.get(transformer.getRandom().nextInt(prefixList.size())).prefixSpace + lastName;
     }
@@ -97,17 +75,18 @@ public class LastNamePrefixVariation extends ProcedureCommon implements Procedur
     return lastName;
   }
 
+
+
+  private Transformer transformer;
+
   public void setTransformer(Transformer transformer) {
     this.transformer = transformer;
   }
 
+
   private static List<Prefix> prefixList = new ArrayList<>();
 
-  public static List<Prefix> getPrefixList() {
-    return Collections.unmodifiableList(prefixList);
-  }
-
-  protected static class Prefix {
+  private static class Prefix {
     private Prefix(String prefix) {
       prefixNoSpace = "";
       prefixSpace = prefix.trim() + " ";
@@ -120,11 +99,12 @@ public class LastNamePrefixVariation extends ProcedureCommon implements Procedur
       prefixSpaceCapitalized = prefixSpace.toUpperCase();
     }
 
-    protected String prefixNoSpace;
-    protected String prefixSpace;
-    protected String prefixNoSpaceCapitalized;
-    protected String prefixSpaceCapitalized;
+    private String prefixNoSpace;
+    private String prefixSpace;
+    private String prefixNoSpaceCapitalized;
+    private String prefixSpaceCapitalized;
   }
+
 
   private static void add(String prefix) {
     prefix = prefix.trim();
@@ -167,5 +147,7 @@ public class LastNamePrefixVariation extends ProcedureCommon implements Procedur
     add("Af");
     add("Abu");
     add("Ab");
+
   }
+
 }
