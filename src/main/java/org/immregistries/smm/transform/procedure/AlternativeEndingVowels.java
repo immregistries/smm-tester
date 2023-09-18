@@ -121,6 +121,9 @@ public class AlternativeEndingVowels extends ProcedureCommon implements Procedur
         case LAST_NAME:
         case MOTHERS_MAIDEN_NAME:
         case ADDRESS_STREET:
+          name = ALTERNATIVE_LAST_NAMES.get(random.nextInt(ALTERNATIVE_LAST_NAMES.size()));
+          break;
+
         case EMAIL:
           name = ALTERNATIVE_LAST_NAMES.get(random.nextInt(ALTERNATIVE_LAST_NAMES.size()));
           break;
@@ -145,6 +148,7 @@ public class AlternativeEndingVowels extends ProcedureCommon implements Procedur
     } else if (field == Field.EMAIL && StringUtils.isNotBlank(originalName)) {
       name = name.replace(" ", ".").replace("'", ".")
           + originalName.substring(originalName.indexOf("@"));
+      name = makeEmailValid(name);
     }
 
     if (upperCase) {

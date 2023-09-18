@@ -51,7 +51,8 @@ public class ProcedureCommonTest extends TestCase {
 
   protected void testProcedureChangesMessageAndDoesNotContain(String om, String fieldText,
       String procedure) {
-    assertEquals(-1, testProcedureChangesMessage(om, procedure).indexOf(fieldText));
+    String changed = testProcedureChangesMessage(om, procedure);
+    assertEquals("Found '" + fieldText + "' in '" + changed + "'", -1, changed.indexOf(fieldText));
   }
 
   protected void testProcedureChangesMessageAndDoesContain(String om, String fieldText,
@@ -97,5 +98,64 @@ public class ProcedureCommonTest extends TestCase {
     assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com^", 5));
     assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 5));
     assertEquals("", ProcedureCommon.readRepeatValue("^NET^^email@email.com", 7));
+  }
+
+  @Test
+  public void testMakeEmailValid() {
+    assertEquals("", ProcedureCommon.makeEmailValid(null));
+    assertEquals("", ProcedureCommon.makeEmailValid(""));
+    assertEquals("", ProcedureCommon.makeEmailValid(" "));
+    assertEquals("", ProcedureCommon.makeEmailValid("\t"));
+    assertEquals("", ProcedureCommon.makeEmailValid("\r\n"));
+    assertEquals("", ProcedureCommon.makeEmailValid("\n"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bob vance@gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bob  vance@gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bob   vance@gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bob    vance@gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bob\tvance@gmail.com"));
+    assertEquals("address@newberlin.com",
+        ProcedureCommon.makeEmailValid("address@new\r\nberlin.com"));
+    assertEquals("address@newberlin.com",
+        ProcedureCommon.makeEmailValid("address@new\nberlin.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid(".bobvance@gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance.@gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid(".bobvance.@gmail.com"));
+    assertEquals("bob.vance@gmail.com", ProcedureCommon.makeEmailValid(".bob.vance.@gmail.com"));
+    assertEquals("bob.vance@gmail.com",
+        ProcedureCommon.makeEmailValid("...bob.vance.....@gmail.com"));
+    assertEquals("bob.vance@gmail.com", ProcedureCommon.makeEmailValid("bob..vance@gmail.com"));
+    assertEquals("bob.vance@gmail.com", ProcedureCommon.makeEmailValid("bob...vance@gmail.com"));
+    assertEquals("bob.v.ance@gmail.com",
+        ProcedureCommon.makeEmailValid("bob....v......ance@gmail.com"));
+    assertEquals("1234567890123456789012345678901234567890123456789012345678901234@gmail.com",
+        ProcedureCommon.makeEmailValid(
+            "1234567890123456789012345678901234567890123456789012345678901234567890@gmail.com"));
+    assertEquals("1234567890123456789012345678901234567890123456789012345678901234@gmail.com",
+        ProcedureCommon.makeEmailValid(
+            "1234567890123456789012345678901234567890123456789012345678901234@gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@.gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@gmail.com."));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@.gmail.com."));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@..gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@gmail.com.."));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@..gmail.com.."));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@....gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@gmail.com...."));
+    assertEquals("bobvance@gmail.com",
+        ProcedureCommon.makeEmailValid("bobvance@....gmail.com...."));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@-gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@gmail.com-"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@-gmail.com-"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@--gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@gmail.com--"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@--gmail.com--"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@----gmail.com"));
+    assertEquals("bobvance@gmail.com", ProcedureCommon.makeEmailValid("bobvance@gmail.com----"));
+    assertEquals("bobvance@gmail.com",
+        ProcedureCommon.makeEmailValid("bobvance@----gmail.com----"));
+    assertEquals("bobvance@gmail.com",
+        ProcedureCommon.makeEmailValid("bobvance@....gmail.....com...."));
   }
 }

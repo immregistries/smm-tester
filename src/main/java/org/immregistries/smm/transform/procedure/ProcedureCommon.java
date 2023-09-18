@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.immregistries.smm.transform.TransformRequest;
 
@@ -270,5 +271,66 @@ public abstract class ProcedureCommon implements ProcedureInterface {
       address = address.toLowerCase();
     }
     return address;
+  }
+
+  // https://www.baeldung.com/java-email-validation-regex
+  protected static String makeEmailValid(String email) {
+    if (StringUtils.isBlank(email)) {
+      return "";
+    }
+
+    // eliminate spaces
+    email = email.replace(" ", "");
+    email = email.replace("\t", "");
+    email = email.replace("\r\n", "");
+    email = email.replace("\n", "");
+
+    String[] parts = email.split("\\@");
+
+    String local = parts[0].trim();
+
+    // local can't start with period
+    while (local.startsWith(".")) {
+      local = local.substring(1).trim();
+    }
+
+    // local can't end with period
+    while (local.endsWith(".")) {
+      local = local.substring(0, local.length() - 1).trim();
+    }
+
+    // local can't contain consecutive dots
+    while (local.contains("..")) {
+      local = local.replace("..", ".").trim();
+    }
+
+    // local has to be 64 characters or less
+    local = StringUtils.truncate(local, 64);
+
+    String domain;
+
+    // create the domain part since there's no @ sign
+    if (parts.length == 1) {
+      domain = "gmail.com";
+    } else {
+      domain = parts[1];
+    }
+
+    // domain can't start with period
+    while (domain.startsWith(".") || domain.startsWith("-")) {
+      domain = domain.substring(1).trim();
+    }
+
+    // domain can't end with period
+    while (domain.endsWith(".") || domain.endsWith("-")) {
+      domain = domain.substring(0, domain.length() - 1).trim();
+    }
+
+    // domain can't contain consecutive dots
+    while (domain.contains("..")) {
+      domain = domain.replace("..", ".").trim();
+    }
+
+    return local + "@" + domain;
   }
 }

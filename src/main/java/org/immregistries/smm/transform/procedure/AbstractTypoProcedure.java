@@ -36,7 +36,7 @@ public abstract class AbstractTypoProcedure extends ProcedureCommon implements P
     this.transformer = transformer;
   }
 
-  private Field field;
+  protected Field field;
 
   protected AbstractTypoProcedure(Field field) {
     this.field = field;

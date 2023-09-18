@@ -44,7 +44,7 @@ public class RepeatedConsonants extends ProcedureCommon implements ProcedureInte
       if ("PID".equals(segmentName)) {
         if (!field.repeatedField) {
           String value = readValue(fields, field.fieldPos, field.subPos);
-          value = varyName(value, transformer);
+          value = varyName(value, transformer, field);
           updateValue(value, fields, field.fieldPos, field.subPos);
         } else {
           int fieldPos = 13;
@@ -55,7 +55,7 @@ public class RepeatedConsonants extends ProcedureCommon implements ProcedureInte
 
             String email = readRepeatValue(value, subPos);
             if (email.indexOf('@') > 0) {
-              email = varyName(email, transformer);
+              email = varyName(email, transformer, field);
               updateRepeat(email, repeatFields, pos, subPos);
             }
             pos++;
@@ -74,20 +74,24 @@ public class RepeatedConsonants extends ProcedureCommon implements ProcedureInte
       'p', 'r', 's', 't', 'b', 'c', 'd', 'f', 'g', 'l', 'm', 'n', 'p', 'r', 's', 't', 'b', 'c', 'd',
       'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'y', 'z'};
 
-  protected static String varyName(String name, Transformer transformer) {
+  protected static String varyName(String name, Transformer transformer, Field field) {
     boolean upperCase = name.toUpperCase().equals(name);
     boolean lowerCase = name.toLowerCase().equals(name);
 
     Random random = transformer.getRandom();
 
     String nameLower = name.toLowerCase();
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 500; i++) {
       char c = REPEATABLE_CONSONANTS[random.nextInt(REPEATABLE_CONSONANTS.length)];
       int pos = nameLower.indexOf(c);
       if (pos > 0) {
         name = nameLower.substring(0, pos) + c + nameLower.substring(pos);
         break;
       }
+    }
+
+    if (field == Field.EMAIL) {
+      name = makeEmailValid(name);
     }
 
     if (upperCase) {

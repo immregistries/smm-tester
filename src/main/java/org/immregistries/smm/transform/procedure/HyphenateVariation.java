@@ -129,6 +129,11 @@ public class HyphenateVariation extends ProcedureCommon implements ProcedureInte
         }
       }
     }
+
+    if (field == Field.EMAIL) {
+      name = makeEmailValid(name);
+    }
+
     if (upperCase) {
       name = name.toUpperCase();
     } else if (lowerCase) {
