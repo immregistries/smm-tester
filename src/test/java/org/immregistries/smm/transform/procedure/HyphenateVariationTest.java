@@ -40,41 +40,43 @@ public class HyphenateVariationTest extends ProcedureCommonTest {
   public void test() {
     Transformer transformer = new Transformer();
 
-    for (TestingGroup group : TestingGroup.values()) {
-      String location = group.location;
-      Field field = group.field;
-      String procedure = group.procedure;
+    for (int i = 0; i < 100; i++) {
+      for (TestingGroup group : TestingGroup.values()) {
+        String location = group.location;
+        Field field = group.field;
+        String procedure = group.procedure;
 
-      if (group == TestingGroup.EMAIL) {
-        String email = "bob@gmail.com";
-        String varied = HyphenateVariation.varyName(email, transformer, field);
-        assertTrue(varied.length() > email.length());
-        assertTrue(varied.startsWith("bob-"));
-        assertTrue(varied.endsWith("@gmail.com"));
+        if (group == TestingGroup.EMAIL) {
+          String email = "bob@gmail.com";
+          String varied = HyphenateVariation.varyName(email, transformer, field);
+          assertTrue(varied.length() > email.length());
+          assertTrue(varied.startsWith("bob-"));
+          assertTrue(varied.endsWith("@gmail.com"));
 
-        email = "bob-jones@gmail.com";
-        varied = HyphenateVariation.varyName(email, transformer, field);
-        assertTrue(varied.length() > email.length());
-        assertTrue(varied.startsWith("bob-"));
-        assertTrue(varied.endsWith("@gmail.com"));
-      } else if (group == TestingGroup.ADDRESS_STREET) {
-        String address = "123 Main St.";
-        String varied = HyphenateVariation.varyName(address, transformer, field);
-        assertTrue(varied.length() > address.length());
-        assertTrue(varied.startsWith("123 Main-"));
-        assertTrue(varied.endsWith(" St."));
-      } else {
-        testVariation("Smith-Jones", "Smith Jones", transformer, location, field, procedure);
-        testVariation("Smith Jones", "Smith-Jones", transformer, location, field, procedure);
-        testVariation("Smith-jones", "Smith Jones", transformer, location, field, procedure);
-        testVariation("smith-jones", "smith jones", transformer, location, field, procedure);
-        assertEquals("Smith-Jones", HyphenateVariation.varyName(
-            HyphenateVariation.varyName("Smith-Jones", transformer, field), transformer, field));
-        assertNotEquals("", HyphenateVariation
-            .varyName(HyphenateVariation.varyName("", transformer, field), transformer, field));
-        testVariationDifferent("Smith", transformer, location, field, procedure);
-        testVariationDifferent("JONES", transformer, location, field, procedure);
-        testVariationDifferent("carpenter", transformer, location, field, procedure);
+          email = "bob-jones@gmail.com";
+          varied = HyphenateVariation.varyName(email, transformer, field);
+          assertTrue(varied.length() > email.length());
+          assertTrue(varied.startsWith("bob-"));
+          assertTrue(varied.endsWith("@gmail.com"));
+        } else if (group == TestingGroup.ADDRESS_STREET) {
+          String address = "123 Main St.";
+          String varied = HyphenateVariation.varyName(address, transformer, field);
+          assertTrue(varied.length() > address.length());
+          assertTrue(varied.startsWith("123 Main-"));
+          assertTrue(varied.endsWith(" St."));
+        } else {
+          testVariation("Smith-Jones", "Smith Jones", transformer, location, field, procedure);
+          testVariation("Smith Jones", "Smith-Jones", transformer, location, field, procedure);
+          testVariation("Smith-jones", "Smith Jones", transformer, location, field, procedure);
+          testVariation("smith-jones", "smith jones", transformer, location, field, procedure);
+          assertEquals("Smith-Jones", HyphenateVariation.varyName(
+              HyphenateVariation.varyName("Smith-Jones", transformer, field), transformer, field));
+          assertNotEquals("", HyphenateVariation
+              .varyName(HyphenateVariation.varyName("", transformer, field), transformer, field));
+          testVariationDifferent("Smith", transformer, location, field, procedure);
+          testVariationDifferent("JONES", transformer, location, field, procedure);
+          testVariationDifferent("carpenter", transformer, location, field, procedure);
+        }
       }
     }
   }
@@ -89,7 +91,14 @@ public class HyphenateVariationTest extends ProcedureCommonTest {
 
   private void testVariationDifferent(String startValue, Transformer transformer, String location,
       Field field, String procedure) {
-    assertNotEquals(startValue, HyphenateVariation.varyName(startValue, transformer, field));
+
+    String output = HyphenateVariation.varyName(startValue, transformer, field);
+
+    // confirm that a hyphen and another word were actually added
+    assertEquals("-", output.substring(startValue.length(), startValue.length() + 1));
+    assertFalse(output.endsWith("-"));
+
+    assertNotEquals(startValue, output);
     String testStart = transform(DEFAULT_TEST_MESSAGE, location + "=" + startValue);
     testProcedureChangesMessage(testStart, procedure);
   }
