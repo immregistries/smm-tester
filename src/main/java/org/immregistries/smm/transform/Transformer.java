@@ -2559,7 +2559,7 @@ public class Transformer {
         // we do know what the current test case is, see if it's ends in -1, -2, etc.
         String currentTestCaseId = transformRequest.getCurrentTestCaseMessage().getTestCaseNumber();
 
-        if (currentTestCaseId.matches(".*-\\d+$")) {
+        if (isTestCaseIdRepeat(currentTestCaseId)) {
           // the current test case ID ends in -1, -2, etc.
           int repeatIndex = currentTestCaseId.lastIndexOf("-");
           String repeat = currentTestCaseId.substring(repeatIndex);
@@ -2582,6 +2582,11 @@ public class Transformer {
 
     return matchingMessage;
   }
+
+  protected static boolean isTestCaseIdRepeat(String currentTestCaseId) {
+    return currentTestCaseId.matches(".*-\\d+$");
+  }
+
 
   public static Transform readHL7Reference(String ref) {
     return readHL7Reference(ref, ref.length());
@@ -2756,30 +2761,7 @@ public class Transformer {
     } else if (t.value.toLowerCase().startsWith("[modify") && t.value.endsWith("]")) {
       // do nothing
     } else if (t.value.startsWith("[") && t.value.endsWith("]")) {
-      String v = t.value.substring(1, t.value.length() - 1);
-      String variableName = v;
-
-      TestCaseMessage tcm = null;
-      if (variableName.contains("::")) {
-        String[] split = variableName.split("\\:\\:");
-        tcm = transformRequest.getTestCaseMessageMap().get(split[0]);
-        variableName = split[1];
-      } else {
-        tcm = transformRequest.getCurrentTestCaseMessage();
-      }
-
-      if (tcm != null) {
-        Map<String, String> variables = tcm.getVariables();
-
-        if (variables.containsKey(variableName)) {
-          t.value = variables.get(variableName);
-          doReplacements(t, transformRequest);
-        } else {
-          t.valueTransform = readHL7Reference(v, v.length());
-        }
-      } else {
-        t.valueTransform = readHL7Reference(v, v.length());
-      }
+      doVariableReplacement(t, transformRequest);
     }
 
     if (t.valueTransform != null) {
@@ -3096,6 +3078,43 @@ public class Transformer {
       if (i >= 0) {
         j = t.value.indexOf(']', i);
       }
+    }
+  }
+
+  protected void doVariableReplacement(Transform t, TransformRequest transformRequest)
+      throws IOException {
+    String v = t.value.substring(1, t.value.length() - 1);
+    String variableName = v;
+
+    TestCaseMessage tcm = null;
+    if (variableName.contains("::")) {
+      String[] split = variableName.split("\\:\\:");
+
+      // look up referenced test message keeping in mind it could be a repeat
+      // Y-1 should map to X-1, Y-2 to X-2, etc.
+      TestCaseMessage matchingTestCaseMessage = getRepeatReferenceTestCaseMessage(transformRequest,
+          split[0], transformRequest.getTestCaseMessageMap());
+
+      if (matchingTestCaseMessage != null) {
+        tcm = transformRequest.getTestCaseMessageMap()
+            .get(matchingTestCaseMessage.getTestCaseNumber());
+        variableName = split[1];
+      }
+    } else {
+      tcm = transformRequest.getCurrentTestCaseMessage();
+    }
+
+    if (tcm != null) {
+      Map<String, String> variables = tcm.getVariables();
+
+      if (variables.containsKey(variableName)) {
+        t.value = variables.get(variableName);
+        doReplacements(t, transformRequest);
+      } else {
+        t.valueTransform = readHL7Reference(v, v.length());
+      }
+    } else {
+      t.valueTransform = readHL7Reference(v, v.length());
     }
   }
 
