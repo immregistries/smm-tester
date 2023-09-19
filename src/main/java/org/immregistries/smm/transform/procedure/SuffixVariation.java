@@ -8,28 +8,24 @@ import org.immregistries.smm.transform.Transformer;
 
 public class SuffixVariation extends ProcedureCommon implements ProcedureInterface {
 
-  private static final String[] SUFFIXES = new String[] {"Jr", "Sr", "II", "III"};
-
-  public SuffixVariation() {
-
-  }
+  // order is important, III has to come before II, Jr. before Jr, Sr. before Sr
+  protected static final String[] SUFFIXES =
+      new String[] {"Jr.", "Jr", "Junior", "Sr.", "Sr", "Senior", "III", "II", "2nd", "3rd"};
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
-    {
-      for (String[] fields : fieldsList) {
-        String segmentName = fields[0];
-        if ("PID".equals(segmentName)) {
-          int fieldPos = 5;
-          String lastName = readValue(fields, fieldPos, 1);
-          String firstName = readValue(fields, fieldPos, 2);
-          String suffix = readValue(fields, fieldPos, 4);
-          String[] names = varyName(lastName, firstName, suffix);
-          updateValue(names[0], fields, fieldPos, 1);
-          updateValue(names[1], fields, fieldPos, 2);
-          updateValue(names[2], fields, fieldPos, 4);
-        }
+    for (String[] fields : fieldsList) {
+      String segmentName = fields[0];
+      if ("PID".equals(segmentName)) {
+        int fieldPos = 5;
+        String lastName = readValue(fields, fieldPos, 1);
+        String firstName = readValue(fields, fieldPos, 2);
+        String suffix = readValue(fields, fieldPos, 4);
+        String[] names = varyName(lastName, firstName, suffix);
+        updateValue(names[0], fields, fieldPos, 1);
+        updateValue(names[1], fields, fieldPos, 2);
+        updateValue(names[2], fields, fieldPos, 4);
       }
     }
     putMessageBackTogether(transformRequest, fieldsList);
@@ -54,7 +50,6 @@ public class SuffixVariation extends ProcedureCommon implements ProcedureInterfa
     String suffixInLastName = getSuffix(lastName);
     String suffixInFirstName = getSuffix(firstName);
     String suffixInSuffix = getSuffix(suffix);
-
 
     if (suffixInSuffix != null) {
       names[0] = lastName + " " + suffixInSuffix;
@@ -85,7 +80,6 @@ public class SuffixVariation extends ProcedureCommon implements ProcedureInterfa
     return names;
   }
 
-
   private static String getSuffix(String name) {
     name = name.toUpperCase();
     for (String suffix : SUFFIXES) {
@@ -97,7 +91,4 @@ public class SuffixVariation extends ProcedureCommon implements ProcedureInterfa
   }
 
   public void setTransformer(Transformer transformer) {}
-
-
-
 }
