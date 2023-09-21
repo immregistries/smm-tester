@@ -46,7 +46,7 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
       if ("PID".equals(segmentName)) {
         if (!field.repeatedField) {
           String value = readValue(fields, field.fieldPos, field.subPos);
-          value = varyName(value, transformer);
+          value = varyName(value, transformer, field);
           updateValue(value, fields, field.fieldPos, field.subPos);
         } else {
           String[] repeatFields = readRepeats(fields, field.fieldPos);
@@ -54,7 +54,7 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
           for (String value : repeatFields) {
             String email = readRepeatValue(value, field.subPos);
             if (email.indexOf('@') > 0) {
-              email = varyName(email, transformer);
+              email = varyName(email, transformer, field);
               updateRepeat(email, repeatFields, pos, field.subPos);
             }
             pos++;
@@ -68,7 +68,7 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
-  protected static String varyName(String name, Transformer transformer) {
+  protected static String varyName(String name, Transformer transformer, Field field) {
     boolean upperCase = name.toUpperCase().equals(name);
     boolean lowerCase = name.toLowerCase().equals(name);
 
@@ -88,6 +88,10 @@ public class AlternativeVowels extends ProcedureCommon implements ProcedureInter
 
         break;
       }
+    }
+
+    if (field == Field.EMAIL) {
+      name = makeEmailValid(name);
     }
 
     if (upperCase) {

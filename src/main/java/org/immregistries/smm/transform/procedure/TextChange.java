@@ -82,33 +82,46 @@ public class TextChange extends ProcedureCommon implements ProcedureInterface {
   }
 
   protected static String varyText(String value, Field field, Transformer transformer) {
+    String originalValue = value;
     boolean upperCase = value.toUpperCase().equals(value);
     boolean lowerCase = value.toLowerCase().equals(value);
     Random random = transformer.getRandom();
 
-    switch (field) {
-      case FIRST_NAME:
-      case MIDDLE_NAME:
-        value = transformer.getRandomValue(random.nextBoolean() ? "GIRL" : "BOY");
-        break;
-      case LAST_NAME:
-      case MOTHERS_MAIDEN_NAME:
-        value = transformer.getRandomValue("LAST_NAME");
-        break;
-      case MOTHERS_FIRST_NAME:
-        value = transformer.getRandomValue("GIRL");
-        break;
-      case ADDRESS_CITY:
-        value = transformer.getRandomValue("ADDRESS");
-        break;
-      case EMAIL:
-        value = transformer.getRandomValue("GIRL") + "." + transformer.getRandomValue("LAST_NAME")
-            + random.nextInt(2500) + "@" + transformer.getRandomValue("LAST_NAME") + ".com";
-        break;
-      case PHONE:
-        value = "" + (random.nextInt(8) + 2) + random.nextInt(10) + random.nextInt(10)
-            + random.nextInt(10) + random.nextInt(10) + random.nextInt(10) + random.nextInt(10);
-        break;
+    boolean notDifferent = true;
+    int count = 0;
+
+    while (notDifferent && count < 10) {
+      switch (field) {
+        case FIRST_NAME:
+        case MIDDLE_NAME:
+          value = transformer.getRandomValue(random.nextBoolean() ? "GIRL" : "BOY");
+          break;
+        case LAST_NAME:
+        case MOTHERS_MAIDEN_NAME:
+          value = transformer.getRandomValue("LAST_NAME");
+          break;
+        case MOTHERS_FIRST_NAME:
+          value = transformer.getRandomValue("GIRL");
+          break;
+        case ADDRESS_CITY:
+          value = transformer.getRandomValue("ADDRESS");
+          break;
+        case EMAIL:
+          value = transformer.getRandomValue("GIRL") + "." + transformer.getRandomValue("LAST_NAME")
+              + random.nextInt(2500) + "@" + transformer.getRandomValue("LAST_NAME") + ".com";
+          value = makeEmailValid(value);
+          break;
+        case PHONE:
+          value = "" + (random.nextInt(8) + 2) + random.nextInt(10) + random.nextInt(10)
+              + random.nextInt(10) + random.nextInt(10) + random.nextInt(10) + random.nextInt(10);
+          break;
+      }
+
+      // try really hard to get a different value
+      if (!originalValue.equals(value)) {
+        notDifferent = false;
+      }
+      count++;
     }
 
     if (upperCase) {

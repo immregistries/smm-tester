@@ -44,7 +44,7 @@ public class AddVariation extends ProcedureCommon implements ProcedureInterface 
       if ("PID".equals(segmentName)) {
         if (!field.repeatedField) {
           String value = readValue(fields, field.fieldPos, field.subPos);
-          value = varyName(value);
+          value = varyName(value, field);
           updateValue(value, fields, field.fieldPos, field.subPos);
         } else {
           String[] repeatFields = readRepeats(fields, field.fieldPos);
@@ -52,7 +52,7 @@ public class AddVariation extends ProcedureCommon implements ProcedureInterface 
           for (String value : repeatFields) {
             String email = readRepeatValue(value, field.subPos);
             if (email.indexOf('@') > 0) {
-              email = varyName(email);
+              email = varyName(email, field);
               updateRepeat(email, repeatFields, pos, field.subPos);
             }
             pos++;
@@ -66,7 +66,7 @@ public class AddVariation extends ProcedureCommon implements ProcedureInterface 
     putMessageBackTogether(transformRequest, fieldsList);
   }
 
-  protected static String varyName(String name) {
+  protected static String varyName(String name, Field field) {
     if (name.startsWith("'") || name.endsWith("'")) {
       return name;
     }
@@ -88,12 +88,17 @@ public class AddVariation extends ProcedureCommon implements ProcedureInterface 
         pos = findFirstConsonantAfterVowel(name);
       }
       if (pos > 0 && pos < name.length()) {
-        if (System.currentTimeMillis() % 2 == 0) {
+        if (field == Field.EMAIL || System.currentTimeMillis() % 2 == 0) {
+          // do not add a space to the email
           name = name.substring(0, pos) + "'" + capitalizeFirst(name.substring(pos));
         } else {
           name = name.substring(0, pos) + " " + capitalizeFirst(name.substring(pos));
         }
       }
+    }
+
+    if (field == Field.EMAIL) {
+      name = makeEmailValid(name);
     }
 
     if (upperCase) {

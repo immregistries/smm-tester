@@ -107,6 +107,10 @@ public class SpecialCharacters extends ProcedureCommon implements ProcedureInter
       name = name.substring(0, pos) + diacritic + name.substring(pos + 1);
     }
 
+    if (field == Field.EMAIL) {
+      name = makeEmailValid(name);
+    }
+
     if (upperCase) {
       name = name.toUpperCase();
     } else if (lowerCase) {
