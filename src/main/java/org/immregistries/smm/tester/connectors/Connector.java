@@ -444,9 +444,9 @@ public abstract class Connector {
 
   public void addAsssementTransformation(String assessmentTransformation) {
     if (this.assessmentTransformations == null) {
-      this.assessmentTransformations = assessmentTransformations + "\n";
+      this.assessmentTransformations = assessmentTransformation + "\n";
     } else {
-      this.assessmentTransformations += assessmentTransformations + "\n";
+      this.assessmentTransformations += assessmentTransformation + "\n";
     }
   }
 
