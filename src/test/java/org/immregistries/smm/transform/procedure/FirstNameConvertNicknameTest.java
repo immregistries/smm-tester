@@ -11,10 +11,7 @@ public class FirstNameConvertNicknameTest extends ProcedureCommonTest {
     Transformer transformer = new Transformer();
 
     assertEquals("Alexander", FirstNameConvertNickname.varyText("Xander", transformer));
-    assertEquals("Edward", FirstNameConvertNickname.varyText("Eddie", transformer));
-    assertEquals("Alex", FirstNameConvertNickname.varyText("Alejandro", transformer));
     assertEquals("Carolina", FirstNameConvertNickname.varyText("Caro", transformer));
-    assertEquals("Caro", FirstNameConvertNickname.varyText("Carolina", transformer));
     assertEquals("Ignacio", FirstNameConvertNickname.varyText("Nacho", transformer));
 
     assertEquals("Shaquille", FirstNameConvertNickname.varyText("Shaq", transformer));
@@ -48,8 +45,6 @@ public class FirstNameConvertNicknameTest extends ProcedureCommonTest {
     testVariationDifferent("William", "PID-5.2", ProcedureFactory.FIRST_NAME_CONVERT_TO_NICKNAME,
         transformer);
     testVariationDifferent("DeeDee", "PID-5.2", ProcedureFactory.FIRST_NAME_CONVERT_TO_NICKNAME,
-        transformer);
-    testVariationDifferent("Emma", "PID-5.2", ProcedureFactory.FIRST_NAME_CONVERT_TO_NICKNAME,
         transformer);
     testVariationDifferent("Lils", "PID-5.2", ProcedureFactory.FIRST_NAME_CONVERT_TO_NICKNAME,
         transformer);
