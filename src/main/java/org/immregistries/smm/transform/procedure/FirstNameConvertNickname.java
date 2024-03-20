@@ -1,6 +1,8 @@
 package org.immregistries.smm.transform.procedure;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,6 +13,8 @@ import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
 public class FirstNameConvertNickname extends ProcedureCommon implements ProcedureInterface {
+
+  public static final double NICKNAME_FILE_FREQUENCY_THRESHOLD = 0.5;
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
@@ -87,6 +91,8 @@ public class FirstNameConvertNickname extends ProcedureCommon implements Procedu
   }
 
   static {
+    loadFileNicknames();
+
     addNameAndNickName("Alexander", "Alex");
     addNameAndNickName("Alexander", "Xander");
     addNameAndNickName("Benjamin", "Ben");
@@ -523,6 +529,33 @@ public class FirstNameConvertNickname extends ProcedureCommon implements Procedu
     addNameAndNickName("Umut", "Um");
     addNameAndNickName("Umut", "Umy");
     addNameAndNickName("Yusuf", "Yusufoglu");
+  }
+
+  public static void loadFileNicknames() {
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(
+        FirstNameConvertNickname.class.getResourceAsStream(("/nicknames.csv"))))) {
+      
+      // skip header
+      br.readLine();
+      
+      String line;
+      while ((line = br.readLine()) != null) {
+        String[] parts = line.split("\\,");
+
+        double frequency = Double.parseDouble(parts[3]);
+        if (frequency >= NICKNAME_FILE_FREQUENCY_THRESHOLD) {
+          String name = parts[0].substring(0, 1) + parts[0].substring(1).toLowerCase();
+          String nickname = parts[1].substring(0, 1) + parts[1].substring(1).toLowerCase();
+          addNameAndNickName(name, nickname);
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void main(String[] args) {
+
   }
 
   private Transformer transformer;
