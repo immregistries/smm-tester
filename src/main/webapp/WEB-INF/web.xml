@@ -42,7 +42,7 @@
     </init-param>
     <init-param>
       <param-name>software.dir</param-name>
-      <param-value>/opt/smm-builds</param-value>
+      <param-value>/var/lib/tomcat9/work/smm</param-value>
       <!-- /home/oisptorg/ois-pt.org/data/dist C:\data\work\product\smm\dist -->
     </init-param>
     <init-param>
