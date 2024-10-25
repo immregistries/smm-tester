@@ -122,11 +122,6 @@ public class Transformer {
   private static final String IF_19_PLUS = "if 19+";
   private static final String IF_18_MINUS = "if 18-";
   private static final String IF_19_MINUS = "if 19-";
-  
-  private static final String IF_ADMINISTERED = "if administered";
-  private static final String IF_HISTORICAL = "if historical";
-  private static final String IF_REFUSAL = "if refusal";
-  private static final String IF_NON_ADMIN = "if non-admin";
 
   private static final int VACCINE_CVX = 0;
   private static final int VACCINE_NAME = 1;
@@ -1103,7 +1098,7 @@ public class Transformer {
         transformRequest.setLine(transformCommand);
 
         if (transformCommand.length() > 0) {
-          boolean shouldSkipTransform = checkForAgeSkip(transformRequest) || checkForSpecialVaccineModifierSkip(transformRequest);
+          boolean shouldSkipTransform = checkForAgeSkip(transformRequest);
           if (shouldSkipTransform) {
             continue;
           }
@@ -1189,51 +1184,6 @@ public class Transformer {
       }
     }
     return shouldSkipTransform;
-  }
-  
-  protected boolean checkForSpecialVaccineModifierSkip(TransformRequest transformRequest) throws IOException {
-    String line = transformRequest.getLine();
-    
-    boolean administered = line.indexOf(IF_ADMINISTERED) > 0;
-    boolean historical = line.indexOf(IF_HISTORICAL) > 0;
-    boolean refusal = line.indexOf(IF_REFUSAL) > 0;
-    boolean nonAdmin = line.indexOf(IF_NON_ADMIN) > 0;
-    
-    if (!administered && !historical && !refusal && !nonAdmin) {
-      // don't skip because there was no special vaccine modifier, just a normal transform
-      return false;
-    }
-    
-    String rxa9 = readValueFromHL7Text("RXA-9", transformRequest.getResultText(), transformRequest);
-    
-    if (administered && "00".equals(rxa9)) {
-      line = line.substring(0, line.indexOf(IF_ADMINISTERED) - 1);
-      transformRequest.setLine(line);
-      return false;
-    }
-    
-    if (historical && ("01".equals(rxa9) || "02".equals(rxa9) ||"03".equals(rxa9) || "04".equals(rxa9) ||"05".equals(rxa9) || "06".equals(rxa9) ||"07".equals(rxa9) || "08".equals(rxa9))) {
-      line = line.substring(0, line.indexOf(IF_HISTORICAL) - 1);
-      transformRequest.setLine(line);
-      return false;
-    }
-    
-    String rxa20 = readValueFromHL7Text("RXA-20", transformRequest.getResultText(), transformRequest);
-
-    if (refusal && StringUtils.isBlank(rxa9) && "RE".equals(rxa20)) {
-      line = line.substring(0, line.indexOf(IF_REFUSAL) - 1);
-      transformRequest.setLine(line);
-      return false;
-    }
-    
-    if (nonAdmin && StringUtils.isBlank(rxa9) && "NA".equals(rxa20)) {
-      line = line.substring(0, line.indexOf(IF_NON_ADMIN) - 1);
-      transformRequest.setLine(line);
-      return false;
-    }
-    
-    // skip this transform because there was a special vaccine modifier but the secondary criteria didn't match
-    return true;
   }
 
   public void doSetField(TransformRequest transformRequest) throws IOException {
