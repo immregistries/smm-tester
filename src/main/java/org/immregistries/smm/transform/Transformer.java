@@ -148,6 +148,8 @@ public class Transformer {
   private static final int VACCINE_VIS3_PUB_DATE = 17;
 
   private static final String REPEAT_REF = "-?";
+  
+  public static final String SCENARIO_WILDCARD = "*";
 
   private static Map<String, List<String[]>> conceptMap = null;
   private static Map<String, List<String[]>> testDataMap = null;
@@ -491,22 +493,33 @@ public class Transformer {
 
   public static String transform(Connector connector, TestCaseMessage testCaseMessage) {
     String message = testCaseMessage.getMessageText();
-    String scenarioTransforms =
-        connector.getScenarioTransformationsMap().get(testCaseMessage.getScenario());
-    if (scenarioTransforms == null) {
-      scenarioTransforms =
-          connector.getScenarioTransformationsMap().get(testCaseMessage.getTestCaseNumber());
+    List<String> scenarioTransforms = new ArrayList<>();
+    
+    // exact match lookup for scenario name
+    if (connector.getScenarioTransformationsMap().containsKey(testCaseMessage.getScenario())) {
+      scenarioTransforms.add(connector.getScenarioTransformationsMap().get(testCaseMessage.getScenario()));
     }
-    testCaseMessage.setScenarioTransforms(scenarioTransforms);
+    
+    // wildcard lookups for test code
+    // possibly don't include the exact match result here to replicate the old functionality
+    // of not including the testCaseNumber lookup if the scenario lookup returned a result
+    scenarioTransforms.addAll(
+      connector.getTransformsFromScenarioMap(
+        testCaseMessage.getTestCaseNumber(),
+        scenarioTransforms.isEmpty()));
+    
+    // I can't tell where this field is being used so I'm not sure if separating by a newline is appropriate or not
+    testCaseMessage.setScenarioTransforms(String.join("\n", scenarioTransforms));
+    
     String additionalTransformations = testCaseMessage.getAdditionalTransformations();
-    if (additionalTransformations.equals("")) {
+    if ("".equals(additionalTransformations)) {
       additionalTransformations = null;
     }
     String transforms = connector.getCustomTransformations();
     if (testCaseMessage.getTestCaseMode() == TestCaseMode.ASSESSMENT) {
       transforms = connector.getAssessmentTransformations();
     }
-    if (!transforms.equals("") || scenarioTransforms != null || additionalTransformations != null) {
+    if (!"".equals(transforms) || !scenarioTransforms.isEmpty() || additionalTransformations != null) {
       Transformer transformer = new Transformer();
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
       connector.setCurrentFilename("dqa-tester-request" + sdf.format(new Date()) + ".hl7");
@@ -518,7 +531,7 @@ public class Transformer {
   }
 
   public String transformForTesting(Connector connector, String messageText,
-      String customTransformations, String scenarioTransformations, String excludeTransformations,
+      String customTransformations, List<String> scenarioTransformations, String excludeTransformations,
       String additionalTransformations, Map<String, TestCaseMessage> testCaseMessageMap) {
     String quickTransforms = "";
 
@@ -560,8 +573,10 @@ public class Transformer {
       }
     }
 
-    if (scenarioTransformations != null) {
-      transforms += scenarioTransformations;
+    if (scenarioTransformations != null && !scenarioTransformations.isEmpty()) {
+      for (String scenarioTransform : scenarioTransformations) {
+        transforms += scenarioTransform + "\n";
+      }
     }
 
     if (additionalTransformations != null) {

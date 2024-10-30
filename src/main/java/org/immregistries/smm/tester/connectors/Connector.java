@@ -14,11 +14,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.regex.Pattern;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import org.immregistries.smm.mover.AckAnalyzer;
 import org.immregistries.smm.tester.PasswordEncryptUtil;
+import org.immregistries.smm.transform.Transformer;
 
 /**
  * 
@@ -864,5 +867,67 @@ public abstract class Connector {
     }
     return response;
   }
-
+  
+  // since we're matching against wildcard scenarios now, we can match more than one transform
+  public List<String> getTransformsFromScenarioMap(String testCode, boolean includeExactMatch) {
+    List<String> transforms = new ArrayList<>();
+    
+    if (scenarioTransformationsMap == null || scenarioTransformationsMap.isEmpty()) {
+      return transforms;
+    }
+    
+    // loop over the scenarios and check for actual equality or equality with wildcards
+    for (Entry<String, String> entry : scenarioTransformationsMap.entrySet()) {
+      if (entry == null) {
+        // bad entry
+        continue;
+      }
+      
+      if (doesScenarioMatchTestCode(entry.getKey(), testCode, includeExactMatch)) {
+        // we found a match
+        transforms.add(entry.getValue());
+      }
+    }
+    
+    // did not find anything
+    return transforms;
+  }
+  
+  public List<String> getTransformsFromScenarioMap(String testCode) {
+    return getTransformsFromScenarioMap(testCode, true);
+  }
+  
+  // does wildcard testing to see if the scenario and testCode are equal
+  public static boolean doesScenarioMatchTestCode(String scenario, String testCode, boolean includeExactMatch) {
+    if (scenario == null) {
+      // bad input
+      return false;
+    }
+    
+    if (includeExactMatch && scenario.equals(testCode)) {
+      return true;
+    }
+    
+    if (scenario.indexOf(Transformer.SCENARIO_WILDCARD) == -1) {
+      // if there's no wildcard skip it
+      return false;
+    }
+    
+    String regexPattern = "^";
+    for (String partial : scenario.split("\\" + Transformer.SCENARIO_WILDCARD)) {
+      regexPattern += Pattern.quote(partial) + ".*";
+    }
+    
+    // drop the final .* unless the scenario name ends with the wildcard
+    if (regexPattern.length() > 2 && !scenario.endsWith(Transformer.SCENARIO_WILDCARD)) {
+      regexPattern = regexPattern.substring(0, regexPattern.length() - 2);
+    }
+    regexPattern += "$";
+    
+    return Pattern.matches(regexPattern, testCode);
+  }
+  
+  public static boolean doesScenarioMatchTestCode(String scenario, String testCode) {
+    return doesScenarioMatchTestCode(scenario, testCode, true);
+  }
 }
