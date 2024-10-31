@@ -13,6 +13,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -80,23 +81,30 @@ public class SubmitServlet extends ClientServlet {
 
       if (transform) {
         if (request.getParameter("transform") != null) {
-          TestCaseMessage testCaseMessage =
-              (TestCaseMessage) session.getAttribute("testCaseMessage");
-          String scenarioTransforms = null;
+          TestCaseMessage testCaseMessage = (TestCaseMessage) session.getAttribute("testCaseMessage");
+          List<String> scenarioTransforms = new ArrayList<>();
           String additionalTransformations = "";
+          
           if (testCaseMessage != null) {
-            scenarioTransforms =
-                connector.getScenarioTransformationsMap().get(testCaseMessage.getScenario());
-            if (scenarioTransforms == null) {
-              scenarioTransforms = connector.getScenarioTransformationsMap()
-                  .get(testCaseMessage.getTestCaseNumber());
+            // exact match lookup for scenario name
+            if (connector.getScenarioTransformationsMap().containsKey(testCaseMessage.getScenario())) {
+              scenarioTransforms.add(connector.getScenarioTransformationsMap().get(testCaseMessage.getScenario()));
             }
+            
+            // wildcard lookups for test code
+            // possibly don't include the exact match result here to replicate the old functionality
+            // of not including the testCaseNumber lookup if the scenario lookup returned a result
+            scenarioTransforms.addAll(
+              connector.getTransformsFromScenarioMap(
+                testCaseMessage.getTestCaseNumber(),
+                scenarioTransforms.isEmpty()));
+            
             additionalTransformations = testCaseMessage.getAdditionalTransformations();
-            if (additionalTransformations.equals("")) {
+            if ("".equals(additionalTransformations)) {
               additionalTransformations = null;
             }
           }
-          if (!connector.getCustomTransformations().equals("") || scenarioTransforms != null
+          if (!"".equals(connector.getCustomTransformations()) || !scenarioTransforms.isEmpty()
               || additionalTransformations != null) {
             Transformer transformer = new Transformer();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
