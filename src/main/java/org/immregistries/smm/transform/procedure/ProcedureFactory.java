@@ -248,6 +248,11 @@ public class ProcedureFactory {
       "ADD_OBX_FOR_FUNDING_SOURCE_TO_ALL_ADMINISTERED_RXA";
   public static final String ADD_OBX_FOR_FUNDING_SOURCE_TO_ALL_RXA =
       "ADD_OBX_FOR_FUNDING_SOURCE_TO_ALL_RXA";
+  
+  // suffix
+  public static final String SUFFIX_VARIATION = "SUFFIX_VARIATION";
+  public static final String SUFFIX_VARIATION_NUMBERS = "SUFFIX_VARIATION_NUMBERS";
+  public static final String SUFFIX_VARIATION_PERIODS = "SUFFIX_VARIATION_PERIODS";
 
   // misc
   public static final String ADMINISTRATIVE_SEX_VARIATION = "ADMINISTRATIVE_SEX_VARIATION";
@@ -258,7 +263,6 @@ public class ProcedureFactory {
       "MIDDLE_NAME_IN_FIRST_NAME_VARIATION";
   public static final String POPULATE_QUERY_FROM_UPDATE = "POPULATE_QUERY_FROM_UPDATE";
   public static final String REMOVE_VACCINATION_GROUPS = "REMOVE_VACCINATION_GROUPS";
-  public static final String SUFFIX_VARIATION = "SUFFIX_VARIATION";
 
   private ProcedureFactory() {}
 
@@ -620,6 +624,14 @@ public class ProcedureFactory {
       case ADD_OBX_FOR_FUNDING_ELIGIBILITY_TO_ALL_ADMINISTERED_RXA:
         return new AddFundingToRxa(AddFundingToRxa.Type.ELIGIBILITY,
             AddFundingToRxa.VaccinationGroups.ADMINISTERED_ONLY);
+      
+      // suffix
+      case SUFFIX_VARIATION:
+        return new SuffixVariation();
+      case SUFFIX_VARIATION_NUMBERS:
+        return new SuffixVariationNumbers();
+      case SUFFIX_VARIATION_PERIODS:
+        return new SuffixVariationPeriods();
 
       // misc
       case REMOVE_VACCINATION_GROUPS:
@@ -639,9 +651,6 @@ public class ProcedureFactory {
 
       case MIDDLE_NAME_IN_FIRST_NAME_VARIATION:
         return new MiddleNameInFirstNameVariation();
-
-      case SUFFIX_VARIATION:
-        return new SuffixVariation();
 
       case ADMINISTRATIVE_SEX_VARIATION:
         return new AdministrativeSexVariation();
