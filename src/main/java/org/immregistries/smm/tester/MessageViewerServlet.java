@@ -1,37 +1,27 @@
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package org.immregistries.smm.tester;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.immregistries.smm.tester.manager.query.QueryRequest;
 import org.immregistries.smm.tester.manager.query.QueryResponse;
 import org.immregistries.smm.tester.manager.query.Vaccination;
 import org.immregistries.smm.tester.manager.response.ImmunizationMessage;
 import org.immregistries.smm.tester.manager.response.ResponseReader;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
- * 
  * @author nathan
  */
 public class MessageViewerServlet extends ClientServlet {
+  private static final long serialVersionUID = 1L;
 
   public static final String PARAM_ACTION = "action";
 
   public static final String PARAM_MESSAGE = "message";
-
-
-
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 1L;
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -46,7 +36,6 @@ public class MessageViewerServlet extends ClientServlet {
     response.setContentType("text/html;charset=UTF-8");
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
-    Authenticate.User user = (Authenticate.User) session.getAttribute("user");
     String action = request.getParameter(PARAM_ACTION);
     String problem = null;
     if (username == null) {

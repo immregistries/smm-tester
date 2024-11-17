@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.immregistries.smm.cdc.CDCWSDLServer;
 import org.immregistries.smm.cdc.Fault;
 import org.immregistries.smm.cdc.MessageTooLargeFault;
@@ -23,9 +20,12 @@ import org.immregistries.smm.cdc.SubmitSingleMessage;
 import org.immregistries.smm.cdc.UnknownFault;
 import org.immregistries.smm.tester.ClientServlet;
 import org.immregistries.smm.tester.manager.HL7Reader;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@SuppressWarnings("serial")
 public class WSDLDemoServlet extends ClientServlet {
+  private static final long serialVersionUID = 1L;
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)

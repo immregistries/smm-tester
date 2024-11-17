@@ -15,10 +15,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.immregistries.smm.RecordServletInterface;
 import org.immregistries.smm.mover.ConnectionManager;
 import org.immregistries.smm.mover.SendData;
@@ -27,14 +23,17 @@ import org.immregistries.smm.transform.PatientType;
 import org.immregistries.smm.transform.ScenarioManager;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.Transformer;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
- * 
  * @author nathan
  */
-@SuppressWarnings("serial")
 public class CreateTestCaseServlet extends ClientServlet {
-
+  private static final long serialVersionUID = 1L;
+  
   public static final String IIS_TEST_REPORT_FILENAME_PREFIX = "IIS Test Report";
 
   /**

@@ -2,13 +2,14 @@ package org.immregistries.smm.mover.install;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.immregistries.smm.mover.install.templates.ConnectionTemplateFactory;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@SuppressWarnings("serial")
 public class PrepareServlet extends ClientServlet {
+  private static final long serialVersionUID = 1L;
+  
   protected static final String FOLDER_NAME = "folderName";
   protected static final String TEMPLATE_NAME = "templateName";
   protected static final String BASE_DIR = "baseDir";

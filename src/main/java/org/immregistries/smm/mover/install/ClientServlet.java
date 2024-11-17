@@ -1,19 +1,16 @@
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package org.immregistries.smm.mover.install;
 
 import java.io.PrintWriter;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import org.immregistries.smm.SoftwareVersion;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 
  * @author nathan
  */
-@SuppressWarnings("serial")
 public class ClientServlet extends HttpServlet {
+  private static final long serialVersionUID = 1L;
 
   protected static SoftwareType getSoftwareType(HttpServletRequest request) {
     String softwareType = request.getParameter("softwareType");

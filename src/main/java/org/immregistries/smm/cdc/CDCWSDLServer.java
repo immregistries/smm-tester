@@ -5,9 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public abstract class CDCWSDLServer {
   private static final String CDATA_END = "]]>";
@@ -19,9 +18,8 @@ public abstract class CDCWSDLServer {
     processor = ProcessorFactory.createProcessor(processorName, this);
   }
 
-  @SuppressWarnings("resource")
   public void process(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {
+      throws IOException {
     String xmlMessage = getBody(req);
     resp.setContentType(
         "application/soap+xml; charset=UTF-8; action=\"urn:cdc:iisb:2011:connectivityTest\"");
