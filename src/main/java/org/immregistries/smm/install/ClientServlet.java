@@ -1,12 +1,9 @@
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package org.immregistries.smm.install;
 
 import java.io.PrintWriter;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import org.immregistries.smm.SoftwareVersion;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 

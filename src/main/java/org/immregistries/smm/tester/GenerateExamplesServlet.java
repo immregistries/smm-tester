@@ -1,6 +1,3 @@
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package org.immregistries.smm.tester;
 
 import java.io.IOException;
@@ -10,18 +7,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.immregistries.smm.transform.ModifyMessageRequest;
 import org.immregistries.smm.transform.ModifyMessageService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * 
  * @author nathan
  */
-@SuppressWarnings("serial")
 public class GenerateExamplesServlet extends ClientServlet {
+  private static final long serialVersionUID = 1L;
+  
   private static final String PARAM_MESSAGE = "message";
   private static final String PARAM_SCRIPT = "script";
   private static final String PARAM_COUNT = "count";

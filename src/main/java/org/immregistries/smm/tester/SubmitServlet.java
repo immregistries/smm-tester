@@ -1,6 +1,3 @@
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package org.immregistries.smm.tester;
 
 import java.io.BufferedReader;
@@ -16,10 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.immregistries.smm.mover.AckAnalyzer;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.manager.HL7Reader;
@@ -30,13 +23,16 @@ import org.immregistries.smm.tester.manager.query.QueryType;
 import org.immregistries.smm.tester.run.TestRunner;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.Transformer;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
- * 
  * @author nathan
  */
-@SuppressWarnings("serial")
 public class SubmitServlet extends ClientServlet {
+  private static final long serialVersionUID = 1L;
 
   protected static Connector getConnector(int id, HttpSession session) throws ServletException {
     List<Connector> connectors = ConnectServlet.getConnectors(session);

@@ -4,14 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-@SuppressWarnings("serial")
 public class CatchServlet extends ClientServlet {
-  
+  private static final long serialVersionUID = 1L;
+
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {

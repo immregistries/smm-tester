@@ -1,6 +1,3 @@
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package org.immregistries.smm.tester;
 
 import java.io.IOException;
@@ -8,10 +5,6 @@ import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.immregistries.smm.tester.manager.query.PatientIdType;
 import org.immregistries.smm.tester.manager.query.QueryConverter;
 import org.immregistries.smm.tester.manager.query.QueryRequest;
@@ -19,9 +12,12 @@ import org.immregistries.smm.tester.manager.query.QueryType;
 import org.immregistries.smm.transform.ScenarioManager;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.Transformer;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
- * 
  * @author nathan
  */
 public class ManualQueryServlet extends ClientServlet {
@@ -77,7 +73,6 @@ public class ManualQueryServlet extends ClientServlet {
     response.setContentType("text/html;charset=UTF-8");
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
-    Authenticate.User user = (Authenticate.User) session.getAttribute("user");
     String action = request.getParameter(PARAM_ACTION);
     String problem = null;
     if (username == null) {

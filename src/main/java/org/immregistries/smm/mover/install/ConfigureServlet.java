@@ -3,18 +3,18 @@ package org.immregistries.smm.mover.install;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.immregistries.smm.mover.SendData;
 import org.immregistries.smm.mover.install.templates.ConnectionTemplate;
 import org.immregistries.smm.mover.install.templates.ConnectionTemplateFactory;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.connectors.ConnectorFactory;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-@SuppressWarnings("serial")
 public class ConfigureServlet extends ClientServlet {
+  private static final long serialVersionUID = 1L;
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)

@@ -1,23 +1,19 @@
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package org.immregistries.smm.tester;
 
 import java.io.PrintWriter;
 import java.util.List;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.immregistries.smm.SoftwareVersion;
 import org.immregistries.smm.tester.connectors.Connector;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 /**
- * 
  * @author nathan
  */
-@SuppressWarnings("serial")
 public class ClientServlet extends HttpServlet {
-
+  private static final long serialVersionUID = 1L;
+  
   protected static final String MENU_HEADER_HOME = "Home";
   protected static final String MENU_HEADER_CONNECT = "Connect to IIS";
   protected static final String MENU_HEADER_SETUP = "Manage Test Cases";

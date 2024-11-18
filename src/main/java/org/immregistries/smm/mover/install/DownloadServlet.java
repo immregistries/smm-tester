@@ -17,16 +17,16 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import org.immregistries.smm.SoftwareVersion;
 import org.immregistries.smm.mover.ConnectionManager;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-@SuppressWarnings("serial")
 public class DownloadServlet extends ClientServlet {
-
+  private static final long serialVersionUID = 1L;
+  
   private static final String FIELD_VERSION = "version";
   private static final String FIELD_DATA_DIR = "dataDir";
   private static final String FIELD_SC_CODE = "scCode";
