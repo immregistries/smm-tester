@@ -1118,7 +1118,7 @@ public class Transformer {
         transformRequest.setLine(transformCommand);
 
         if (transformCommand.length() > 0) {
-          boolean shouldSkipTransform = checkForAgeSkip(transformRequest) || checkForSpecialVaccineModifierSkip(transformRequest);
+          boolean shouldSkipTransform = checkForAgeSkip(transformRequest);
           if (shouldSkipTransform) {
             continue;
           }
@@ -1206,69 +1206,106 @@ public class Transformer {
     return shouldSkipTransform;
   }
   
-  protected boolean checkForSpecialVaccineModifierSkip(TransformRequest transformRequest) throws IOException {
-    String line = transformRequest.getLine();
+  protected boolean checkForSpecialVaccineModifierSkip(
+      TransformRequest transformRequest,
+      int transformRepeat) throws IOException {
     
-    boolean administered = line.indexOf(IF_ADMINISTERED) > 0;
-    boolean historical = line.indexOf(IF_HISTORICAL) > 0;
-    boolean refusal = line.indexOf(IF_REFUSAL) > 0;
-    boolean nonAdmin = line.indexOf(IF_NON_ADMIN) > 0;
-    
-    if (!administered && !historical && !refusal && !nonAdmin) {
+    if (!transformRequest.isAdministeredCheck()
+        && !transformRequest.isHistoricalCheck()
+        && !transformRequest.isRefusalCheck()
+        && !transformRequest.isNonAdminCheck()) {
       // don't skip because there was no special vaccine modifier, just a normal transform
       return false;
     }
     
-    String rxa9 = readValueFromHL7Text("RXA-9", transformRequest.getResultText(), transformRequest);
+    Transform rxa9transform = readHL7Reference("RXA-9", "RXA-9".length());
+    rxa9transform.setSegmentRepeat(transformRepeat);
     
-    if (administered && "00".equals(rxa9)) {
-      line = line.substring(0, line.indexOf(IF_ADMINISTERED) - 1);
-      transformRequest.setLine(line);
+    String rxa9 = getValueFromHL7(transformRequest.getResultText(), rxa9transform, transformRequest);
+    
+    if (transformRequest.isAdministeredCheck() && "00".equals(rxa9)) {
       return false;
     }
     
-    if (historical && ("01".equals(rxa9) || "02".equals(rxa9) ||"03".equals(rxa9) || "04".equals(rxa9) ||"05".equals(rxa9) || "06".equals(rxa9) ||"07".equals(rxa9) || "08".equals(rxa9))) {
-      line = line.substring(0, line.indexOf(IF_HISTORICAL) - 1);
-      transformRequest.setLine(line);
+    if (transformRequest.isHistoricalCheck() && ("01".equals(rxa9) || "02".equals(rxa9) ||"03".equals(rxa9) || "04".equals(rxa9) ||"05".equals(rxa9) || "06".equals(rxa9) ||"07".equals(rxa9) || "08".equals(rxa9))) {
       return false;
     }
     
-    String rxa20 = readValueFromHL7Text("RXA-20", transformRequest.getResultText(), transformRequest);
-
-    if (refusal && StringUtils.isBlank(rxa9) && "RE".equals(rxa20)) {
-      line = line.substring(0, line.indexOf(IF_REFUSAL) - 1);
-      transformRequest.setLine(line);
+    Transform rxa20transform = readHL7Reference("RXA-20", "RXA-20".length());
+    rxa20transform.setSegmentRepeat(transformRepeat);
+    
+    String rxa20 = getValueFromHL7(transformRequest.getResultText(), rxa20transform, transformRequest);
+    
+    if (transformRequest.isRefusalCheck() && StringUtils.isBlank(rxa9) && "RE".equals(rxa20)) {
       return false;
     }
     
-    if (nonAdmin && StringUtils.isBlank(rxa9) && "NA".equals(rxa20)) {
-      line = line.substring(0, line.indexOf(IF_NON_ADMIN) - 1);
-      transformRequest.setLine(line);
+    if (transformRequest.isNonAdminCheck() && StringUtils.isBlank(rxa9) && "NA".equals(rxa20)) {
       return false;
     }
     
     // skip this transform because there was a special vaccine modifier but the secondary criteria didn't match
     return true;
   }
+  
+  protected String cleanTransformLineOfIfChecks(TransformRequest transformRequest) {
+    String line = transformRequest.getLine();
+    
+    if (transformRequest.isAdministeredCheck()) {
+      line = line.substring(0, line.indexOf(IF_ADMINISTERED) - 1);
+    }
+    
+    if (transformRequest.isHistoricalCheck()) {
+      line = line.substring(0, line.indexOf(IF_HISTORICAL) - 1);
+    }
+    
+    if (transformRequest.isRefusalCheck()) {
+      line = line.substring(0, line.indexOf(IF_REFUSAL) - 1);
+    }
+    
+    if (transformRequest.isNonAdminCheck()) {
+      line = line.substring(0, line.indexOf(IF_NON_ADMIN) - 1);
+    }
+    
+    return line;
+  }
 
   public void doSetField(TransformRequest transformRequest) throws IOException {
     String resultText = transformRequest.getResultText();
+    
+    // update with any if checks
+    transformRequest.setAdministeredCheck(transformRequest.getLine().indexOf(IF_ADMINISTERED) > 0);
+    transformRequest.setHistoricalCheck(transformRequest.getLine().indexOf(IF_HISTORICAL) > 0);
+    transformRequest.setRefusalCheck(transformRequest.getLine().indexOf(IF_REFUSAL) > 0);
+    transformRequest.setNonAdminCheck(transformRequest.getLine().indexOf(IF_NON_ADMIN) > 0);
+    
+    // remove if checks from the transform request line
+    transformRequest.setLine(cleanTransformLineOfIfChecks(transformRequest));
+    
     String line = transformRequest.getLine();
+    
     int posEqual = line.indexOf("=");
-    Transform t = readHL7Reference(line, posEqual);
-    if (t != null) {
-      t.value = line.substring(posEqual + 1).trim();
+    Transform transform = readHL7Reference(line, posEqual);
+    if (transform != null) {
+      transform.value = line.substring(posEqual + 1).trim();
+      
       int count = 1;
-      if (t.all) {
-        count = countSegments(resultText, t);
+      if (transform.all) {
+        count = countSegments(resultText, transform);
       }
+      
       for (int i = 1; i <= count; i++) {
-        if (t.all) {
-          t.segmentRepeat = i;
+        if (transform.all) {
+          transform.segmentRepeat = i;
         }
-        handleSometimes(t);
-        doReplacements(t, transformRequest);
-        resultText = setValueInHL7(resultText, t, transformRequest);
+        
+        if (checkForSpecialVaccineModifierSkip(transformRequest, transform.getSegmentRepeat())) {
+          continue;
+        }
+        
+        handleSometimes(transform);
+        doReplacements(transform, transformRequest);
+        resultText = setValueInHL7(resultText, transform, transformRequest);
       }
     }
     transformRequest.setResultText(resultText);
@@ -2029,7 +2066,7 @@ public class Transformer {
     return count;
   }
 
-  private String setValueInHL7(String resultText, Transform t, TransformRequest transformRequest)
+  private String setValueInHL7(String resultText, Transform transform, TransformRequest transformRequest)
       throws IOException {
 
     BufferedReader inResult = new BufferedReader(new StringReader(resultText));
@@ -2039,17 +2076,17 @@ public class Transformer {
     resultText = "";
     String lineResult;
     int repeatCount = 0;
-    String newValue = t.value;
+    String newValue = transform.value;
     String prepend = "";
     while ((lineResult = inResult.readLine()) != null) {
       lineResult = lineResult.trim();
       if (lineResult.length() > 0) {
-        if (t.boundSegment != null && !foundBoundEnd) {
+        if (transform.boundSegment != null && !foundBoundEnd) {
           boolean skip = false;
-          if (lineResult.startsWith(t.boundSegment + "|")) {
+          if (lineResult.startsWith(transform.boundSegment + "|")) {
             boundCount++;
             if (!foundBoundStart) {
-              if (boundCount == t.boundRepeat) {
+              if (boundCount == transform.boundRepeat) {
                 foundBoundStart = true;
               }
             } else if (foundBoundStart) {
@@ -2057,7 +2094,7 @@ public class Transformer {
             }
             skip = true;
           } else if (foundBoundStart) {
-            if (!lineResult.startsWith(t.segment + "|")) {
+            if (!lineResult.startsWith(transform.segment + "|")) {
               skip = true;
             }
           } else {
@@ -2068,24 +2105,24 @@ public class Transformer {
             continue;
           }
         }
-        if (lineResult.startsWith(t.segment + "|")) {
+        if (lineResult.startsWith(transform.segment + "|")) {
           repeatCount++;
-          if (t.segmentRepeat == repeatCount) {
+          if (transform.segmentRepeat == repeatCount) {
 
-            if (!t.isFieldSet()) {
+            if (!transform.isFieldSet()) {
               // This is a segment only reference
-              lineResult = t.segment + newValue;
+              lineResult = transform.segment + newValue;
             } else {
 
               int pos = lineResult.indexOf("|");
               int count = (lineResult.startsWith("MSH|") || lineResult.startsWith("FHS|")
                   || lineResult.startsWith("BHS|")) ? 2 : 1;
-              while (pos != -1 && count < t.field) {
+              while (pos != -1 && count < transform.field) {
                 pos = lineResult.indexOf("|", pos + 1);
                 count++;
               }
               if (pos == -1) {
-                while (count < t.field) {
+                while (count < transform.field) {
                   lineResult += "|";
                   count++;
                 }
@@ -2093,11 +2130,11 @@ public class Transformer {
                 lineResult += "||";
               }
 
-              boolean isMSH2 = lineResult.startsWith("MSH|") && t.field == 2;
+              boolean isMSH2 = lineResult.startsWith("MSH|") && transform.field == 2;
               count = 1;
               pos++;
               int tildePos = pos;
-              while (tildePos != -1 && count < t.fieldRepeat) {
+              while (tildePos != -1 && count < transform.fieldRepeat) {
                 int endPosTilde = isMSH2 ? -1 : lineResult.indexOf("~", tildePos);
                 int endPosBar = lineResult.indexOf("|", tildePos);
                 if (endPosBar == -1) {
@@ -2113,14 +2150,14 @@ public class Transformer {
                 }
               }
               if (tildePos == -1) {
-                while (count < t.fieldRepeat) {
+                while (count < transform.fieldRepeat) {
                   prepend = "~" + prepend;
                   count++;
                 }
               }
 
               count = 1;
-              while (pos != -1 && count < t.subfield) {
+              while (pos != -1 && count < transform.subfield) {
                 int posCaret = isMSH2 ? -1 : lineResult.indexOf("^", pos);
                 int endPosBar = lineResult.indexOf("|", pos);
                 if (endPosBar == -1) {
@@ -2133,7 +2170,7 @@ public class Transformer {
                 if (posCaret == -1 || (posCaret > endPosBar || posCaret > endPosTilde)) {
                   // there's no caret, so add it to value, keep same
                   // position
-                  while (count < t.subfield) {
+                  while (count < transform.subfield) {
                     prepend = prepend + "^";
                     count++;
                   }
@@ -2149,9 +2186,9 @@ public class Transformer {
                 count++;
               }
               if (pos != -1) {
-                if (t.subsubfield > 0) {
+                if (transform.subsubfield > 0) {
                   count = 1;
-                  while (pos != -1 && count < t.subsubfield) {
+                  while (pos != -1 && count < transform.subsubfield) {
                     int posAmper = isMSH2 ? -1 : lineResult.indexOf("&", pos);
                     int endPosBar = lineResult.indexOf("|", pos);
                     if (endPosBar == -1) {
@@ -2176,7 +2213,7 @@ public class Transformer {
                     if (posAmper == -1 || (posAmper > endPos)) {
                       // there's no ampersand, so add it to the value, keep the
                       // same position
-                      while (count < t.subsubfield) {
+                      while (count < transform.subsubfield) {
                         prepend = prepend + "&";
                         count++;
                       }
@@ -2202,7 +2239,7 @@ public class Transformer {
                 if (endPosCaret != -1 && endPosCaret < endPos) {
                   endPos = endPosCaret;
                 }
-                if (t.subsubfield > 0) {
+                if (transform.subsubfield > 0) {
                   int endPosAmper = isMSH2 ? -1 : lineResult.indexOf("&", pos);
                   if (endPosAmper != -1 && endPosAmper < endPos) {
                     endPos = endPosAmper;
@@ -2211,11 +2248,11 @@ public class Transformer {
 
                 // if we're concatenating ("PID-5.1+=MORE" for example
                 // we want to include the existing 5.1 text in the substring
-                String lineNew = lineResult.substring(0, t.concatenate ? endPos : pos);
+                String lineNew = lineResult.substring(0, transform.concatenate ? endPos : pos);
 
                 if (newValue.toUpperCase().startsWith("[MAP ")) {
                   String oldValue = lineResult.substring(pos, endPos);
-                  newValue = mapValue(t, oldValue, transformRequest);
+                  newValue = mapValue(transform, oldValue, transformRequest);
                 } else if (newValue.toUpperCase().startsWith("[TRUNC")) {
                   String oldValue = lineResult.substring(pos, endPos);
                   newValue = truncate(lineResult, newValue, oldValue);
@@ -2427,10 +2464,10 @@ public class Transformer {
     return getValueFromHL7(messageText, t, transformRequest);
   }
 
-  protected static String getValueFromHL7(final String resultText, Transform t,
+  protected static String getValueFromHL7(final String resultText, Transform transform,
       TransformRequest transformRequest) throws IOException {
 
-    BufferedReader inResult = getMessageText(resultText, t, transformRequest);
+    BufferedReader inResult = getMessageText(resultText, transform, transformRequest);
 
     if (inResult == null) {
       return "";
@@ -2444,12 +2481,12 @@ public class Transformer {
     while ((lineResult = inResult.readLine()) != null) {
       lineResult = lineResult.trim();
       if (lineResult.length() > 0) {
-        if (t.boundSegment != null && !foundBoundEnd) {
+        if (transform.boundSegment != null && !foundBoundEnd) {
           boolean skip = false;
-          if (lineResult.startsWith(t.boundSegment + "|")) {
+          if (lineResult.startsWith(transform.boundSegment + "|")) {
             boundCount++;
             if (!foundBoundStart) {
-              if (boundCount == t.boundRepeat) {
+              if (boundCount == transform.boundRepeat) {
                 foundBoundStart = true;
               }
             } else if (foundBoundStart) {
@@ -2457,7 +2494,7 @@ public class Transformer {
             }
             skip = true;
           } else if (foundBoundStart) {
-            if (!lineResult.startsWith(t.segment + "|")) {
+            if (!lineResult.startsWith(transform.segment + "|")) {
               skip = true;
             }
           } else {
@@ -2467,17 +2504,17 @@ public class Transformer {
             continue;
           }
         }
-        if (lineResult.startsWith(t.segment + "|")) {
+        if (lineResult.startsWith(transform.segment + "|")) {
           repeatCount++;
-          if (t.segmentRepeat == repeatCount) {
-            if (!t.fieldSet) {
+          if (transform.segmentRepeat == repeatCount) {
+            if (!transform.fieldSet) {
               // The field was not set, this a reference to the whole segment
               return lineResult.substring(3);
             }
             int pos = lineResult.indexOf("|");
             int count = (lineResult.startsWith("MSH|") || lineResult.startsWith("FHS|")
                 || lineResult.startsWith("BHS|")) ? 2 : 1;
-            while (pos != -1 && count < t.field) {
+            while (pos != -1 && count < transform.field) {
               pos = lineResult.indexOf("|", pos + 1);
               count++;
             }
@@ -2487,8 +2524,8 @@ public class Transformer {
 
             pos++;
             count = 1;
-            boolean isMSH2 = lineResult.startsWith("MSH|") && t.field == 2;
-            while (pos != -1 && count < t.subfield) {
+            boolean isMSH2 = lineResult.startsWith("MSH|") && transform.field == 2;
+            while (pos != -1 && count < transform.subfield) {
               int posCaret = isMSH2 ? -1 : lineResult.indexOf("^", pos);
               int endPosBar = lineResult.indexOf("|", pos);
               if (endPosBar == -1) {
@@ -2499,7 +2536,7 @@ public class Transformer {
                 endPosTilde = lineResult.length();
               }
               if (posCaret == -1 || (posCaret > endPosBar || posCaret > endPosTilde)) {
-                if (count < t.subfield) {
+                if (count < transform.subfield) {
                   return "";
                 }
                 if (endPosTilde < endPosBar) {
@@ -2513,9 +2550,9 @@ public class Transformer {
               }
               count++;
             }
-            if (t.subsubfield > 0) {
+            if (transform.subsubfield > 0) {
               count = 1;
-              while (pos != -1 && count < t.subsubfield) {
+              while (pos != -1 && count < transform.subsubfield) {
                 int posAmper = isMSH2 ? -1 : lineResult.indexOf("&", pos);
                 int endPosCaret = isMSH2 ? -1 : lineResult.indexOf("^", pos);
                 if (endPosCaret == -1) {
@@ -2531,7 +2568,7 @@ public class Transformer {
                 }
                 if (posAmper == -1
                     || (posAmper > endPosBar || posAmper > endPosTilde || posAmper > endPosCaret)) {
-                  if (count < t.subsubfield) {
+                  if (count < transform.subsubfield) {
                     return "";
                   }
                   if (endPosCaret < endPosTilde) {
@@ -2792,50 +2829,50 @@ public class Transformer {
     }
   }
 
-  private void doReplacements(Transform t, TransformRequest transformRequest) throws IOException {
+  private void doReplacements(Transform transform, TransformRequest transformRequest) throws IOException {
     Connector connector = transformRequest.getConnector();
     String resultText = transformRequest.getResultText();
-    doPatientReplacements(transformRequest.getPatient(), t);
+    doPatientReplacements(transformRequest.getPatient(), transform);
     if (connector != null) {
-      doConnectionReplacements(connector, t);
+      doConnectionReplacements(connector, transform);
     }
-    if (t.value.equalsIgnoreCase("[NOW]")) {
-      t.value = transformRequest.getNow();
-    } else if (t.value.equalsIgnoreCase("[NOW_NO_TIMEZONE]")) {
-      t.value = transformRequest.getNowNoTimezone();
-    } else if (t.value.equalsIgnoreCase("[TODAY]")) {
-      t.value = transformRequest.getToday();
-    } else if (t.value.equalsIgnoreCase("[TOMORROW]")) {
-      t.value = transformRequest.getTomorrow();
-    } else if (t.value.equalsIgnoreCase("[LONG_TIME_FROM_NOW]")) {
-      t.value = transformRequest.getLongTimeFromNow();
-    } else if (t.value.equalsIgnoreCase("[YESTERDAY]")) {
-      t.value = transformRequest.getYesterday();
-    } else if (t.value.equalsIgnoreCase("[DAY_BEFORE_YESTERDAY]")) {
-      t.value = transformRequest.getDayBeforeYesterday();
-    } else if (t.value.equalsIgnoreCase("[THREE_DAYS_AGO]")) {
-      t.value = transformRequest.getThreeDaysAgo();
-    } else if (t.value.equalsIgnoreCase("[CONTROL_ID]")) {
-      t.value = connector.getCurrentControlId();
-    } else if (t.value.equalsIgnoreCase(REP_SPACE)) {
-      t.value = " ";
-    } else if (t.value.toLowerCase().startsWith("[map") && t.value.endsWith("]")) {
+    if (transform.value.equalsIgnoreCase("[NOW]")) {
+      transform.value = transformRequest.getNow();
+    } else if (transform.value.equalsIgnoreCase("[NOW_NO_TIMEZONE]")) {
+      transform.value = transformRequest.getNowNoTimezone();
+    } else if (transform.value.equalsIgnoreCase("[TODAY]")) {
+      transform.value = transformRequest.getToday();
+    } else if (transform.value.equalsIgnoreCase("[TOMORROW]")) {
+      transform.value = transformRequest.getTomorrow();
+    } else if (transform.value.equalsIgnoreCase("[LONG_TIME_FROM_NOW]")) {
+      transform.value = transformRequest.getLongTimeFromNow();
+    } else if (transform.value.equalsIgnoreCase("[YESTERDAY]")) {
+      transform.value = transformRequest.getYesterday();
+    } else if (transform.value.equalsIgnoreCase("[DAY_BEFORE_YESTERDAY]")) {
+      transform.value = transformRequest.getDayBeforeYesterday();
+    } else if (transform.value.equalsIgnoreCase("[THREE_DAYS_AGO]")) {
+      transform.value = transformRequest.getThreeDaysAgo();
+    } else if (transform.value.equalsIgnoreCase("[CONTROL_ID]")) {
+      transform.value = connector.getCurrentControlId();
+    } else if (transform.value.equalsIgnoreCase(REP_SPACE)) {
+      transform.value = " ";
+    } else if (transform.value.toLowerCase().startsWith("[map") && transform.value.endsWith("]")) {
       // do nothing
-    } else if (t.value.toLowerCase().startsWith("[trunc") && t.value.endsWith("]")) {
+    } else if (transform.value.toLowerCase().startsWith("[trunc") && transform.value.endsWith("]")) {
       // do nothing
-    } else if (t.value.toLowerCase().startsWith("[modify") && t.value.endsWith("]")) {
+    } else if (transform.value.toLowerCase().startsWith("[modify") && transform.value.endsWith("]")) {
       // do nothing
-    } else if (t.value.startsWith("[") && t.value.endsWith("]")) {
-      doVariableReplacement(t, transformRequest);
+    } else if (transform.value.startsWith("[") && transform.value.endsWith("]")) {
+      doVariableReplacement(transform, transformRequest);
     }
 
-    if (t.valueTransform != null) {
-      if (t.valueTransform.getSegment().equals(t.segment)
-          && !t.valueTransform.isSegmentRepeatSet()) {
+    if (transform.valueTransform != null) {
+      if (transform.valueTransform.getSegment().equals(transform.segment)
+          && !transform.valueTransform.isSegmentRepeatSet()) {
         // Referencing same segment and specific repeat not set, so assume to be referencing the same segment
-        t.valueTransform.segmentRepeat = t.segmentRepeat;
+        transform.valueTransform.segmentRepeat = transform.segmentRepeat;
       }
-      t.value = getValueFromHL7(resultText, t.valueTransform, transformRequest);
+      transform.value = getValueFromHL7(resultText, transform.valueTransform, transformRequest);
     }
   }
 
