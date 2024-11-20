@@ -824,240 +824,408 @@ public class TransformerTest extends TestCase {
   @Test
   public void test_checkForSpecialVaccineModifierSkip_noModifiers() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||01^Historical^NIP001|||||||||||20|A|\\r\"");
+    tr.setHistoricalCheck(true);
     tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_admin_rxa9empty() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if administered");
+    tr.setAdministeredCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if administered", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_admin_rxa9not00() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||01^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if administered");
+    tr.setAdministeredCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if administered", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_admin_rxa9is00() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||00^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if administered");
+    tr.setAdministeredCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_admin_multiple_firstrxa9is00_secondrxa9not00() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||00^Historical^NIP001|||||||||||20|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||01^Historical^NIP001|||||||||||20|A|\\r\"");
+    tr.setAdministeredCheck(true);
+    tr.setLine("my transform");
+
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_admin_multiple_firstrxa9is00_secondrxa9is00() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||00^Historical^NIP001|||||||||||20|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||00^Historical^NIP001|||||||||||20|A|\\r\"");
+    tr.setAdministeredCheck(true);
+    tr.setLine("my transform");
+
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_admin_multiple_firstrxa9not00_secondrxa9is00() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||01^Historical^NIP001|||||||||||20|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||00^Historical^NIP001|||||||||||20|A|\\r\"");
+    tr.setAdministeredCheck(true);
+    tr.setLine("my transform");
+
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_admin_multiple_firstrxa9not00_secondrxa9not00() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||01^Historical^NIP001|||||||||||20|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||01^Historical^NIP001|||||||||||20|A|\\r\"");
+    tr.setAdministeredCheck(true);
+    tr.setLine("my transform");
+
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9empty() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if historical", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9bad() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||00^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if historical", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9is01() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||01^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9is02() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||02^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9is03() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||03^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9is04() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||04^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9is05() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||05^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9is06() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||06^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9is07() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||07^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9is08() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||08^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_historical_rxa9is09() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||09^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if historical");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if historical", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_historical_multiple_firstrxa9is08_secondrxa9is09() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||08^Historical^NIP001|||||||||||20|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||09^Historical^NIP001|||||||||||20|A|\\r\"");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
+
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_historical_multiple_firstrxa9is09_secondrxa9is09() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||09^Historical^NIP001|||||||||||20|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||09^Historical^NIP001|||||||||||20|A|\\r\"");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
+
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_historical_multiple_firstrxa9is09_secondrxa9is08() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||09^Historical^NIP001|||||||||||20|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||08^Historical^NIP001|||||||||||20|A|\\r\"");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
+
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_historical_multiple_firstrxa9is08_secondrxa9is08() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||08^Historical^NIP001|||||||||||20|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||08^Historical^NIP001|||||||||||20|A|\\r\"");
+    tr.setHistoricalCheck(true);
+    tr.setLine("my transform");
+
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_refusal_rxa9notEmpty() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||01^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if refusal");
+    tr.setRefusalCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if refusal", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_refusal_rxa9empty_rxa20empty() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001||||||||||||A|\\r\"");
-    tr.setLine("my transform if refusal");
+    tr.setRefusalCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if refusal", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_refusal_rxa9empty_rxa20bad() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||bad|A|\\r\"");
-    tr.setLine("my transform if refusal");
+    tr.setRefusalCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if refusal", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_refusal_rxa9empty_rxa20isRE() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||RE|A|\\r\"");
-    tr.setLine("my transform if refusal");
+    tr.setRefusalCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_refusal_multiple_firstFalse_secondTrue() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||RE|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||BAD|A|\\r\"");
+    tr.setRefusalCheck(true);
+    tr.setLine("my transform");
+
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_refusal_multiple_firstFalse_secondFalse() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||RE|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||RE|A|\\r\"");
+    tr.setRefusalCheck(true);
+    tr.setLine("my transform");
+
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_refusal_multiple_firstTrue_secondFalse() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||BAD|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||RE|A|\\r\"");
+    tr.setRefusalCheck(true);
+    tr.setLine("my transform");
+
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_refusal_multiple_firstTrue_secondTrue() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||BAD|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||BAD|A|\\r\"");
+    tr.setRefusalCheck(true);
+    tr.setLine("my transform");
+
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_nonAdmin_rxa9notEmpty() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||01^Historical^NIP001|||||||||||20|A|\\r\"");
-    tr.setLine("my transform if non-admin");
+    tr.setNonAdminCheck(true);
+    tr.setLine("my transform if");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if non-admin", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_nonAdmin_rxa9empty_rxa20empty() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001||||||||||||A|\\r\"");
-    tr.setLine("my transform if non-admin");
+    tr.setNonAdminCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if non-admin", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_nonAdmin_rxa9empty_rxa20bad() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||bad|A|\\r\"");
-    tr.setLine("my transform if non-admin");
+    tr.setNonAdminCheck(true);
+    tr.setLine("my transform");
     
-    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform if non-admin", tr.getLine());
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_nonAdmin_rxa9empty_rxa20isNA() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||NA|A|\\r\"");
-    tr.setLine("my transform if non-admin");
+    tr.setNonAdminCheck(true);
+    tr.setLine("my transform");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("my transform", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_nonAdmin_rxa9empty_multiple_firstFalse_secondTrue() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||NA|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||BAD|A|\\r\"");
+    tr.setNonAdminCheck(true);
+    tr.setLine("my transform");
+
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_nonAdmin_rxa9empty_multiple_firstFalse_secondFalse() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||NA|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||NA|A|\\r\"");
+    tr.setNonAdminCheck(true);
+    tr.setLine("my transform");
+
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_nonAdmin_rxa9empty_multiple_firstTrue_secondFalse() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||BAD|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||NA|A|\\r\"");
+    tr.setNonAdminCheck(true);
+    tr.setLine("my transform");
+
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
+  }
+  
+  @Test
+  public void test_checkForSpecialVaccineModifierSkip_nonAdmin_rxa9empty_multiple_firstTrue_secondTrue() throws IOException {
+    TransformRequest tr = new TransformRequest(
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||BAD|A|\\r\"\n" +
+        "RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||BAD|A|\\r\"");
+    tr.setNonAdminCheck(true);
+    tr.setLine("my transform");
+
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
+    assertTrue(new Transformer().checkForSpecialVaccineModifierSkip(tr, 2));
   }
   
   @Test
   public void test_checkForSpecialVaccineModifierSkip_nearEmpty() throws IOException {
     TransformRequest tr = new TransformRequest("RXA|0|1|20110220||62^HPV^CVX|999|||^Historical^NIP001|||||||||||NA|A|\\r\"");
-    tr.setLine(" if non-admin");
+    tr.setNonAdminCheck(true);
+    tr.setLine(" ");
     
-    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr));
-    
-    assertEquals("", tr.getLine());
+    assertFalse(new Transformer().checkForSpecialVaccineModifierSkip(tr, 1));
   }
 }
