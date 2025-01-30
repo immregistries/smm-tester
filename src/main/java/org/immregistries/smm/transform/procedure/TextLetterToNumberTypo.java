@@ -33,7 +33,7 @@ public class TextLetterToNumberTypo extends AbstractTypoProcedure {
     // try really hard to find a letter, somewhere
     if (!typoesMap.containsKey(letter)) {
       for (pos = 1; pos < name.length(); pos++) {
-        letter = name.substring(pos, pos + 1);
+        letter = name.substring(pos, pos + 1).toUpperCase();
         if (typoesMap.containsKey(letter)) {
           break;
         }
