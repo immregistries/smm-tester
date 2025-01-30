@@ -40,7 +40,7 @@ public class QueryConverterQBPZ34 extends QueryConverter {
         sb.append(mshFields.get(12) + "|");
         sb.append(mshFields.get(13) + "|");
         sb.append(mshFields.get(14) + "|");
-        sb.append("NE|");
+        sb.append("ER|");
         sb.append("AL|");
         sb.append(mshFields.get(17) + "|");
         sb.append(mshFields.get(18) + "|");
