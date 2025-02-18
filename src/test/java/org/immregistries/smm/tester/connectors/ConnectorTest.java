@@ -225,19 +225,39 @@ public class ConnectorTest {
   }
   
   @Test
-  public void getTransformsFromScenarioMap_multiple_wildcard_secondNoMatch() {
+  public void getTransformsFromScenarioMap_multiple_wildcard_secondMatch() {
     Map<String, String> map = new HashMap<>();
-    map.put("GM-1.*,GM-1.3", "t1");
-    map.put("GM-1.6,GM-1.7", "t2");
+    map.put("GM-1.*,GM-1.3,GM-2.1", "t1");
+    map.put("GM-1.6,GM-1.7,GM-2.1", "t2");
     
     connector.setScenarioTransformationsMap(map);
 
     List<String> results = connector.getTransformsFromScenarioMap("GM-1.4");
-    assertEquals(0, results.size());
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+    
+    results = connector.getTransformsFromScenarioMap("GM-1.3");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+    
+    results = connector.getTransformsFromScenarioMap("GM-1.6");
+    assertEquals(2, results.size());
+    assertTrue(results.contains("t1"));
+    assertTrue(results.contains("t2"));
+    
+    results = connector.getTransformsFromScenarioMap("GM-1.7");
+    assertEquals(2, results.size());
+    assertTrue(results.contains("t1"));
+    assertTrue(results.contains("t2"));
+    
+    results = connector.getTransformsFromScenarioMap("GM-2.1");
+    assertEquals(2, results.size());
+    assertTrue(results.contains("t1"));
+    assertTrue(results.contains("t2"));
   }
   
   @Test
-  public void getTransformsFromScenarioMap_multiple_wildcard_firstNoMatch() {
+  public void getTransformsFromScenarioMap_multiple_wildcard_firstMatch() {
     Map<String, String> map = new HashMap<>();
     map.put("GM-1.3,GM-1.*", "t1");
     map.put("GM-1.6,GM-1.7", "t2");
@@ -245,7 +265,22 @@ public class ConnectorTest {
     connector.setScenarioTransformationsMap(map);
 
     List<String> results = connector.getTransformsFromScenarioMap("GM-1.4");
-    assertEquals(0, results.size());
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+    
+    results = connector.getTransformsFromScenarioMap("GM-1.3");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+    
+    results = connector.getTransformsFromScenarioMap("GM-1.6");
+    assertEquals(2, results.size());
+    assertTrue(results.contains("t1"));
+    assertTrue(results.contains("t2"));
+    
+    results = connector.getTransformsFromScenarioMap("GM-1.7");
+    assertEquals(2, results.size());
+    assertTrue(results.contains("t1"));
+    assertTrue(results.contains("t2"));
   }
   
   @Test
@@ -283,7 +318,8 @@ public class ConnectorTest {
     connector.setScenarioTransformationsMap(map);
 
     List<String> results = connector.getTransformsFromScenarioMap("GM-1.4");
-    assertEquals(0, results.size());
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
   }
   
   @Test
@@ -361,5 +397,57 @@ public class ConnectorTest {
     assertTrue(results.contains("t1"));
     assertTrue(results.contains("t2"));
     assertTrue(results.contains("t3"));
+  }
+  
+  @Test
+  public void getTransformsFromScenarioMap_multiple_multipleMatches() {
+    Map<String, String> map = new HashMap<>();
+    map.put("GM-1.*, GM-2.*", "t1");
+    map.put("GM-3.1", "t2");
+    
+    connector.setScenarioTransformationsMap(map);
+
+    List<String> results = connector.getTransformsFromScenarioMap("GM-1.4");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+
+    results = connector.getTransformsFromScenarioMap("GM-2.4");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+  }
+  
+  @Test
+  public void getTransformsFromScenarioMap_multiple_multipleMatches_withNot() {
+    Map<String, String> map = new HashMap<>();
+    map.put("GM-1.*, GM-2.*, !GM-*", "t1");
+    map.put("GM-3.1", "t2");
+    
+    connector.setScenarioTransformationsMap(map);
+
+    List<String> results = connector.getTransformsFromScenarioMap("GM-1.4");
+    assertEquals(0, results.size());
+
+    results = connector.getTransformsFromScenarioMap("GM-2.4");
+    assertEquals(0, results.size());
+  }
+  
+  @Test
+  public void getTransformsFromScenarioMap_multiple_allNots() {
+    Map<String, String> map = new HashMap<>();
+    map.put("!GM-1.*, !GM-2.*, !GM-*", "t1");
+    map.put("GM-3.1", "t2");
+    
+    connector.setScenarioTransformationsMap(map);
+
+    List<String> results = connector.getTransformsFromScenarioMap("GM-1.4");
+    assertEquals(0, results.size());
+
+    results = connector.getTransformsFromScenarioMap("BM-1.4");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+
+    results = connector.getTransformsFromScenarioMap("GM-3.1");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t2"));
   }
 }

@@ -925,14 +925,12 @@ public abstract class Connector {
       return true;
     }
     
+    boolean anyMatch = false;
+    boolean allNots = true;
+    
     // for one to many scenarios, we don't check exact match and only care about wildcards
     // and ALL scenarios must match for a test code to match
     for (String scenario : scenarios) {
-      if (scenario.indexOf(Transformer.SCENARIO_WILDCARD) == -1) {
-        // if there's no wildcard skip it
-        return false;
-      }
-      
       // check if scenario starts with !, if it does, note it and delete it
       boolean not = scenario.startsWith(Transformer.SCENARIO_NOT);
       if (not) {
@@ -954,15 +952,27 @@ public abstract class Connector {
       
       boolean patternMatch = Pattern.matches(regexPattern, testCode);
       
-      if (!not && !patternMatch || not && patternMatch) {
-        // this pattern did not match this test code
-        // or it did match it but is NOT
-        return false;
+      if (patternMatch) {
+        if (not) {
+          // immediately return false if ANY not tests matched
+          return false;
+        }
+        
+        anyMatch = true;
+      }
+      
+      if (!not) {
+        allNots = false;
       }
     }
     
-    // all scenarios passed for this test code
-    return true;
+    if (!allNots && anyMatch) {
+      // at least one scenario passed for this test code, and ALL the NOT tests passed
+      return true;
+    }
+    
+    // matches if all the tests were NOTs and none of them passed
+    return allNots && !anyMatch;
   }
   
   public static boolean doesScenarioMatchTestCode(String scenario, String testCode) {
