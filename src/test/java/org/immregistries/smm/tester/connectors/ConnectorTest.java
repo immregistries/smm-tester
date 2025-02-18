@@ -450,4 +450,72 @@ public class ConnectorTest {
     assertEquals(1, results.size());
     assertTrue(results.contains("t2"));
   }
+  
+  @Test
+  public void getTransformsFromScenarioMap_notExactMatch() {
+    Map<String, String> map = new HashMap<>();
+    map.put("!GM-1.1", "t1");
+    map.put("GM-3.1", "t2");
+    
+    connector.setScenarioTransformationsMap(map);
+
+    List<String> results = connector.getTransformsFromScenarioMap("GM-1.4");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+  }
+  
+  @Test
+  public void getTransformsFromScenarioMap_moreScenarios() {
+    Map<String, String> map = new HashMap<>();
+    map.put("GM-*, !GM-1.*, BM-1.1", "t1");
+    
+    connector.setScenarioTransformationsMap(map);
+
+    List<String> results = connector.getTransformsFromScenarioMap("GM-1.1");
+    assertEquals(0, results.size());
+    
+    results = connector.getTransformsFromScenarioMap("GM-1.2");
+    assertEquals(0, results.size());
+    
+    results = connector.getTransformsFromScenarioMap("GM-2.1");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+    
+    results = connector.getTransformsFromScenarioMap("GM-2.2");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+    
+    results = connector.getTransformsFromScenarioMap("BM-1.1");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+  }
+  
+  @Test
+  public void getTransformsFromScenarioMap_moreScenarios2() {
+    Map<String, String> map = new HashMap<>();
+    map.put("!GM-1.1, !GM-1.2, !GM-1.3", "t1");
+    
+    connector.setScenarioTransformationsMap(map);
+
+    List<String> results = connector.getTransformsFromScenarioMap("GM-1.1");
+    assertEquals(0, results.size());
+    
+    results = connector.getTransformsFromScenarioMap("GM-1.2");
+    assertEquals(0, results.size());
+    
+    results = connector.getTransformsFromScenarioMap("GM-1.3");
+    assertEquals(0, results.size());
+    
+    results = connector.getTransformsFromScenarioMap("GM-2.1");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+    
+    results = connector.getTransformsFromScenarioMap("GM-2.2");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+    
+    results = connector.getTransformsFromScenarioMap("BM-1.1");
+    assertEquals(1, results.size());
+    assertTrue(results.contains("t1"));
+  }
 }
