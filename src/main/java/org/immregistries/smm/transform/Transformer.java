@@ -150,6 +150,8 @@ public class Transformer {
   private static final String REPEAT_REF = "-?";
   
   public static final String SCENARIO_WILDCARD = "*";
+  public static final String SCENARIO_DELIM = ",";
+  public static final String SCENARIO_NOT = "!";
 
   private static Map<String, List<String[]>> conceptMap = null;
   private static Map<String, List<String[]>> testDataMap = null;

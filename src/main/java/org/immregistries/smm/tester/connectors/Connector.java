@@ -10,6 +10,7 @@ import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,8 +18,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import org.apache.commons.lang3.StringUtils;
 import org.immregistries.smm.mover.AckAnalyzer;
 import org.immregistries.smm.tester.PasswordEncryptUtil;
 import org.immregistries.smm.transform.Transformer;
@@ -898,33 +901,78 @@ public abstract class Connector {
   }
   
   // does wildcard testing to see if the scenario and testCode are equal
-  public static boolean doesScenarioMatchTestCode(String scenario, String testCode, boolean includeExactMatch) {
-    if (scenario == null) {
+  public static boolean doesScenarioMatchTestCode(
+      String scenarioString,
+      String testCode,
+      boolean includeExactMatch) {
+    
+    if (scenarioString == null) {
       // bad input
       return false;
     }
     
-    if (includeExactMatch && scenario.equals(testCode)) {
-      return true;
-    }
+    Set<String> scenarios = Arrays.stream(scenarioString.split("\\" + Transformer.SCENARIO_DELIM))
+      .map(String::trim)
+      .filter(StringUtils::isNotBlank)
+      .collect(Collectors.toSet());
     
-    if (scenario.indexOf(Transformer.SCENARIO_WILDCARD) == -1) {
-      // if there's no wildcard skip it
+    if (scenarios.isEmpty()) {
       return false;
     }
     
-    String regexPattern = "^";
-    for (String partial : scenario.split("\\" + Transformer.SCENARIO_WILDCARD)) {
-      regexPattern += Pattern.quote(partial) + ".*";
+    // for exact match, simply check if any of them match
+    if (includeExactMatch && scenarios.contains(testCode)) {
+      return true;
     }
     
-    // drop the final .* unless the scenario name ends with the wildcard
-    if (regexPattern.length() > 2 && !scenario.endsWith(Transformer.SCENARIO_WILDCARD)) {
-      regexPattern = regexPattern.substring(0, regexPattern.length() - 2);
-    }
-    regexPattern += "$";
+    boolean anyMatch = false;
+    boolean allNots = true;
     
-    return Pattern.matches(regexPattern, testCode);
+    // for one to many scenarios, we don't check exact match and only care about wildcards
+    // and ALL scenarios must match for a test code to match
+    for (String scenario : scenarios) {
+      // check if scenario starts with !, if it does, note it and delete it
+      boolean not = scenario.startsWith(Transformer.SCENARIO_NOT);
+      if (not) {
+        scenario = scenario.substring(Transformer.SCENARIO_NOT.length());
+      }
+      
+      // build a regex pattern that matches the entire string
+      // from start (^) to end ($)
+      String regexPattern = "^";
+      for (String partial : scenario.split("\\" + Transformer.SCENARIO_WILDCARD)) {
+        regexPattern += Pattern.quote(partial) + ".*";
+      }
+      
+      // drop the final .* unless the scenario name ends with the wildcard
+      if (regexPattern.length() > 2 && !scenario.endsWith(Transformer.SCENARIO_WILDCARD)) {
+        regexPattern = regexPattern.substring(0, regexPattern.length() - 2);
+      }
+      regexPattern += "$";
+      
+      boolean patternMatch = Pattern.matches(regexPattern, testCode);
+      
+      if (patternMatch) {
+        if (not) {
+          // immediately return false if ANY not tests matched
+          return false;
+        }
+        
+        anyMatch = true;
+      }
+      
+      if (!not) {
+        allNots = false;
+      }
+    }
+    
+    if (!allNots && anyMatch) {
+      // at least one scenario passed for this test code, and ALL the NOT tests passed
+      return true;
+    }
+    
+    // matches if all the tests were NOTs and none of them passed
+    return allNots && !anyMatch;
   }
   
   public static boolean doesScenarioMatchTestCode(String scenario, String testCode) {
