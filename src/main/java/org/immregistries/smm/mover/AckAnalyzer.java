@@ -99,17 +99,9 @@ public class AckAnalyzer {
   private boolean setupProblem = false;
   private String setupProblemDescription = "";
   private List<String> segments;
-  private FileOut errorFileOut = null;
   private TestCaseMessage testCaseMessage = null;
 
   private void log(String s) {
-    if (errorFileOut != null) {
-      try {
-        errorFileOut.printCommentLn(s);
-      } catch (IOException ioe) {
-        ioe.printStackTrace();
-      }
-    }
     if (testCaseMessage != null) {
       testCaseMessage.log(s);
     }
@@ -170,23 +162,17 @@ public class AckAnalyzer {
   }
 
   public AckAnalyzer(String ack) {
-    this(ack, AckType.DEFAULT, null, null);
+    this(ack, AckType.DEFAULT, null);
   }
 
   public AckAnalyzer(String ack, AckType ackType) {
-    this(ack, ackType, null, null);
+    this(ack, ackType, null);
   }
 
-  public AckAnalyzer(String ack, AckType ackType, FileOut errorFileOut) {
-    this(ack, ackType, errorFileOut, null);
-  }
-
-  public AckAnalyzer(String ack, AckType ackType, FileOut errorFileOut,
-      TestCaseMessage testCaseMessage) {
+  public AckAnalyzer(String ack, AckType ackType, TestCaseMessage testCaseMessage) {
     while (ack != null && ack.length() > 0 && ack.charAt(0) <= ' ') {
       ack = ack.substring(1);
     }
-    this.errorFileOut = errorFileOut;
     this.testCaseMessage = testCaseMessage;
     log("  Ack Type = " + ackType);
 

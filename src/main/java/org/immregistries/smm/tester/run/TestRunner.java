@@ -376,8 +376,7 @@ public class TestRunner {
         {
           if (ackMessageReader != null || !connector.getAckType().isInHL7Format()) {
             testCaseMessage.log("Analyzing acknowledgement");
-            AckAnalyzer ackAnalyzer = new AckAnalyzer(actualResponseMessage, connector.getAckType(),
-                null, testCaseMessage);
+            AckAnalyzer ackAnalyzer = new AckAnalyzer(actualResponseMessage, connector.getAckType(), testCaseMessage);
             if (ackAnalyzer.isPositive()) {
               testCaseMessage.log("Positive acknowledgement detected");
             } else {

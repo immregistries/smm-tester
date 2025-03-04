@@ -2,7 +2,8 @@ target
 bin
 .classpath
 .project
-\.settings/
+.settings/
+
 
 *.prefs
 src/main/java/org/immregistries/smm/tester/BulkQueryServlet.java
