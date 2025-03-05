@@ -7,7 +7,7 @@
 
 #### 1. Java JDK
 
-Ensure that you have Java SE (or OpenJDK) version 6.0 (also displayed as 1.6) or later installed:
+Ensure that you have Java SE (or OpenJDK) version 8.0 (also displayed as 1.8) or later installed:
 
 - To confirm the version of Java installed on your system, follow these steps:
   + Open a command window (in Windows click Start >> Run and type `cmd`, press enter)
