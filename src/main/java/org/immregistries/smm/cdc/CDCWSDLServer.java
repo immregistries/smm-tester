@@ -18,7 +18,7 @@ public abstract class CDCWSDLServer {
     processor = ProcessorFactory.createProcessor(processorName, this);
   }
 
-  public void process(HttpServletRequest req, HttpServletResponse resp)
+  public void processHttpRequest(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
     String xmlMessage = getBody(req);
     resp.setContentType(

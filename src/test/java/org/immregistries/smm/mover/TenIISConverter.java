@@ -1,39 +1,35 @@
 package org.immregistries.smm.mover;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 public class TenIISConverter {
 
   private static final char CR = 13;
   private static final char LF = 10;
 
-  public static void main(String[] args) throws Exception {
-    String filenameIn = args[0];
-    String filenameOut = args[1];
-    PrintWriter out = new PrintWriter(new File(filenameOut));
-    BufferedReader in = new BufferedReader(new FileReader(new File(filenameIn)));
+  // returns the number of messages processed.
+  public static int convert(BufferedReader input, OutputStreamWriter output) throws IOException {
     String line;
     boolean mshFoundOnce = false;
     int count = 0;
-    while ((line = in.readLine()) != null) {
+    while ((line = input.readLine()) != null) {
       if (line.startsWith("BTS") || (mshFoundOnce && line.startsWith("MSH"))) {
-        out.print(LF);
+        output.write(LF);
       }
-      out.print(line);
-      out.print(CR);
+      output.write(line);
+      output.write(CR);
       if (line.startsWith("FHS") || line.startsWith("BHS") || line.startsWith("BTS") || line.startsWith("FTS")) {
-        out.print(LF);
+        output.write(LF);
       }
       if (line.startsWith("MSH")) {
         mshFoundOnce = true;
         count++;
       }
     }
-    in.close();
-    out.close();
-    System.out.println("Done, processed " + count + " message" + (count == 1 ? "" : "s"));
+    input.close();
+    output.close();
+    return count;
   }
 }
