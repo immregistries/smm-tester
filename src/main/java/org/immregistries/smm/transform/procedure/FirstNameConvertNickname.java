@@ -534,10 +534,10 @@ public class FirstNameConvertNickname extends ProcedureCommon implements Procedu
   public static void loadFileNicknames() {
     try (BufferedReader br = new BufferedReader(new InputStreamReader(
         FirstNameConvertNickname.class.getResourceAsStream(("/nicknames.csv"))))) {
-      
+
       // skip header
       br.readLine();
-      
+
       String line;
       while ((line = br.readLine()) != null) {
         String[] parts = line.split("\\,");
@@ -552,10 +552,6 @@ public class FirstNameConvertNickname extends ProcedureCommon implements Procedu
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
-
-  public static void main(String[] args) {
-
   }
 
   private Transformer transformer;

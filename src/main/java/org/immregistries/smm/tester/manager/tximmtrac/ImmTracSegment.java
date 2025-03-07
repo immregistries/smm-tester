@@ -171,22 +171,5 @@ public abstract class ImmTracSegment
     this.segmentLength = segmentLength;
   }
 
-  public static void main(String[] args)
-  {
-    System.out.println("-----------------------------------------------------------------");
-    System.out.println(" GET PAD 0");
-    System.out.println(" '" + getPad(0) + "'");
-    System.out.println("-----------------------------------------------------------------");
-    System.out.println(" GET PAD 1");
-    System.out.println(" '" + getPad(1) + "'");
-    System.out.println("-----------------------------------------------------------------");
-    System.out.println(" GET PAD 0");
-    System.out.println(" '" + getPad(0) + "'");
-    System.out.println("-----------------------------------------------------------------");
-    System.out.println(" GET PAD 10");
-    System.out.println(" '" + getPad(10) + "'");
-    System.out.println("-----------------------------------------------------------------");
-  }
-
   public abstract boolean isBlankSoDoNotSend(Map values);
 }

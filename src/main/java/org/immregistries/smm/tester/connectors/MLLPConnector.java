@@ -59,16 +59,6 @@ public class MLLPConnector extends Connector {
           + "ORC|RE||BB79Q4.5^NIST-AA-IZ-2|||||||7824^Jackson^Lily^Suzanne^^^^^NIST-PI-1^L^^^PRN\r"
           + "RXA|0|1|20200508||45^Hep B, unspecified formulation^CVX|999|||01^Historical Administration^NIP001|||||||||||CP|A";
 
-  public static void main(String[] args) throws Exception {
-    if (args.length == 0) {
-      System.err.println(
-          "Usage: java org.immregistries.smm.tester.connectors.MLLPConnector [http://URL:Port]");
-    }
-    MLLPConnector conn = new MLLPConnector("MLLP", args[0]);
-    String ack = conn.submitMessage(EXAMPLE_MESSAGE, false);
-    System.out.println(ack);
-  }
-
   /**
    * This socket is kept open for this instance, until the "shutdown" method
    * is called.

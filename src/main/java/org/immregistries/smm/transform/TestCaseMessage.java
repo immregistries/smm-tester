@@ -50,12 +50,6 @@ public class TestCaseMessage {
   public static final String TEST_TYPE = "Test Type:";
   public static final String TEST_CASE_MODE = "Test Case Mode:";
 
-  public static void main(String[] args) {
-    for (int i = 0; i < args.length; i++) {
-      System.out.println((i + 1) + ". Add one: " + addOne(args[1]));
-    }
-  }
-
   protected static String addOne(String s) {
     String result = "";
     if (s.equals("")) {

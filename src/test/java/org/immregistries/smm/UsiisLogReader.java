@@ -19,6 +19,7 @@ import java.util.Map;
 
 public class UsiisLogReader {
 
+  // should this have a default location?
   private static final String fileLocation = "C:\\test\\usiis";
 
   // ignore
@@ -30,15 +31,11 @@ public class UsiisLogReader {
   private static final String BEGIN_POST_HL7SERVLET = "BEGIN POST Hl7Servlet";
   private static final String BEGIN_GETAUTHROUT = "BEGIN getAuthRouth";
   private static final String END_GETAUTHROUT = "END getAuthRouth";
-  private static final String IISSERVICEIMPL_SUBMITSINGLEMESSAGE =
-      "IisServiceImpl.submitSingleMessage";
-  private static final String BEGIN_CALLING_CONNECT_ON_SOCKET_PORT_MIRTH_OR_OTHER =
-      "BEGIN calling connect on socket Port (Mirth or other)";
-  private static final String END_CALLING_CONNECT_ON_SOCKET_PORT_MIRTH_OR_OTHER =
-      "END calling connect on socket Port (Mirth or other)";
+  private static final String IISSERVICEIMPL_SUBMITSINGLEMESSAGE = "IisServiceImpl.submitSingleMessage";
+  private static final String BEGIN_CALLING_CONNECT_ON_SOCKET_PORT_MIRTH_OR_OTHER = "BEGIN calling connect on socket Port (Mirth or other)";
+  private static final String END_CALLING_CONNECT_ON_SOCKET_PORT_MIRTH_OR_OTHER = "END calling connect on socket Port (Mirth or other)";
   private static final String HL7_SUBMITTED = "HL7 SUBMITTED";
-  private static final String END_IISSERVICEIMPL_SUBMITSINGLEMESSAGE =
-      "END IisServiceImpl.submitSingleMessage";
+  private static final String END_IISSERVICEIMPL_SUBMITSINGLEMESSAGE = "END IisServiceImpl.submitSingleMessage";
   private static final String EHR_SERVICE = "EHR_SERVICE";
   private static final String PROFILE_END_SOAP_HL7WEBSERVICE = "PROFILE END SOAP Hl7WebService";
   private static final String END_POST_HL7SERVLET = "END POST Hl7Servlet";
@@ -61,33 +58,43 @@ public class UsiisLogReader {
 
   private static Map<String, MinuteStat> minuteStatMap = new HashMap<>();
 
+  public UsiisLogReader() throws IOException {
+    this(fileLocation);
+  }
 
-  public static void main(String[] args) throws IOException {
+  public UsiisLogReader(String fileLocation) throws IOException {
     File file = new File(fileLocation);
-    String[] logFilenames = file.list(new FilenameFilter() {
+
+    String[] logFileNames = file.list(new FilenameFilter() {
       @Override
       public boolean accept(File dir, String name) {
         return name.endsWith(".log");
       }
     });
+
     int problemCount = 0;
-    for (String logFilename : logFilenames) {
+
+    for (String logFilename : logFileNames) {
       minuteStatMap = new HashMap<>();
-      System.out.println("Reading " + logFilename);
       File logFile = new File(file, logFilename);
       BufferedReader in = new BufferedReader(new FileReader(logFile));
       File summaryFile = new File(file, logFilename + ".csv");
       PrintWriter out = new PrintWriter(new FileWriter(summaryFile));
+
       try {
+
         out.print("Log File Id");
         for (String f : FIELDS_TO_PROCESS) {
           out.print("|");
           out.print(f);
         }
         out.println();
+
         String line;
         int lineCount = 0;
+
         while ((line = in.readLine()) != null) {
+
           lineCount++;
           if (line.length() < 40 || !line.substring(24, 31).equals(" INFO [")) {
             continue;
@@ -100,6 +107,7 @@ public class UsiisLogReader {
               continue;
             }
           }
+
           if (ignore) {
             continue;
           }
@@ -113,40 +121,43 @@ public class UsiisLogReader {
 
           boolean foundValue = false;
           for (String f : FIELDS_TO_PROCESS) {
+
             if (line.contains(f)) {
               foundValue = true;
               boolean foundMessageId = false;
               String idsCurrentlyOpen = "";
+
               for (String messageId : messageIdFieldMap.keySet()) {
                 if (!idsCurrentlyOpen.equals("")) {
                   idsCurrentlyOpen += ", ";
                 }
                 idsCurrentlyOpen += "'" + messageId + "'";
               }
+
               for (String messageId : messageIdFieldMap.keySet()) {
                 int i = messageId.indexOf("[");
                 String messageIdPart1 = messageId.substring(0, i);
                 String messageIdPart2 = messageId.substring(i);
-                // System.out.println("Looking for line containing '" + messageIdPart1 + "' and '" + messageIdPart2 + "'");
                 if (line.contains(messageIdPart1) && line.contains(messageIdPart2)) {
-
                   messageIdFieldMap.get(messageId).put(f, line.substring(0, 24));
                   foundMessageId = true;
                   break;
                 }
               }
+
               if (!foundMessageId) {
                 System.err.println(lineCount + ": Unrecognized message id: " + line);
-                System.err
-                    .println(lineCount + ":   Looking for one of these ids: " + idsCurrentlyOpen);
+                System.err.println(lineCount + ":   Looking for one of these ids: " + idsCurrentlyOpen);
                 problemCount++;
                 if (problemCount > 70) {
                   return;
                 }
               }
+
               break;
             }
           }
+
           if (!foundValue) {
             System.err.println("Unrecognized line: " + line);
           }
@@ -160,6 +171,7 @@ public class UsiisLogReader {
 
           }
         }
+
         for (String messageId : messageIdFieldMap.keySet()) {
           printMessage(out, messageId, lineCount);
         }
@@ -169,6 +181,7 @@ public class UsiisLogReader {
         outMinute.println("Minute,Count,Total Elapsed");
         List<String> minuteList = new ArrayList<>(minuteStatMap.keySet());
         Collections.sort(minuteList);
+
         if (minuteList.size() > 0) {
           MinuteStat ms1 = minuteStatMap.get(minuteList.get(0));
           MinuteStat ms2 = minuteStatMap.get(minuteList.get(minuteList.size() - 1));
@@ -190,8 +203,7 @@ public class UsiisLogReader {
           Collections.sort(minuteList);
           for (String minute : minuteList) {
             MinuteStat minuteStat = minuteStatMap.get(minute);
-            outMinute
-                .println(minute + "," + minuteStat.messageCount + "," + minuteStat.elapsedTotal);
+            outMinute.println(minute + "," + minuteStat.messageCount + "," + minuteStat.elapsedTotal);
           }
         }
         outMinute.close();
@@ -276,6 +288,5 @@ public class UsiisLogReader {
 
   private static class Event {
     String timestamp = "";
-
   }
 }

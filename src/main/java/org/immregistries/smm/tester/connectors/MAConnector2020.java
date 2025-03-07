@@ -215,23 +215,24 @@ public class MAConnector2020 extends HttpConnector {
       "OBX|4|TS|29769-7^Date Vaccine Information Statement Presented^LN|1|20000105||||||F|||20150120101310\r\n" + 
       "OBX|5|CE|64994-7^Test^|1|V01^^||||||F|||\r\n" + 
       "";
-  
-  public static void main(String[] args) throws Exception {
-    String facilityId = "";
-    String otherId = "";
-    String password = "Cgmiis801";
-    String url = "https://miis-cg-cert.hhs.state.ma.us:443/CDCService";
-    String userId = "ccghlsevenqa";
+
+  public String sendRequest(
+        String label,         // eg. "MA SIIS"
+        String facilityId,
+        String otherId,
+        String password,
+        String url,           // eg. "https://miis-cg-cert.hhs.state.ma.us:443/CDCService"
+        String userId
+      ) throws IOException {
     ClientConnection client = new ClientConnection();
     client.setFacilityId(facilityId);
     client.setOtherId(otherId);
     client.setPassword(password);
     client.setUrl(url);
     client.setUserId(userId);
-    
-    MAConnector2020 conn = new MAConnector2020("MA SIIS", url, ConnectorFactory.TYPE_MA_SOAP_2020);
-    
-    String response = conn.sendRequest(EXAMPLE_MESSAGE, client, false);
-    System.out.println(response);
+
+    MAConnector2020 conn = new MAConnector2020(label, url, ConnectorFactory.TYPE_MA_SOAP_2020);
+
+    return conn.sendRequest(EXAMPLE_MESSAGE, client, false);
   }
 }
