@@ -66,8 +66,6 @@ public abstract class Connector {
         connector = new HttpConnector(label, url);
       } else if (type.equals(ConnectorFactory.TYPE_MLLP)) {
         connector = new MLLPConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_RAW)) {
-        connector = new HttpRawConnector(label, url);
       } else if (type.equals(ConnectorFactory.TYPE_HI_SOAP)) {
         connector = new HISoapConnector(label, url);
       } else if (type.equals(ConnectorFactory.TYPE_ENVISION_SOAP)) {

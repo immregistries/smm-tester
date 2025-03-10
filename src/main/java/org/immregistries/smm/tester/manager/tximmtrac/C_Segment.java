@@ -72,7 +72,7 @@ public class C_Segment extends ImmTracSegment
     fields.add(SOURCE_SYSTEM_CLIENT_ID_27);
   }
   
-  public boolean isBlankSoDoNotSend(Map values)
+  public boolean isBlankSoDoNotSend(Map<Field, String> values)
   {
     return false;
   }

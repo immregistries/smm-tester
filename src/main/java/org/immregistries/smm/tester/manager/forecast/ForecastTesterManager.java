@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -56,7 +58,13 @@ public class ForecastTesterManager {
 
     List<ForecastTestCase> forecastTestCaseList = new ArrayList<ForecastTestCase>();
     HttpURLConnection urlConn;
-    URL url = new URL(forecastTesterUrl + "?testPanelId=" + testPanel.getId());
+    URL url;
+    try {
+      URI uri = new URI(forecastTesterUrl + "?testPanelId=" + testPanel.getId());
+      url = uri.toURL();
+    } catch (URISyntaxException uriEx) {
+      throw new IOException(uriEx);
+    }
 
     urlConn = (HttpURLConnection) url.openConnection();
     urlConn.setRequestMethod("GET");
@@ -207,7 +215,13 @@ public class ForecastTesterManager {
     int softwareId = connector.getTchForecastTesterSoftwareId();
     int taskGroupId = connector.getTchForecastTesterTaskGroupId();
     DataOutputStream printout;
-    URL url = new URL(forecastTesterUrl);
+    URL url;
+    try {
+      URI uri = new URI(forecastTesterUrl);
+      url = uri.toURL();
+    } catch (URISyntaxException uriEx) {
+      throw new IOException(uriEx);
+    }
     HttpURLConnection urlConn;
     urlConn = (HttpURLConnection) url.openConnection();
     urlConn.setRequestMethod("POST");

@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class AlternativeEndingVowels extends ProcedureCommon implements ProcedureInterface {
+public class AlternativeEndingVowels extends ProcedureCommon {
 
   public enum Field {
                      FIRST_NAME(5, 2, false),

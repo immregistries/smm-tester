@@ -6,12 +6,9 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class AdministrativeSexVariation extends ProcedureCommon implements ProcedureInterface {
-
-
+public class AdministrativeSexVariation extends ProcedureCommon {
 
   public AdministrativeSexVariation() {
-
   }
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)

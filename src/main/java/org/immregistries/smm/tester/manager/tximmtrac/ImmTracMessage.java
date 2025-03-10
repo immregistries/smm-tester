@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * @author Nathan Bunker
  */
@@ -16,31 +15,24 @@ public abstract class ImmTracMessage
   protected List<ImmTracSegment> segments;
   protected List<Map<ImmTracSegment.Field, String>> segmentValues;
 
-  protected void addSegment(ImmTracSegment segment, Map<ImmTracSegment.Field, String> values)
-  {
+  protected void addSegment(ImmTracSegment segment, Map<ImmTracSegment.Field, String> values) {
     segments.add(segment);
     segmentValues.add(values);
   }
 
-  public ImmTracMessage(ImmTracSegment[] segmentOrder)
-  {
+  public ImmTracMessage(ImmTracSegment[] segmentOrder) {
     this.segmentOrder = segmentOrder;
   }
 
-  
-
-  public String serialize()
-  {
+  public String serialize() {
     StringBuffer line = new StringBuffer();
-    for (Iterator it = segments.iterator(), vit = segmentValues.iterator(); it.hasNext()
-        && vit.hasNext();)
-    {
+    Iterator<ImmTracSegment> it;
+    Iterator<Map<ImmTracSegment.Field, String>> vit;
+    for (it = segments.iterator(), vit = segmentValues.iterator(); it.hasNext() && vit.hasNext();) {
       ImmTracSegment segment = (ImmTracSegment) it.next();
-      Map values = (Map) vit.next();
+      Map<ImmTracSegment.Field, String> values = (Map<ImmTracSegment.Field, String>) vit.next();
       line.append(segment.serialize(values));
     }
     return line.toString();
   }
-
-
 }

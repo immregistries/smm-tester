@@ -6,7 +6,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public abstract class AbstractSuffixVariation extends ProcedureCommon implements ProcedureInterface {
+public abstract class AbstractSuffixVariation extends ProcedureCommon {
 
   protected abstract String[] getSuffixes();
 

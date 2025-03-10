@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -61,7 +63,13 @@ public class ILSoapConnector extends Connector {
     URLConnection urlConn;
     DataOutputStream printout;
     InputStreamReader input = null;
-    URL url = new URL(conn.getUrl());
+    URL url;
+    try {
+      URI uri = new URI(conn.getUrl());
+      url = uri.toURL();
+    } catch (URISyntaxException uriEx) {
+      throw new IOException(uriEx);
+    }
     urlConn = url.openConnection();
     urlConn.setDoInput(true);
     urlConn.setDoOutput(true);
@@ -103,7 +111,13 @@ public class ILSoapConnector extends Connector {
     URLConnection urlConn;
     DataOutputStream printout;
     InputStreamReader input = null;
-    URL url = new URL(this.url);
+    URL url;
+    try {
+      URI uri = new URI(this.url);
+      url = uri.toURL();
+    } catch (URISyntaxException uriEx) {
+      throw new Exception(uriEx);
+    }
     urlConn = url.openConnection();
     urlConn.setDoInput(true);
     urlConn.setDoOutput(true);

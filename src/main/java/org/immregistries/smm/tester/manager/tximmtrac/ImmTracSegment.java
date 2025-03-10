@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public abstract class ImmTracSegment
 {
-  protected List fields = new ArrayList();
+  protected List<Field> fields = new ArrayList<Field>();
   protected String segmentName = "";
   protected String segmentDescription = "";
   protected int segmentLength = 0;
@@ -25,10 +25,10 @@ public abstract class ImmTracSegment
     this.segmentLength = length;
   }
 
-  public Map deSerialize(String line, int start)
+  public Map<Field, String> deSerialize(String line, int start)
   {
-    Map values = new HashMap();
-    for (Iterator it = fields.iterator(); it.hasNext();)
+    Map<Field, String> values = new HashMap<Field, String>();
+    for (Iterator<Field> it = fields.iterator(); it.hasNext();)
     {
       Field field = (Field) it.next();
       int end = field.getFieldLength() + start;
@@ -43,7 +43,7 @@ public abstract class ImmTracSegment
     return values;
   }
 
-  public String serialize(Map values)
+  public String serialize(Map<Field, String> values)
   {
     if (isBlankSoDoNotSend(values))
     {
@@ -51,7 +51,7 @@ public abstract class ImmTracSegment
     }
     StringBuffer line = new StringBuffer();
     boolean first = true;
-    for (Iterator it = fields.iterator(); it.hasNext();)
+    for (Iterator<Field> it = fields.iterator(); it.hasNext();)
     {
       Field field = (Field) it.next();
       String value = (String) values.get(field);
@@ -171,5 +171,5 @@ public abstract class ImmTracSegment
     this.segmentLength = segmentLength;
   }
 
-  public abstract boolean isBlankSoDoNotSend(Map values);
+  public abstract boolean isBlankSoDoNotSend(Map<Field, String> values);
 }

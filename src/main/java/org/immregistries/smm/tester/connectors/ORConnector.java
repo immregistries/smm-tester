@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -104,7 +106,13 @@ public class ORConnector extends HttpConnector {
       SSLSocketFactory factory = setupSSLSocketFactory(debug, debugLog);
       DataOutputStream printout;
       InputStreamReader input = null;
-      URL url = new URL(conn.getUrl());
+      URL url;
+      try {
+        URI uri = new URI(conn.getUrl());
+        url = uri.toURL();
+      } catch (URISyntaxException uriEx) {
+        throw new IOException(uriEx);
+      }
       urlConn = url.openConnection();
       if (factory != null && urlConn instanceof HttpsURLConnection) {
         if (debug) {
