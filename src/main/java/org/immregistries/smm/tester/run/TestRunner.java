@@ -23,17 +23,20 @@ import static org.immregistries.smm.RecordInterface.VALUE_RESULT_QUERY_TYPE_UNEX
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.immregistries.smm.RecordInterface;
 import org.immregistries.smm.mover.AckAnalyzer;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.manager.HL7Reader;
 import org.immregistries.smm.tester.manager.forecast.ForecastTesterManager;
-import org.immregistries.smm.tester.manager.nist.NISTValidator;
 import org.immregistries.smm.tester.manager.nist.ValidationReport;
 import org.immregistries.smm.tester.manager.nist.ValidationResource;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.TestError;
 import org.immregistries.smm.transform.Transform;
 import org.immregistries.smm.transform.Transformer;
+
+import gov.nist.healthcare.hl7ws.client.MessageValidationV2SoapClient;
 
 /**
  * 
@@ -582,11 +585,19 @@ public class TestRunner {
     testCaseMessage.setMessageTextSent(message);
   }
 
+  private static synchronized ValidationReport validate(String message, ValidationResource validationResource) {
+    MessageValidationV2SoapClient soapClient = new MessageValidationV2SoapClient(RecordInterface.EVS_URL);
+    synchronized (soapClient) {
+      String result = soapClient.validate(message, validationResource.getOid(), "", "");
+      ValidationReport validationReport = new ValidationReport(result);
+      return validationReport;
+    }
+  }
+
   public static void validateResponseWithNIST(TestCaseMessage testCaseMessage, String messageText) {
     ascertainValidationResource(testCaseMessage, messageText);
     if (testCaseMessage.getValidationResource() != null) {
-      ValidationReport validationReport =
-          NISTValidator.validate(messageText, testCaseMessage.getValidationResource());
+      ValidationReport validationReport = validate(messageText, testCaseMessage.getValidationResource());
       testCaseMessage.setValidationReport(validationReport);
       if (validationReport != null) {
         testCaseMessage.setValidationReportPass(
