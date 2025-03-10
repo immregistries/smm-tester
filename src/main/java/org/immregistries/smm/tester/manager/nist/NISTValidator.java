@@ -1,6 +1,6 @@
 package org.immregistries.smm.tester.manager.nist;
 
-import org.immregistries.smm.SoftwareVersion;
+import org.immregistries.smm.RecordInterface;
 import gov.nist.healthcare.hl7ws.client.MessageValidationV2SoapClient;
 
 public class NISTValidator {
@@ -8,7 +8,7 @@ public class NISTValidator {
 
   private static synchronized MessageValidationV2SoapClient getSoapClient() {
     if (soapClient == null) {
-      soapClient = new MessageValidationV2SoapClient(SoftwareVersion.EVS_URL);
+      soapClient = new MessageValidationV2SoapClient(RecordInterface.EVS_URL);
     }
     return soapClient;
   }

@@ -2,6 +2,12 @@ package org.immregistries.smm;
 
 
 public interface RecordInterface {
+  // OLD URL:
+  //  - http://hit-testing2.nist.gov:8090/hl7v2ws/services/soap/MessageValidationV2
+  // Better URL because it won't move:
+  //  - http://hl7v2.ws.nist.gov/hl7v2ws//services/soap/MessageValidationV2
+  public static final String EVS_URL = "http://hl7v2.ws.nist.gov/hl7v2ws//services/soap/MessageValidationV2";
+
   public static final String VALUE_DATE_FORMAT = "yyyyMMddHHmmss+z";
   public static final String VALUE_DATE_NO_TIME_FORMAT = "yyyyMMdd";
 
