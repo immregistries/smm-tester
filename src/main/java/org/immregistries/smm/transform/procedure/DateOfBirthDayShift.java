@@ -6,9 +6,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class DateOfBirthDayShift extends ProcedureCommon implements ProcedureInterface {
-
-
+public class DateOfBirthDayShift extends ProcedureCommon {
 
   public DateOfBirthDayShift() {
 
@@ -65,10 +63,6 @@ public class DateOfBirthDayShift extends ProcedureCommon implements ProcedureInt
     return dob;
   }
 
-
-
   public void setTransformer(Transformer transformer) {}
-
-
 
 }

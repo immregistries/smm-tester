@@ -6,13 +6,9 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class MiddleNameInFirstNameVariation extends ProcedureCommon implements ProcedureInterface {
+public class MiddleNameInFirstNameVariation extends ProcedureCommon {
 
-
-
-  public MiddleNameInFirstNameVariation() {
-
-  }
+  public MiddleNameInFirstNameVariation() { }
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
@@ -73,10 +69,6 @@ public class MiddleNameInFirstNameVariation extends ProcedureCommon implements P
     return names;
   }
 
-
-
   public void setTransformer(Transformer transformer) {}
-
-
 
 }

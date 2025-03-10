@@ -220,7 +220,7 @@ public class HttpRawConnector extends Connector {
       X509TrustManager defaultTrustManager) throws KeyStoreException {
     debugLog.append("Trusted certificates: \r");
     for (X509Certificate cert : defaultTrustManager.getAcceptedIssuers()) {
-      String certStr = "S:" + cert.getSubjectDN().getName() + " I:" + cert.getIssuerDN().getName();
+      String certStr = "S:" + cert.getSubjectX500Principal().getName() + " I:" + cert.getIssuerX500Principal().getName();
       debugLog.append(" + " + certStr + " \r");
     }
     Enumeration<String> enumeration = keyStore.aliases();

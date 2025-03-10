@@ -8,7 +8,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class LastNamePrefixVariation extends ProcedureCommon implements ProcedureInterface {
+public class LastNamePrefixVariation extends ProcedureCommon {
 
   public enum Field {
                      LAST_NAME,

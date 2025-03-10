@@ -19,7 +19,7 @@ public class TR_Segment extends ImmTracSegment
   {
     fields.add(SEGMENT_CODE_1);
   }
-  public boolean isBlankSoDoNotSend(Map values)
+  public boolean isBlankSoDoNotSend(Map<Field, String> values)
   {
     return false;
   }

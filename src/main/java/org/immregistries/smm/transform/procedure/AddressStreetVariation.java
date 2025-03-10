@@ -6,7 +6,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class AddressStreetVariation extends ProcedureCommon implements ProcedureInterface {
+public class AddressStreetVariation extends ProcedureCommon {
 
   public AddressStreetVariation() {}
 

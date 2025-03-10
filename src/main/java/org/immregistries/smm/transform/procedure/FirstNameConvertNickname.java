@@ -12,7 +12,7 @@ import java.util.Random;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class FirstNameConvertNickname extends ProcedureCommon implements ProcedureInterface {
+public class FirstNameConvertNickname extends ProcedureCommon {
 
   public static final double NICKNAME_FILE_FREQUENCY_THRESHOLD = 0.5;
 

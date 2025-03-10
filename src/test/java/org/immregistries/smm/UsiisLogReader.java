@@ -285,8 +285,4 @@ public class UsiisLogReader {
     }
     return messageId;
   }
-
-  private static class Event {
-    String timestamp = "";
-  }
 }

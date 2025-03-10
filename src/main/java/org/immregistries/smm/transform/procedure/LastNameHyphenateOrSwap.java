@@ -6,14 +6,11 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class LastNameHyphenateOrSwap extends ProcedureCommon implements ProcedureInterface {
-
+public class LastNameHyphenateOrSwap extends ProcedureCommon {
 
   private Transformer transformer;
-  
-  public LastNameHyphenateOrSwap() {
 
-  }
+  public LastNameHyphenateOrSwap() { }
 
   public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
       throws IOException {
@@ -59,12 +56,8 @@ public class LastNameHyphenateOrSwap extends ProcedureCommon implements Procedur
     return lastName;
   }
 
-
-
   public void setTransformer(Transformer transformer) {
     this.transformer = transformer;
   }
-
-
 
 }

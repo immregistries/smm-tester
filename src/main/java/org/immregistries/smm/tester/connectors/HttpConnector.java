@@ -349,7 +349,7 @@ public class HttpConnector extends Connector {
       X509TrustManager defaultTrustManager) throws KeyStoreException {
     debugLog.append("Trusted certificates: \r");
     for (X509Certificate cert : defaultTrustManager.getAcceptedIssuers()) {
-      String certStr = "S:" + cert.getSubjectDN().getName() + " I:" + cert.getIssuerDN().getName();
+      String certStr = "S:" + cert.getSubjectX500Principal().getName() + " I:" + cert.getIssuerX500Principal().getName();
       debugLog.append(" + " + certStr + " \r");
     }
     Enumeration<String> enumeration = keyStore.aliases();
@@ -365,7 +365,7 @@ public class HttpConnector extends Connector {
   public String connectivityTest(String message) throws Exception {
     return "Connectivity test not supported for HTTPS POST connections";
   }
-  
+
   @Override
   public boolean connectivityTestSupported() {
     return false;

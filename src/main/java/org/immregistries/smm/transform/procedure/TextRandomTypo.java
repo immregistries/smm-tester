@@ -9,7 +9,7 @@ import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 import org.immregistries.smm.transform.procedure.AbstractTypoProcedure.Field;
 
-public class TextRandomTypo extends ProcedureCommon implements ProcedureInterface {
+public class TextRandomTypo extends ProcedureCommon {
 
   public TextRandomTypo(AbstractTypoProcedure.Field field) {
     this.field = field;

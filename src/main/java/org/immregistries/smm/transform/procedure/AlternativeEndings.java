@@ -7,7 +7,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class AlternativeEndings extends ProcedureCommon implements ProcedureInterface {
+public class AlternativeEndings extends ProcedureCommon {
 
   public enum Field {
                      FIRST_NAME(5, 2, false),

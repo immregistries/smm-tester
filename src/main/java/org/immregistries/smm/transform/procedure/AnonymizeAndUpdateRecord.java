@@ -12,7 +12,7 @@ import org.immregistries.smm.transform.PatientType;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class AnonymizeAndUpdateRecord extends ProcedureCommon implements ProcedureInterface {
+public class AnonymizeAndUpdateRecord extends ProcedureCommon {
 
   private static final int MS_IN_DAY = 24 * 60 * 60 * 1000;
 
@@ -215,7 +215,5 @@ public class AnonymizeAndUpdateRecord extends ProcedureCommon implements Procedu
     messageDate = new Date();
     daysToAdd = 0;
   }
-
-
 
 }

@@ -8,7 +8,7 @@ import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 import org.immregistries.smm.transform.procedure.LastNamePrefixVariation.Prefix;
 
-public class RemoveLastNamePrefix extends ProcedureCommon implements ProcedureInterface {
+public class RemoveLastNamePrefix extends ProcedureCommon {
 
   public enum Field {
                      LAST_NAME,

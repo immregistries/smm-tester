@@ -6,7 +6,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public abstract class AbstractTypoProcedure extends ProcedureCommon implements ProcedureInterface {
+public abstract class AbstractTypoProcedure extends ProcedureCommon {
 
   public enum Field {
                      FIRST_NAME(5, 2, false),

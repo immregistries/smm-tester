@@ -6,7 +6,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class AddVariation extends ProcedureCommon implements ProcedureInterface {
+public class AddVariation extends ProcedureCommon {
 
   public enum Field {
                      FIRST_NAME(5, 2, false),

@@ -6,7 +6,7 @@ import java.util.List;
 import org.immregistries.smm.transform.TransformRequest;
 import org.immregistries.smm.transform.Transformer;
 
-public class RemoveAiraSuffix extends ProcedureCommon implements ProcedureInterface {
+public class RemoveAiraSuffix extends ProcedureCommon {
 
   public static enum Field {
                             FIRST_NAME,
@@ -53,7 +53,7 @@ public class RemoveAiraSuffix extends ProcedureCommon implements ProcedureInterf
     }
     putMessageBackTogether(transformRequest, fieldsList);
   }
-  
+
   protected static String removeSuffix(String name) {
     return name.substring(0, name.length() - 4);
   }

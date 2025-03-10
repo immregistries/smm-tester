@@ -44,7 +44,7 @@ public class CX_Segment extends ImmTracSegment
     fields.add(COMMENTS_13);
   }
 
-  public boolean isBlankSoDoNotSend(Map values)
+  public boolean isBlankSoDoNotSend(Map<Field, String> values)
   {
     return isBlank(CLIENT_SUFFIX_3, values)
         && isBlank(MOTHERS_LAST_NAME_4, values)
@@ -56,7 +56,7 @@ public class CX_Segment extends ImmTracSegment
           && isBlank(COMMENTS_13, values);
   }
 
-  private boolean isBlank(Field field, Map values)
+  private boolean isBlank(Field field, Map<Field, String> values)
   {
     String value = (String) values.get(field);
     return value == null || value.equals("");
