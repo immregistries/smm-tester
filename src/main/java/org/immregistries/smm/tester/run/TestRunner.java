@@ -1,6 +1,3 @@
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
 package org.immregistries.smm.tester.run;
 
 import static org.immregistries.smm.RecordInterface.VALUE_RESULT_FORECAST_STATUS_INCLUDED;
@@ -39,7 +36,7 @@ import org.immregistries.smm.transform.Transformer;
 import gov.nist.healthcare.hl7ws.client.MessageValidationV2SoapClient;
 
 /**
- * 
+ *
  * @author nathan
  */
 public class TestRunner {
@@ -159,10 +156,17 @@ public class TestRunner {
     return testCaseMessage;
   }
 
-  public boolean runTest(Connector connector, TestCaseMessage testCaseMessage, String message)
-      throws Exception {
-    setupForRunTest(testCaseMessage, message);
-    doRunTest(connector, testCaseMessage, message);
+  public boolean runTest(Connector connector, TestCaseMessage testCaseMessage, String message) throws Exception {
+    wasRun = false;
+    passedTest = false;
+    actualResponseMessage = null;
+    testCaseMessage.setMessageTextSent(message);
+    startTime = System.currentTimeMillis();
+    testCaseMessage.setActualRequestMessage(message);
+    actualResponseMessage = connector.submitMessage(message, false);
+    actualResponseMessage = cleanMessage(actualResponseMessage);
+    endTime = System.currentTimeMillis();
+    testCaseMessage.setActualResponseMessage(actualResponseMessage);
     testCaseMessage.setTotalRunTime(getTotalRunTime());
     evaluateRunTest(connector, testCaseMessage);
     if (validateResponse) {
@@ -558,16 +562,6 @@ public class TestRunner {
     return matches;
   }
 
-  private void doRunTest(Connector connector, TestCaseMessage testCaseMessage, String message)
-      throws Exception {
-    startTime = System.currentTimeMillis();
-    testCaseMessage.setActualRequestMessage(message);
-    actualResponseMessage = connector.submitMessage(message, false);
-    actualResponseMessage = cleanMessage(actualResponseMessage);
-    endTime = System.currentTimeMillis();
-    testCaseMessage.setActualResponseMessage(actualResponseMessage);
-  }
-
   private String cleanMessage(String message) {
     if (message == null) {
       return "";
@@ -576,13 +570,6 @@ public class TestRunner {
       message = message.substring(1);
     }
     return message;
-  }
-
-  private void setupForRunTest(TestCaseMessage testCaseMessage, String message) {
-    wasRun = false;
-    passedTest = false;
-    actualResponseMessage = null;
-    testCaseMessage.setMessageTextSent(message);
   }
 
   private static synchronized ValidationReport validate(String message, ValidationResource validationResource) {
@@ -595,7 +582,7 @@ public class TestRunner {
   }
 
   public static void validateResponseWithNIST(TestCaseMessage testCaseMessage, String messageText) {
-    ascertainValidationResource(testCaseMessage, messageText);
+    mapValidationResource(testCaseMessage, messageText);
     if (testCaseMessage.getValidationResource() != null) {
       ValidationReport validationReport = validate(messageText, testCaseMessage.getValidationResource());
       testCaseMessage.setValidationReport(validationReport);
@@ -607,8 +594,7 @@ public class TestRunner {
     }
   }
 
-  public static void ascertainValidationResource(TestCaseMessage testCaseMessage,
-      String messageText) {
+  public static void mapValidationResource(TestCaseMessage testCaseMessage, String messageText) {
     ValidationResource validationResource = null;
     HL7Reader hl7Reader = new HL7Reader(messageText);
     if (hl7Reader.advanceToSegment("MSH")) {
