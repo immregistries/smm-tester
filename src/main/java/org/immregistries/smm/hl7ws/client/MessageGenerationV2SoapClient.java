@@ -1,7 +1,7 @@
-package gov.nist.healthcare.hl7ws.client;
+package org.immregistries.smm.hl7ws.client;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import gov.nist.healthcare.hl7ws.messagegeneration.MessageGenerationV2Interface;
+import org.immregistries.smm.hl7ws.messagegeneration.MessageGenerationV2Interface;
 
 
 public class MessageGenerationV2SoapClient implements MessageGenerationV2Interface {

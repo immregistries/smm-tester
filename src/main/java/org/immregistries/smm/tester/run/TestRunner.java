@@ -33,7 +33,7 @@ import org.immregistries.smm.transform.TestError;
 import org.immregistries.smm.transform.Transform;
 import org.immregistries.smm.transform.Transformer;
 
-import gov.nist.healthcare.hl7ws.client.MessageValidationV2SoapClient;
+import org.immregistries.smm.hl7ws.client.MessageValidationV2SoapClient;
 
 /**
  *

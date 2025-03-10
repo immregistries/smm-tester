@@ -5,7 +5,8 @@
  * "nist.disclaimer" file given in the distribution for information on the use and redistribution of
  * this software.
  */
-package gov.nist.healthcare.hl7ws.messagevalidation;
+//package gov.nist.healthcare.hl7ws.messagevalidation;
+package org.immregistries.smm.hl7ws.messagevalidation;
 
 import javax.jws.WebService;
 
