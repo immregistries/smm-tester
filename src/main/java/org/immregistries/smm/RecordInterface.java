@@ -1,7 +1,7 @@
 package org.immregistries.smm;
 
 
-public interface RecordServletInterface {
+public interface RecordInterface {
   public static final String VALUE_DATE_FORMAT = "yyyyMMddHHmmss+z";
   public static final String VALUE_DATE_NO_TIME_FORMAT = "yyyyMMdd";
 

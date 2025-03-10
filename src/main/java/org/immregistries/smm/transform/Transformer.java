@@ -439,8 +439,7 @@ public class Transformer {
 
   protected void init() {
     try {
-      BufferedReader in = new BufferedReader(
-          new InputStreamReader(getClass().getResourceAsStream("transform.txt")));
+      BufferedReader in = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("transform.txt")));
       conceptMap = readDataIn(in);
     } catch (IOException e) {
       e.printStackTrace();
