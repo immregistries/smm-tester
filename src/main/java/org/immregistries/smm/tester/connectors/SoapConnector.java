@@ -26,7 +26,7 @@ public class SoapConnector extends HttpConnector {
       this(label, url, null);
   }
   public SoapConnector(String label, String url, javax.net.ssl.SSLContext sslContext) throws Exception {
-    super(label, url, ConnectorFactory.TYPE_SOAP);
+    super(label, url, "SOAP");
     clientService = new Client_ServiceStub(this.url, sslContext);
   }
   

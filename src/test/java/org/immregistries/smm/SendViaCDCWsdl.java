@@ -22,7 +22,7 @@ public class SendViaCDCWsdl {
   @Test 
   public void sendToIISSandbox() throws Exception
   {
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_SOAP, "IIS Sandbox", SANDBOX_URL);
+    Connector connector = ConnectorFactory.getConnector("SOAP", "IIS Sandbox", SANDBOX_URL);
     connector.setUserid("SMM Tester");
     connector.setPassword("password1234");
     connector.setFacilityid("SMM Tester Junit");

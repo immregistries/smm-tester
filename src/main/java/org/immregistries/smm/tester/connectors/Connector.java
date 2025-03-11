@@ -59,55 +59,9 @@ public abstract class Connector {
       String aartPublicIdCode, String aartAccessPasscode, String badUserid, String badPassword,
       String badFacilityid) throws Exception {
     if (!label.equals("") && !type.equals("")) {
-      Connector connector = null;
-      if (type.equals(ConnectorFactory.TYPE_SOAP)) {
+      Connector connector;
+      if (label == "SOAP") {
         connector = new SoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_POST)) {
-        connector = new HttpConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_MLLP)) {
-        connector = new MLLPConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_HI_SOAP)) {
-        connector = new HISoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_ENVISION_SOAP)) {
-        connector = new EnvisionConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_ENVISION_SOAP11)) {
-        connector = new EnvisionConnector(label, url, true);
-      } else if (type.equals(ConnectorFactory.TYPE_OR_SOAP)) {
-        connector = new ORConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_WI_SOAP)) {
-        connector = new WIConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_IL_WS)) {
-        connector = new ILConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_IL_SOAP)) {
-        connector = new ILSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_MA_SOAP)) {
-        connector = new MAConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_MA_SOAP_2020)) {
-        connector = new MAConnector2020(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_MO_SOAP)) {
-        connector = new MOConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_NJ_SOAP)) {
-        connector = new NJConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_CA_SOAP)) {
-        connector = new CASoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_SC_SOAP)) {
-        connector = new SCSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_AL_SOAP)) {
-        connector = new ALSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_CO_SOAP)) {
-        connector = new COSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_FL_SOAP)) {
-        connector = new FLSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_KS_SOAP)) {
-        connector = new KSSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_KY_KHIE)) {
-        connector = new KYKHIEConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_AZ_SOAP)) {
-        connector = new AZSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_ND_SOAP)) {
-        connector = new NDSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_IZ_GATEWAY)) {
-        connector = new IZGatewayConnector(label, url);
       } else {
         connector = new HttpConnector(label, url);
       }
@@ -868,64 +822,64 @@ public abstract class Connector {
     }
     return response;
   }
-  
+
   // since we're matching against wildcard scenarios now, we can match more than one transform
   public List<String> getTransformsFromScenarioMap(String testCode, boolean includeExactMatch) {
     List<String> transforms = new ArrayList<>();
-    
+
     if (scenarioTransformationsMap == null || scenarioTransformationsMap.isEmpty()) {
       return transforms;
     }
-    
+
     // loop over the scenarios and check for actual equality or equality with wildcards
     for (Entry<String, String> entry : scenarioTransformationsMap.entrySet()) {
       if (entry == null) {
         // bad entry
         continue;
       }
-      
+
       if (doesScenarioMatchTestCode(entry.getKey(), testCode, includeExactMatch)) {
         // we found a match
         transforms.add(entry.getValue());
       }
     }
-    
+
     // did not find anything
     return transforms;
   }
-  
+
   public List<String> getTransformsFromScenarioMap(String testCode) {
     return getTransformsFromScenarioMap(testCode, true);
   }
-  
+
   // does wildcard testing to see if the scenario and testCode are equal
   public static boolean doesScenarioMatchTestCode(
       String scenarioString,
       String testCode,
       boolean includeExactMatch) {
-    
+
     if (scenarioString == null) {
       // bad input
       return false;
     }
-    
+
     Set<String> scenarios = Arrays.stream(scenarioString.split("\\" + Transformer.SCENARIO_DELIM))
       .map(String::trim)
       .filter(StringUtils::isNotBlank)
       .collect(Collectors.toSet());
-    
+
     if (scenarios.isEmpty()) {
       return false;
     }
-    
+
     // for exact match, simply check if any of them match
     if (includeExactMatch && scenarios.contains(testCode)) {
       return true;
     }
-    
+
     boolean anyMatch = false;
     boolean allNots = true;
-    
+
     // for one to many scenarios, we don't check exact match and only care about wildcards
     // and ALL scenarios must match for a test code to match
     for (String scenario : scenarios) {
@@ -934,45 +888,45 @@ public abstract class Connector {
       if (not) {
         scenario = scenario.substring(Transformer.SCENARIO_NOT.length());
       }
-      
+
       // build a regex pattern that matches the entire string
       // from start (^) to end ($)
       String regexPattern = "^";
       for (String partial : scenario.split("\\" + Transformer.SCENARIO_WILDCARD)) {
         regexPattern += Pattern.quote(partial) + ".*";
       }
-      
+
       // drop the final .* unless the scenario name ends with the wildcard
       if (regexPattern.length() > 2 && !scenario.endsWith(Transformer.SCENARIO_WILDCARD)) {
         regexPattern = regexPattern.substring(0, regexPattern.length() - 2);
       }
       regexPattern += "$";
-      
+
       boolean patternMatch = Pattern.matches(regexPattern, testCode);
-      
+
       if (patternMatch) {
         if (not) {
           // immediately return false if ANY not tests matched
           return false;
         }
-        
+
         anyMatch = true;
       }
-      
+
       if (!not) {
         allNots = false;
       }
     }
-    
+
     if (!allNots && anyMatch) {
       // at least one scenario passed for this test code, and ALL the NOT tests passed
       return true;
     }
-    
+
     // matches if all the tests were NOTs and none of them passed
     return allNots && !anyMatch;
   }
-  
+
   public static boolean doesScenarioMatchTestCode(String scenario, String testCode) {
     return doesScenarioMatchTestCode(scenario, testCode, true);
   }

@@ -16,7 +16,7 @@ public class TestTransformer {
   @Test
   public void testRemoveRepeats() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     // remove repeat PID-3.5 valued MA
@@ -94,7 +94,7 @@ public class TestTransformer {
   @Test
   public void testTransformInsertSegments() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     messageText = "MSH|\r";
@@ -132,7 +132,7 @@ public class TestTransformer {
   @Test
   public void testTransformRemoveSegments() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     messageText = "MSH|\rPID|\rNK1|\r";
@@ -156,7 +156,7 @@ public class TestTransformer {
   @Test
   public void testTrunc() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     messageText = "MSH|^~\\&|||||20150623104521-0600||VXU^V04^VXU_V04\rPID|\rNK1||||\r";
@@ -169,7 +169,7 @@ public class TestTransformer {
   @Test
   public void testClean() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     messageText = "MSH|\rPID|\rNK1||||\r";
@@ -221,7 +221,7 @@ public class TestTransformer {
   @Test
   public void testFix() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     messageText =
@@ -259,7 +259,7 @@ public class TestTransformer {
   @Test
   public void testMap() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     messageText = "MSH|\rPID|\rNK1|Hi|||\r";
@@ -277,7 +277,7 @@ public class TestTransformer {
   @Test
   public void testMapAddress() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageTextOriginal = "MSH|\rPID|\rNK1|Hi|||\r";
 
     {
@@ -300,7 +300,7 @@ public class TestTransformer {
   @Test
   public void testSetRepeats() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     messageText = "MSH|\rPID|\rNK1|Hi|||\r";
@@ -551,7 +551,7 @@ public class TestTransformer {
   @Test
   public void testNMSIIS() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     connector.setCustomTransformations("MSH-3=RPMS\n" + "MSH-4=[OTHERID]\n" + "MSH-6=NMSIIS\n"
@@ -590,7 +590,7 @@ public class TestTransformer {
   @Test
   public void testASIIS() throws Exception {
     Transformer transformer = new Transformer();
-    Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
+    Connector connector = ConnectorFactory.getConnector("POST", "Test", "");
     String messageText = "";
 
     messageText = TEST_ASIIS_1;
