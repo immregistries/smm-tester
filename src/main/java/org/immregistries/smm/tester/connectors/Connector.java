@@ -60,11 +60,7 @@ public abstract class Connector {
       String badFacilityid) throws Exception {
     if (!label.equals("") && !type.equals("")) {
       Connector connector;
-      if (label == "SOAP") {
-        connector = new SoapConnector(label, url);
-      } else {
-        connector = new HttpConnector(label, url);
-      }
+      connector = new SoapConnector(label, url);
       connector.setUserid(userid);
       connector.setPurpose(purpose);
       connector.setOtherid(otherid);
@@ -98,13 +94,13 @@ public abstract class Connector {
   }
 
   public static enum TransferType {
-                                   NEAR_REAL_TIME_LINK,
-                                   RECIPROCAL_BATCH_UPDATE,
-                                   MANUAL
+    NEAR_REAL_TIME_LINK,
+    RECIPROCAL_BATCH_UPDATE,
+    MANUAL
   };
 
   protected String label = "";
-  protected String type = "";
+  protected String type = "POST"; // default to HTTP POST
   protected String userid = "";
   protected String otherid = "";
   protected String password = "";
@@ -474,6 +470,10 @@ public abstract class Connector {
     return label;
   }
 
+  public Connector(String label) {
+    this.label = label;
+  }
+
   public Connector(String label, String type) {
     this.label = label;
     this.type = type;
@@ -685,7 +685,7 @@ public abstract class Connector {
       } else if (line.startsWith("Disable Certificate Check:")) {
         String s = readValue(line);
         disableServerCertificateCheck =
-            s.equalsIgnoreCase("y") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("true");
+          s.equalsIgnoreCase("y") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("true");
       } else if (line.startsWith("Key Store Password:")) {
         keyStorePassword = PasswordEncryptUtil.decrypt(readValue(line));
       } else if (line.startsWith("Cause Issues:")) {
@@ -783,12 +783,12 @@ public abstract class Connector {
 
     public void checkClientTrusted(X509Certificate[] chain, String authType)
         throws CertificateException {
-      throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     public void checkServerTrusted(X509Certificate[] chain, String authType)
         throws CertificateException {
-      tm.checkServerTrusted(chain, authType);
+        tm.checkServerTrusted(chain, authType);
     }
 
   }
@@ -925,7 +925,7 @@ public abstract class Connector {
 
     // matches if all the tests were NOTs and none of them passed
     return allNots && !anyMatch;
-  }
+      }
 
   public static boolean doesScenarioMatchTestCode(String scenario, String testCode) {
     return doesScenarioMatchTestCode(scenario, testCode, true);
