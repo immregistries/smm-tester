@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 public abstract class CDCWSDLServer {
   private static final String CDATA_END = "]]>";
@@ -18,55 +16,40 @@ public abstract class CDCWSDLServer {
     processor = ProcessorFactory.createProcessor(processorName, this);
   }
 
-  public void processHttpRequest(HttpServletRequest req, HttpServletResponse resp)
-      throws IOException {
-    String xmlMessage = getBody(req);
-    resp.setContentType(
-        "application/soap+xml; charset=UTF-8; action=\"urn:cdc:iisb:2011:connectivityTest\"");
-    PrintWriter out = new PrintWriter(resp.getOutputStream());
+  public String processHttpRequestXML(String xmlMessage) throws IOException {
+    PrintWriter outWriter = new PrintWriter("");
+    String out = "";
     try {
       if (isConnectivityTest(xmlMessage)) {
         String echoBack = getEchoBack(xmlMessage);
-        processor.doConnectivityTest(out, echoBack);
+        processor.doConnectivityTest(outWriter, echoBack);
       } else if (isSubmitSingleMessage(xmlMessage)) {
         SubmitSingleMessage ssm = getSubmitSingleMessage(xmlMessage);
         authorize(ssm);
-        processor.doProcessMessage(out, ssm);
+        processor.doProcessMessage(outWriter, ssm);
       } else {
         throw new UnsupportedOperationFault(
             "Expected either connectivityTest or SubmitSingleMessage");
       }
     } catch (MessageTooLargeFault mtlf) {
-      out = quitelyResetBuffer(resp, out);
-      processor.doPrintException(out, mtlf);
+      outWriter = new PrintWriter("");
+      processor.doPrintException(outWriter, mtlf);
     } catch (SecurityFault sf) {
-      out = quitelyResetBuffer(resp, out);
-      processor.doPrintException(out, sf);
+      outWriter = new PrintWriter("");
+      processor.doPrintException(outWriter, sf);
     } catch (UnsupportedOperationFault uof) {
-      out = quitelyResetBuffer(resp, out);
-      processor.doPrintException(out, uof);
+      outWriter = new PrintWriter("");
+      processor.doPrintException(outWriter, uof);
     } catch (UnknownFault uf) {
-      out = quitelyResetBuffer(resp, out);
-      processor.doPrintException(out, uf);
+      outWriter = new PrintWriter("");
+      processor.doPrintException(outWriter, uf);
     } catch (Exception e) {
       UnknownFault uf = new UnknownFault("Exception ocurred", e);
-      out = quitelyResetBuffer(resp, out);
-      processor.doPrintException(out, uf);
+      outWriter = new PrintWriter("");
+      processor.doPrintException(outWriter, uf);
     } finally {
-      out.close();
-    }
-  }
-
-  public PrintWriter quitelyResetBuffer(HttpServletResponse resp, PrintWriter out) {
-    try {
-      resp.resetBuffer();
-      return new PrintWriter(resp.getOutputStream());
-    } catch (IOException ioe) {
-      ioe.printStackTrace();
-      // ignore, will just have to print as buffer has already been flushed
-    } catch (IllegalStateException ise) {
-      ise.printStackTrace();
-      // ignore, will just have to print as buffer has already been flushed
+      out = outWriter.toString();
+      outWriter.close();
     }
     return out;
   }
@@ -77,14 +60,14 @@ public abstract class CDCWSDLServer {
 
   public abstract String getEchoBackMessage(String message);
 
-  private static String getBody(HttpServletRequest req) throws IOException {
+  private static String getBody(InputStream inputStream) throws IOException {
+    // param: http req.getInputStream()
 
     String body = null;
     StringBuilder stringBuilder = new StringBuilder();
     BufferedReader bufferedReader = null;
 
     try {
-      InputStream inputStream = req.getInputStream();
       if (inputStream != null) {
         bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         char[] charBuffer = new char[128];
