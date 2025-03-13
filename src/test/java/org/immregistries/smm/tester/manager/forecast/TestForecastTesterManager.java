@@ -1,10 +1,10 @@
-package org.immregistries.smm.tester.manager.forecast;
+package org.immregistries.hart.tester.manager.forecast;
 
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import org.immregistries.smm.transform.TestCaseMessage;
+import org.immregistries.hart.transform.TestCaseMessage;
 import org.junit.Test;
 
 public class TestForecastTesterManager

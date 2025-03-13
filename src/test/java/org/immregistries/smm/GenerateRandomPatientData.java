@@ -1,8 +1,8 @@
-package org.immregistries.smm;
+package org.immregistries.hart;
 
-import org.immregistries.smm.tester.transform.Patient;
-import org.immregistries.smm.transform.PatientType;
-import org.immregistries.smm.transform.Transformer;
+import org.immregistries.hart.tester.transform.Patient;
+import org.immregistries.hart.transform.PatientType;
+import org.immregistries.hart.transform.Transformer;
 import org.junit.Test;
 
 

@@ -1,4 +1,4 @@
-package org.immregistries.smm.transform.procedure;
+package org.immregistries.hart.transform.procedure;
 
 import org.junit.Test;
 

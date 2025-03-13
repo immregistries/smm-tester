@@ -1,8 +1,8 @@
-package org.immregistries.smm.tester.manager.tximmtrac;
+package org.immregistries.hart.tester.manager.tximmtrac;
 
-import org.immregistries.smm.tester.manager.query.ImmunizationUpdate;
-import org.immregistries.smm.tester.manager.response.ImmunizationMessage;
-import org.immregistries.smm.tester.manager.response.ResponseReader;
+import org.immregistries.hart.tester.manager.query.ImmunizationUpdate;
+import org.immregistries.hart.tester.manager.response.ImmunizationMessage;
+import org.immregistries.hart.tester.manager.response.ResponseReader;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import java.text.SimpleDateFormat;

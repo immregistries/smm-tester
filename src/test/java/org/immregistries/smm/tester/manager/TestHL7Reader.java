@@ -1,4 +1,4 @@
-package org.immregistries.smm.tester.manager;
+package org.immregistries.hart.tester.manager;
 
 import org.junit.Test;
 import junit.framework.TestCase;

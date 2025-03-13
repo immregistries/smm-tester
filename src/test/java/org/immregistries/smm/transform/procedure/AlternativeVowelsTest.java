@@ -1,10 +1,10 @@
-package org.immregistries.smm.transform.procedure;
+package org.immregistries.hart.transform.procedure;
 
 import java.util.Arrays;
 import java.util.List;
-import org.immregistries.smm.tester.manager.HL7Reader;
-import org.immregistries.smm.transform.Transformer;
-import org.immregistries.smm.transform.procedure.AlternativeVowels.Field;
+import org.immregistries.hart.tester.manager.HL7Reader;
+import org.immregistries.hart.transform.Transformer;
+import org.immregistries.hart.transform.procedure.AlternativeVowels.Field;
 import org.junit.Test;
 
 public class AlternativeVowelsTest extends ProcedureCommonTest {

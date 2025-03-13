@@ -1,4 +1,4 @@
-package org.immregistries.smm.mover;
+package org.immregistries.hart.mover;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

@@ -1,4 +1,4 @@
-package org.immregistries.smm.tester.manager;
+package org.immregistries.hart.tester.manager;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

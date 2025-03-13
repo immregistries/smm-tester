@@ -1,9 +1,9 @@
-package org.immregistries.smm.transform.procedure;
+package org.immregistries.hart.transform.procedure;
 
 import static org.junit.Assert.assertNotEquals;
 import java.util.Arrays;
 import java.util.List;
-import org.immregistries.smm.transform.procedure.AddVariation.Field;
+import org.immregistries.hart.transform.procedure.AddVariation.Field;
 import org.junit.Test;
 
 public class AddVariationTest extends ProcedureCommonTest {

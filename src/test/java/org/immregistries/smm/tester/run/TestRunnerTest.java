@@ -1,8 +1,8 @@
-package org.immregistries.smm.tester.run;
+package org.immregistries.hart.tester.run;
 
-import org.immregistries.smm.tester.connectors.Connector;
-import org.immregistries.smm.tester.connectors.SoapConnector;
-import org.immregistries.smm.transform.TestCaseMessage;
+import org.immregistries.hart.tester.connectors.Connector;
+import org.immregistries.hart.tester.connectors.SoapConnector;
+import org.immregistries.hart.transform.TestCaseMessage;
 import org.junit.Test;
 import junit.framework.TestCase;
 

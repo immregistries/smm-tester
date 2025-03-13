@@ -1,10 +1,10 @@
-package org.immregistries.smm.transform.procedure;
+package org.immregistries.hart.transform.procedure;
 
 import static org.junit.Assert.assertNotEquals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.immregistries.smm.transform.Transformer;
+import org.immregistries.hart.transform.Transformer;
 import org.junit.Test;
 
 public class TextTypoTest extends ProcedureCommonTest {

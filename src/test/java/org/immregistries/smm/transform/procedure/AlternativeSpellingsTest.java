@@ -1,9 +1,9 @@
-package org.immregistries.smm.transform.procedure;
+package org.immregistries.hart.transform.procedure;
 
 import static org.junit.Assert.assertNotEquals;
 import java.util.Arrays;
-import org.immregistries.smm.transform.Transformer;
-import org.immregistries.smm.transform.procedure.AlternativeSpellings.Field;
+import org.immregistries.hart.transform.Transformer;
+import org.immregistries.hart.transform.procedure.AlternativeSpellings.Field;
 import org.junit.Test;
 
 public class AlternativeSpellingsTest extends ProcedureCommonTest {

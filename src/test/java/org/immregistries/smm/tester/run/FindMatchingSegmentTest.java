@@ -1,6 +1,6 @@
-package org.immregistries.smm.tester.run;
+package org.immregistries.hart.tester.run;
 
-import org.immregistries.smm.transform.TestCaseMessage;
+import org.immregistries.hart.transform.TestCaseMessage;
 import org.junit.Test;
 import junit.framework.TestCase;
 

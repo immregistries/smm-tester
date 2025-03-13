@@ -1,7 +1,7 @@
-package org.immregistries.smm;
+package org.immregistries.hart;
 
-import org.immregistries.smm.tester.connectors.Connector;
-import org.immregistries.smm.tester.connectors.ConnectorFactory;
+import org.immregistries.hart.tester.connectors.Connector;
+import org.immregistries.hart.tester.connectors.ConnectorFactory;
 import org.junit.Test;
 
 public class SendViaCDCWsdl {

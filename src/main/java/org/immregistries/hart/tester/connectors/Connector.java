@@ -1,0 +1,933 @@
+/*
+ * To change this template, choose Tools | Templates and open the template in the editor.
+ */
+package org.immregistries.hart.tester.connectors;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.security.KeyStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import org.apache.commons.lang3.StringUtils;
+import org.immregistries.hart.mover.AckAnalyzer;
+import org.immregistries.hart.tester.PasswordEncryptUtil;
+import org.immregistries.hart.transform.Transformer;
+
+/**
+ * 
+ * @author nathan
+ */
+public abstract class Connector {
+
+  public static final String PURPOSE_GENERAL = "General";
+  public static final String PURPOSE_UPDATE = "Update";
+  public static final String PURPOSE_QUERY = "Query";
+
+  private boolean setupGlobalKeyStore = true;
+
+  public boolean isSetupGlobalKeyStore() {
+    return setupGlobalKeyStore;
+  }
+
+  public void setSetupGlobalKeyStore(boolean setupGlobalKeyStore) {
+    this.setupGlobalKeyStore = setupGlobalKeyStore;
+  }
+
+  protected abstract void setupFields(List<String> fields);
+
+  protected static Connector addConnector(String label, String type, String url, String userid,
+      String otherid, String facilityid, String destinationid, String password,
+      String keyStorePassword, String enableTimeStart, String enableTimeEnd,
+      AckAnalyzer.AckType ackType, TransferType transferType, List<String> fields,
+      String customTransformations, String assesmentTransformations, List<Connector> connectors,
+      String purpose, int tchForecastTesterSoftwareId, int tchForecastTesterTaskGroupId,
+      String rxaFilterFacilityId, Set<String> queryResponseFieldsNotReturnedSet,
+      Map<String, String> scenarioTransformationsMap, boolean disableServerCertificateCheck,
+      String aartPublicIdCode, String aartAccessPasscode, String badUserid, String badPassword,
+      String badFacilityid) throws Exception {
+    if (!label.equals("") && !type.equals("")) {
+      Connector connector;
+      connector = new SoapConnector(label, url);
+      connector.setUserid(userid);
+      connector.setPurpose(purpose);
+      connector.setOtherid(otherid);
+      connector.setFacilityid(facilityid);
+      connector.setDestinationid(destinationid);
+      connector.setPassword(password);
+      connector.setBadUserid(badUserid);
+      connector.setBadFacilityid(badFacilityid);
+      connector.setBadPassword(badPassword);
+      connector.setupFields(fields);
+      connector.setCustomTransformations(customTransformations);
+      connector.setAssessmentTransformations(assesmentTransformations);
+      connector.setKeyStorePassword(keyStorePassword);
+      connector.setAckType(ackType);
+      connector.setTransferType(transferType);
+      connector.setDisableServerCertificateCheck(disableServerCertificateCheck);
+      connector.setEnableTimeStart(enableTimeStart);
+      connector.setEnableTimeEnd(enableTimeEnd);
+      connector.setTchForecastTesterSoftwareId(tchForecastTesterSoftwareId);
+      connector.setTchForecastTesterTaskGroupId(tchForecastTesterTaskGroupId);
+      connector.setQueryResponseFieldsNotReturnedSet(queryResponseFieldsNotReturnedSet);
+      connector.setScenarioTransformationsMap(scenarioTransformationsMap);
+      connector.setRxaFilterFacilityId(rxaFilterFacilityId);
+      connector.setAartPublicIdCode(aartPublicIdCode);
+      connector.setAartAccessPasscode(aartAccessPasscode);
+      connectors.add(connector);
+
+      return connector;
+    }
+    return null;
+  }
+
+  public static enum TransferType {
+    NEAR_REAL_TIME_LINK,
+    RECIPROCAL_BATCH_UPDATE,
+    MANUAL
+  };
+
+  protected String label = "";
+  protected String type = "POST"; // default to HTTP POST
+  protected String userid = "";
+  protected String otherid = "";
+  protected String password = "";
+  protected String badUserid = "";
+  protected String badFacilityid = "";
+  protected String badPassword = "";
+  protected String facilityid = "";
+  protected String destinationid = "";
+  protected String url = "";
+  protected String currentFilename = "";
+  protected String currentControlId = "";
+  protected String enableTimeStart = "";
+  protected String enableTimeEnd = "";
+  protected boolean disableServerCertificateCheck = false;
+  protected TransferType transferType = TransferType.NEAR_REAL_TIME_LINK;
+  private String customTransformations = "";
+  private String assessmentTransformations = "";
+  private String[] quickTransformations;
+  private KeyStore keyStore = null;
+  private String keyStorePassword = null;
+  private AckAnalyzer.AckType ackType = AckAnalyzer.AckType.DEFAULT;
+  private Map<String, Connector> otherConnectorMap = new HashMap<String, Connector>();
+  private String purpose = "";
+  private Set<String> queryResponseFieldsNotReturnedSet = null;
+  private Map<String, String> scenarioTransformationsMap = new HashMap<String, String>();
+  private String segmentSeparator = "\r";
+  private String rxaFilterFacilityId = "";
+  private String aartPublicIdCode = "";
+  private String aartAccessPasscode = "";
+
+  public String getBadUserid() {
+    return badUserid;
+  }
+
+  public void setBadUserid(String badUserid) {
+    this.badUserid = badUserid;
+  }
+
+  public String getBadFacilityid() {
+    return badFacilityid;
+  }
+
+  public void setBadFacilityid(String badFacilityid) {
+    this.badFacilityid = badFacilityid;
+  }
+
+  public String getBadPassword() {
+    return badPassword;
+  }
+
+  public void setBadPassword(String badPassword) {
+    this.badPassword = badPassword;
+  }
+
+  public String getAssessmentTransformations() {
+    return assessmentTransformations;
+  }
+
+  public void setAssessmentTransformations(String assessmentTransformations) {
+    this.assessmentTransformations = assessmentTransformations;
+  }
+
+  public String getAartPublicIdCode() {
+    return aartPublicIdCode;
+  }
+
+  public void setAartPublicIdCode(String aartPublicIdCode) {
+    this.aartPublicIdCode = aartPublicIdCode;
+  }
+
+  public String getAartAccessPasscode() {
+    return aartAccessPasscode;
+  }
+
+  public void setAartAccessPasscode(String aartAccessPasscode) {
+    this.aartAccessPasscode = aartAccessPasscode;
+  }
+
+  public String getRxaFilterFacilityId() {
+    return rxaFilterFacilityId;
+  }
+
+  public void setRxaFilterFacilityId(String rxaFilterFacilityId) {
+    this.rxaFilterFacilityId = rxaFilterFacilityId;
+  }
+
+  public boolean isRxaFilter() {
+    return rxaFilterFacilityId != null && !rxaFilterFacilityId.equals("");
+  }
+
+  public void shutdown() {
+    System.out.println("Shutting down " + label);
+  }
+
+  public Connector(Connector copy) {
+    this.label = copy.label;
+    this.type = copy.type;
+    this.userid = copy.userid;
+    this.otherid = copy.otherid;
+    this.password = copy.password;
+    this.facilityid = copy.facilityid;
+    this.destinationid = copy.destinationid;
+    this.badUserid = copy.badUserid;
+    this.badPassword = copy.badPassword;
+    this.badFacilityid = copy.badFacilityid;
+    this.url = copy.url;
+    this.currentFilename = copy.currentFilename;
+    this.currentControlId = copy.currentControlId;
+    this.enableTimeStart = copy.enableTimeStart;
+    this.enableTimeEnd = copy.enableTimeEnd;
+    this.disableServerCertificateCheck = copy.disableServerCertificateCheck;
+    this.transferType = copy.transferType;
+    this.customTransformations = copy.customTransformations;
+    this.assessmentTransformations = copy.assessmentTransformations;
+    this.quickTransformations = copy.quickTransformations;
+    this.keyStore = copy.keyStore;
+    this.keyStorePassword = copy.keyStorePassword;
+    this.ackType = copy.ackType;
+    this.otherConnectorMap = copy.otherConnectorMap;
+    this.purpose = copy.purpose;
+    this.queryResponseFieldsNotReturnedSet = copy.queryResponseFieldsNotReturnedSet;
+    this.scenarioTransformationsMap = copy.scenarioTransformationsMap;
+    this.segmentSeparator = copy.segmentSeparator;
+    this.rxaFilterFacilityId = copy.rxaFilterFacilityId;
+  }
+
+  public String getSegmentSeparator() {
+    return segmentSeparator;
+  }
+
+  public void setSegmentSeparator(String segmentSeparator) {
+    this.segmentSeparator = segmentSeparator;
+  }
+
+  public boolean isDisableServerCertificateCheck() {
+    return disableServerCertificateCheck;
+  }
+
+  public void setDisableServerCertificateCheck(boolean disableServerCertificateCheck) {
+    this.disableServerCertificateCheck = disableServerCertificateCheck;
+  }
+
+  public void setScenarioTransformationsMap(Map<String, String> scenarioTransformationsMap) {
+    this.scenarioTransformationsMap = scenarioTransformationsMap;
+  }
+
+  public Map<String, String> getScenarioTransformationsMap() {
+    return scenarioTransformationsMap;
+  }
+
+  public void setQueryResponseFieldsNotReturnedSet(Set<String> queryResponseFieldsNotReturnedSet) {
+    this.queryResponseFieldsNotReturnedSet = queryResponseFieldsNotReturnedSet;
+  }
+
+  public Set<String> getQueryResponseFieldsNotReturnedSet() {
+    return queryResponseFieldsNotReturnedSet;
+  }
+
+  private int tchForecastTesterSoftwareId = 0;
+  private int tchForecastTesterTaskGroupId = 0;
+
+  public int getTchForecastTesterTaskGroupId() {
+    return tchForecastTesterTaskGroupId;
+  }
+
+  public void setTchForecastTesterTaskGroupId(int tchForecastTesterTaskGroupId) {
+    this.tchForecastTesterTaskGroupId = tchForecastTesterTaskGroupId;
+  }
+
+  public int getTchForecastTesterSoftwareId() {
+    return tchForecastTesterSoftwareId;
+  }
+
+  public void setTchForecastTesterSoftwareId(int tchForecastTesterSoftwareId) {
+    this.tchForecastTesterSoftwareId = tchForecastTesterSoftwareId;
+  }
+
+  public Map<String, Connector> getOtherConnectorMap() {
+    return otherConnectorMap;
+  }
+
+  public String getPurpose() {
+    return purpose;
+  }
+
+  public void setPurpose(String purpose) {
+    this.purpose = purpose;
+  }
+
+  public String getOtherid() {
+    return otherid;
+  }
+
+  public void setOtherid(String otherid) {
+    this.otherid = otherid;
+  }
+
+  public String getCurrentControlId() {
+    return currentControlId;
+  }
+
+  public void setCurrentControlId(String currentControlId) {
+    this.currentControlId = currentControlId;
+  }
+
+  public String getEnableTimeStart() {
+    return enableTimeStart;
+  }
+
+  public void setEnableTimeStart(String enableTimeStart) {
+    this.enableTimeStart = enableTimeStart;
+  }
+
+  public String getEnableTimeEnd() {
+    return enableTimeEnd;
+  }
+
+  public void setEnableTimeEnd(String enableTimeEnd) {
+    this.enableTimeEnd = enableTimeEnd;
+  }
+
+  public TransferType getTransferType() {
+    return transferType;
+  }
+
+  public void setTransferType(TransferType transferType) {
+    this.transferType = transferType;
+  }
+
+  protected boolean throwExceptions = false;
+
+  public String getCurrentFilename() {
+    return currentFilename;
+  }
+
+  public void setCurrentFilename(String currentFilename) {
+    this.currentFilename = currentFilename;
+  }
+
+  public AckAnalyzer.AckType getAckType() {
+    return ackType;
+  }
+
+  public void setAckType(AckAnalyzer.AckType ackType) {
+    this.ackType = ackType;
+  }
+
+  public boolean isThrowExceptions() {
+    return throwExceptions;
+  }
+
+  public void setThrowExceptions(boolean throwExceptions) {
+    this.throwExceptions = throwExceptions;
+  }
+
+  public String getKeyStorePassword() {
+    return keyStorePassword;
+  }
+
+  public void setKeyStorePassword(String keyStorePassword) {
+    this.keyStorePassword = keyStorePassword;
+  }
+
+  public KeyStore getKeyStore() {
+    return keyStore;
+  }
+
+  public void setKeyStore(KeyStore keyStore) {
+    this.keyStore = keyStore;
+  }
+
+  public String[] getQuickTransformations() {
+    return quickTransformations;
+  }
+
+  public void setQuickTransformations(String[] quickTransformations) {
+    this.quickTransformations = quickTransformations;
+  }
+
+  public String getCustomTransformations() {
+    return customTransformations;
+  }
+
+  public void setCustomTransformations(String customTransformations) {
+    this.customTransformations = customTransformations;
+  }
+
+  public void addCustomTransformation(String customTransformation) {
+    if (this.customTransformations == null) {
+      this.customTransformations = customTransformation + "\n";
+    } else {
+      this.customTransformations += customTransformation + "\n";
+    }
+  }
+
+  public void addAsssementTransformation(String assessmentTransformation) {
+    if (this.assessmentTransformations == null) {
+      this.assessmentTransformations = assessmentTransformation + "\n";
+    } else {
+      this.assessmentTransformations += assessmentTransformation + "\n";
+    }
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public String getUrlShort() {
+    if (url != null && url.length() > 28) {
+      return url.substring(0, 28) + "..";
+    }
+    return url;
+  }
+
+  public String getLabelDisplay() {
+    if (purpose.equals("")) {
+      return label + " (" + type + ")";
+    }
+    return label + " - " + purpose + " (" + type + ")";
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getFacilityid() {
+    return facilityid;
+  }
+
+  public void setFacilityid(String facilityid) {
+    this.facilityid = facilityid;
+  }
+
+  public String getDestinationid() {
+    return destinationid;
+  }
+
+  public void setDestinationid(String destinationid) {
+    this.destinationid = destinationid;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getUserid() {
+    return userid;
+  }
+
+  public void setUserid(String userid) {
+    this.userid = userid;
+  }
+
+  public String getLabel() {
+    return label;
+  }
+
+  public Connector(String label) {
+    this.label = label;
+  }
+
+  public Connector(String label, String type) {
+    this.label = label;
+    this.type = type;
+  }
+
+  public abstract String submitMessage(String message, boolean debug) throws Exception;
+
+  public abstract String connectivityTest(String message) throws Exception;
+
+  public abstract boolean connectivityTestSupported();
+
+  public String getScript() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("-----------------------------------------\n");
+    sb.append("Connection\n");
+    sb.append("Label: " + label + "\n");
+    if (!purpose.equals("")) {
+      sb.append("Purpose: " + purpose);
+    }
+    sb.append("Type: " + type + "\n");
+    sb.append("URL: " + url + "\n");
+    sb.append("User Id: " + userid + "\n");
+    if (otherid != null && !otherid.equals("")) {
+      sb.append("Other Id: " + otherid + "\n");
+    }
+    try {
+      sb.append("Password: " + PasswordEncryptUtil.encrypt(password) + "\n");
+    } catch (Exception e) {
+      sb.append("Password: \n");
+      e.printStackTrace();
+    }
+    sb.append("Facility Id: " + facilityid + "\n");
+    if (!destinationid.equals("")) {
+      sb.append("Destination Id: " + destinationid + "\n");
+    }
+    if (badUserid != null && !badUserid.equals("")) {
+      sb.append("Bad User Id: " + badUserid + "\n");
+    }
+    if (badPassword != null && !badPassword.equals("")) {
+      sb.append("Bad Password: " + badPassword + "\n");
+    }
+    if (badFacilityid != null && !badFacilityid.equals("")) {
+      sb.append("Bad Facility Id: " + badFacilityid + "\n");
+    }
+    if (keyStorePassword != null && keyStorePassword.length() > 0) {
+      try {
+        sb.append("Key Store Password: " + PasswordEncryptUtil.encrypt(keyStorePassword) + "\n");
+      } catch (Exception e) {
+        sb.append("Key Store Password: \n");
+        e.printStackTrace();
+      }
+    }
+    sb.append("Ack Type: " + ackType + "\n");
+    sb.append("Transfer Type: " + transferType + "\n");
+    if (!enableTimeStart.equals("")) {
+      sb.append("Enable Time Start: " + enableTimeStart + "\n");
+    }
+    if (!enableTimeEnd.equals("")) {
+      sb.append("Enable Time End: " + enableTimeEnd + "\n");
+    }
+    if (disableServerCertificateCheck) {
+      sb.append("Disable Certificate Check: true\n");
+    }
+    if (queryResponseFieldsNotReturnedSet != null) {
+      sb.append("Query Response Fields Not Returned: ");
+      boolean first = true;
+      for (String value : queryResponseFieldsNotReturnedSet) {
+        if (!first) {
+          sb.append(", ");
+        }
+        sb.append(value);
+        first = false;
+      }
+      sb.append("\n");
+    }
+    if (customTransformations != null && customTransformations.length() > 0) {
+      sb.append("Custom Transformations: \n");
+      printTransformString(sb, customTransformations);
+    }
+    if (assessmentTransformations != null && assessmentTransformations.length() > 0) {
+      sb.append("Assessment Transformations: \n");
+      printTransformString(sb, assessmentTransformations);
+    }
+    for (String scenarioTransformName : scenarioTransformationsMap.keySet()) {
+      sb.append("Scenario Transform for " + scenarioTransformName + ": \n");
+      printTransformString(sb, scenarioTransformationsMap.get(scenarioTransformName));
+    }
+    makeScriptAdditions(sb);
+    return sb.toString();
+  }
+
+  public void printTransformString(StringBuilder sb, String transformString) {
+    try {
+      BufferedReader inTransform = new BufferedReader(new StringReader(transformString));
+      String line;
+      while ((line = inTransform.readLine()) != null) {
+        line = line.trim();
+        sb.append(" + " + line + "\n");
+      }
+    } catch (IOException ioe) {
+      // IOException not expected when reading a string
+      throw new RuntimeException("Exception while reading string", ioe);
+    }
+  }
+
+  protected abstract void makeScriptAdditions(StringBuilder sb);
+
+  public static List<Connector> makeConnectors(String script) throws Exception {
+    List<Connector> connectors = new ArrayList<Connector>();
+    String label = "";
+    String purpose = "";
+    String type = "";
+    String userid = "";
+    String otherid = "";
+    String password = "";
+    String facilityid = "";
+    String destinationid = "";
+    String badUserid = "";
+    String badPassword = "";
+    String badFacilityid = "";
+    String url = "";
+    String customTransformations = "";
+    String assesmentTransformations = "";
+    String keyStorePassword = "";
+    String enableTimeStart = "";
+    String enableTimeEnd = "";
+    String aartPublicIdCode = "";
+    String aartAccessPasscode = "";
+    boolean disableServerCertificateCheck = false;
+    Set<String> queryResponseFieldsNotReturnedSet = null;
+    Map<String, String> scenarioTransformationsMap = new HashMap<String, String>();
+    int tchForecastTesterSoftwareId = 0;
+    int tchForecastTesterTaskGroupId = 0;
+    String rxaFilterFacilityId = "";
+    TransferType transferType = TransferType.NEAR_REAL_TIME_LINK;
+    AckAnalyzer.AckType ackType = AckAnalyzer.AckType.DEFAULT;
+    List<String> fields = new ArrayList<String>();
+    BufferedReader in = new BufferedReader(new StringReader(script));
+    String line;
+    String lastList = "";
+    while ((line = in.readLine()) != null) {
+      line = line.trim();
+      if (line.startsWith("Connection")) {
+        addConnector(label, type, url, userid, otherid, facilityid, destinationid, password,
+            keyStorePassword, enableTimeStart, enableTimeEnd, ackType, transferType, fields,
+            customTransformations, assesmentTransformations, connectors, purpose,
+            tchForecastTesterSoftwareId, tchForecastTesterTaskGroupId, rxaFilterFacilityId,
+            queryResponseFieldsNotReturnedSet, scenarioTransformationsMap,
+            disableServerCertificateCheck, aartPublicIdCode, aartAccessPasscode, badUserid,
+            badPassword, badFacilityid);
+        label = "";
+        purpose = "";
+        type = "";
+        url = "";
+        userid = "";
+        otherid = "";
+        facilityid = "";
+        destinationid = "";
+        badUserid = "";
+        badFacilityid = "";
+        badPassword = "";
+        enableTimeStart = "";
+        enableTimeEnd = "";
+        ackType = AckAnalyzer.AckType.DEFAULT;
+        transferType = TransferType.NEAR_REAL_TIME_LINK;
+        customTransformations = "";
+        assesmentTransformations = "";
+        keyStorePassword = "";
+        tchForecastTesterSoftwareId = 0;
+        tchForecastTesterTaskGroupId = 0;
+        rxaFilterFacilityId = "";
+        fields = new ArrayList<String>();
+      } else if (line.startsWith("Label:")) {
+        label = readValue(line);
+      } else if (line.startsWith("Type:")) {
+        type = readValue(line);
+      } else if (line.startsWith("URL:")) {
+        url = readValue(line);
+      } else if (line.startsWith("Purpose:")) {
+        purpose = readValue(line);
+      } else if (line.startsWith("User Id:")) {
+        userid = readValue(line);
+      } else if (line.startsWith("Bad User Id:")) {
+        badUserid = readValue(line);
+      } else if (line.startsWith("Other Id:")) {
+        otherid = readValue(line);
+      } else if (line.startsWith("Ack Type:")) {
+        ackType = AckAnalyzer.AckType.valueOf(readValue(line));
+      } else if (line.startsWith("Enable Time Start:")) {
+        enableTimeStart = readValue(line);
+      } else if (line.startsWith("Enable Time End:")) {
+        enableTimeEnd = readValue(line);
+      } else if (line.startsWith("Transfer Type:")) {
+        transferType = TransferType.valueOf(readValue(line));
+      } else if (line.startsWith("Password:")) {
+        password = PasswordEncryptUtil.decrypt(readValue(line));
+      } else if (line.startsWith("Bad Password:")) {
+        badPassword = PasswordEncryptUtil.decrypt(readValue(line));
+      } else if (line.startsWith("AART Public Id Code:")) {
+        aartPublicIdCode = readValue(line);
+      } else if (line.startsWith("AART Access Passcode:")) {
+        aartAccessPasscode = readValue(line);
+      } else if (line.startsWith("Facility Id:")) {
+        facilityid = readValue(line);
+      } else if (line.startsWith("Destination Id:")) {
+        destinationid = readValue(line);
+      } else if (line.startsWith("Bad Facility Id:")) {
+        badFacilityid = readValue(line);
+      } else if (line.startsWith("Disable Certificate Check:")) {
+        String s = readValue(line);
+        disableServerCertificateCheck =
+          s.equalsIgnoreCase("y") || s.equalsIgnoreCase("yes") || s.equalsIgnoreCase("true");
+      } else if (line.startsWith("Key Store Password:")) {
+        keyStorePassword = PasswordEncryptUtil.decrypt(readValue(line));
+      } else if (line.startsWith("Cause Issues:")) {
+        lastList = "CI";
+      } else if (line.startsWith("Query Response Fields Not Returned: ")) {
+        queryResponseFieldsNotReturnedSet = new HashSet<String>();
+        String[] values = readValue(line).split("\\,");
+        for (String value : values) {
+          if (value != null) {
+            value = value.trim();
+            if (value.length() > 0) {
+              queryResponseFieldsNotReturnedSet.add(value);
+            }
+          }
+        }
+      } else if (line.startsWith("Custom Transformations:")) {
+        lastList = "CT";
+      } else if (line.startsWith("Assessment Transformations:")) {
+        lastList = "ST";
+      } else if (line.startsWith("Scenario Transform for ")) {
+        int endPos = line.lastIndexOf(':');
+        if (endPos == -1) {
+          endPos = line.length();
+        }
+        lastList = line.substring("Scenario Transform for ".length(), endPos).trim();
+      } else if (line.startsWith("Test Case Transform for ")) {
+        int endPos = line.lastIndexOf(':');
+        if (endPos == -1) {
+          endPos = line.length();
+        }
+        lastList = line.substring("Test Case Transform for ".length(), endPos).trim();
+      } else if (line.startsWith("TCH Forecast Tester Software Id:")) {
+        try {
+          tchForecastTesterSoftwareId = Integer.parseInt(readValue(line));
+        } catch (NumberFormatException nfe) {
+          // ignore, can't read
+        }
+      } else if (line.startsWith("TCH Forecast Tester Task Group Id:")) {
+        try {
+          tchForecastTesterTaskGroupId = Integer.parseInt(readValue(line));
+        } catch (NumberFormatException nfe) {
+          // ignore, can't read
+        }
+      } else if (line.startsWith("RXA Filter Facility Id:")) {
+        rxaFilterFacilityId = readValue(line);
+      } else if (line.startsWith("+")) {
+        String ctLine = line.substring(1).trim() + "\n";
+        if (lastList.equals("CT")) {
+          customTransformations += ctLine;
+        } else if (lastList.equals("ST")) {
+          assesmentTransformations += ctLine;
+        } else {
+          String transform = scenarioTransformationsMap.get(lastList);
+          if (transform == null) {
+            transform = ctLine;
+          } else {
+            transform += ctLine;
+          }
+          scenarioTransformationsMap.put(lastList, transform);
+        }
+      } else {
+        fields.add(line);
+      }
+
+    }
+    addConnector(label, type, url, userid, otherid, facilityid, destinationid, password,
+        keyStorePassword, enableTimeStart, enableTimeEnd, ackType, transferType, fields,
+        customTransformations, assesmentTransformations, connectors, purpose,
+        tchForecastTesterSoftwareId, tchForecastTesterTaskGroupId, rxaFilterFacilityId,
+        queryResponseFieldsNotReturnedSet, scenarioTransformationsMap,
+        disableServerCertificateCheck, aartPublicIdCode, aartAccessPasscode, badUserid, badPassword,
+        badFacilityid);
+    return connectors;
+  }
+
+  protected static String readValue(String line) {
+    int pos = line.indexOf(":");
+    if (pos == -1) {
+      return "";
+    }
+    return line.substring(pos + 1).trim();
+  }
+
+  protected static class SavingTrustManager implements X509TrustManager {
+
+    private final X509TrustManager tm;
+
+    SavingTrustManager(X509TrustManager tm) {
+      this.tm = tm;
+    }
+
+    public X509Certificate[] getAcceptedIssuers() {
+      return tm.getAcceptedIssuers();
+    }
+
+    public void checkClientTrusted(X509Certificate[] chain, String authType)
+        throws CertificateException {
+        throw new UnsupportedOperationException();
+    }
+
+    public void checkServerTrusted(X509Certificate[] chain, String authType)
+        throws CertificateException {
+        tm.checkServerTrusted(chain, authType);
+    }
+
+  }
+
+  protected static TrustManager[] trustAllCerts;
+
+  protected static String replaceAmpersand(String s) {
+    String s2 = "";
+    int pos = s.indexOf("&");
+    while (pos != -1) {
+      s2 = s2 + s.substring(0, pos);
+      s2 = s2 + "&amp;";
+      s = s.substring(pos + 1);
+      pos = s.indexOf("&");
+    }
+    s2 = s2 + s;
+    return s2;
+  }
+
+  public static StringBuilder extractResponse(StringBuilder response, String startTag,
+      String stopTag) {
+
+    String responseString = response.toString();
+    int startPos = responseString.indexOf(startTag);
+    int endPos = responseString.indexOf(stopTag, startPos > 0 ? startPos : 0);
+    if (startPos > 0 && endPos > startPos) {
+      responseString = responseString.substring(startPos + startTag.length(), endPos);
+      responseString = responseString.replaceAll("\\Q&amp;\\E", "&");
+      response = new StringBuilder(responseString);
+
+    }
+    return response;
+  }
+
+  // since we're matching against wildcard scenarios now, we can match more than one transform
+  public List<String> getTransformsFromScenarioMap(String testCode, boolean includeExactMatch) {
+    List<String> transforms = new ArrayList<>();
+
+    if (scenarioTransformationsMap == null || scenarioTransformationsMap.isEmpty()) {
+      return transforms;
+    }
+
+    // loop over the scenarios and check for actual equality or equality with wildcards
+    for (Entry<String, String> entry : scenarioTransformationsMap.entrySet()) {
+      if (entry == null) {
+        // bad entry
+        continue;
+      }
+
+      if (doesScenarioMatchTestCode(entry.getKey(), testCode, includeExactMatch)) {
+        // we found a match
+        transforms.add(entry.getValue());
+      }
+    }
+
+    // did not find anything
+    return transforms;
+  }
+
+  public List<String> getTransformsFromScenarioMap(String testCode) {
+    return getTransformsFromScenarioMap(testCode, true);
+  }
+
+  // does wildcard testing to see if the scenario and testCode are equal
+  public static boolean doesScenarioMatchTestCode(
+      String scenarioString,
+      String testCode,
+      boolean includeExactMatch) {
+
+    if (scenarioString == null) {
+      // bad input
+      return false;
+    }
+
+    Set<String> scenarios = Arrays.stream(scenarioString.split("\\" + Transformer.SCENARIO_DELIM))
+      .map(String::trim)
+      .filter(StringUtils::isNotBlank)
+      .collect(Collectors.toSet());
+
+    if (scenarios.isEmpty()) {
+      return false;
+    }
+
+    // for exact match, simply check if any of them match
+    if (includeExactMatch && scenarios.contains(testCode)) {
+      return true;
+    }
+
+    boolean anyMatch = false;
+    boolean allNots = true;
+
+    // for one to many scenarios, we don't check exact match and only care about wildcards
+    // and ALL scenarios must match for a test code to match
+    for (String scenario : scenarios) {
+      // check if scenario starts with !, if it does, note it and delete it
+      boolean not = scenario.startsWith(Transformer.SCENARIO_NOT);
+      if (not) {
+        scenario = scenario.substring(Transformer.SCENARIO_NOT.length());
+      }
+
+      // build a regex pattern that matches the entire string
+      // from start (^) to end ($)
+      String regexPattern = "^";
+      for (String partial : scenario.split("\\" + Transformer.SCENARIO_WILDCARD)) {
+        regexPattern += Pattern.quote(partial) + ".*";
+      }
+
+      // drop the final .* unless the scenario name ends with the wildcard
+      if (regexPattern.length() > 2 && !scenario.endsWith(Transformer.SCENARIO_WILDCARD)) {
+        regexPattern = regexPattern.substring(0, regexPattern.length() - 2);
+      }
+      regexPattern += "$";
+
+      boolean patternMatch = Pattern.matches(regexPattern, testCode);
+
+      if (patternMatch) {
+        if (not) {
+          // immediately return false if ANY not tests matched
+          return false;
+        }
+
+        anyMatch = true;
+      }
+
+      if (!not) {
+        allNots = false;
+      }
+    }
+
+    if (!allNots && anyMatch) {
+      // at least one scenario passed for this test code, and ALL the NOT tests passed
+      return true;
+    }
+
+    // matches if all the tests were NOTs and none of them passed
+    return allNots && !anyMatch;
+      }
+
+  public static boolean doesScenarioMatchTestCode(String scenario, String testCode) {
+    return doesScenarioMatchTestCode(scenario, testCode, true);
+  }
+}

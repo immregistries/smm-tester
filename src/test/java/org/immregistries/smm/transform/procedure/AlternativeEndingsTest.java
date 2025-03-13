@@ -1,7 +1,7 @@
-package org.immregistries.smm.transform.procedure;
+package org.immregistries.hart.transform.procedure;
 
 import static org.junit.Assert.assertNotEquals;
-import org.immregistries.smm.transform.procedure.AlternativeEndings.Field;
+import org.immregistries.hart.transform.procedure.AlternativeEndings.Field;
 import org.junit.Test;
 
 public class AlternativeEndingsTest extends ProcedureCommonTest {

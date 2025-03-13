@@ -1,4 +1,4 @@
-package org.immregistries.smm.tester.connectors;
+package org.immregistries.hart.tester.connectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

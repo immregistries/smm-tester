@@ -1,8 +1,8 @@
-package org.immregistries.smm.transform.procedure;
+package org.immregistries.hart.transform.procedure;
 
 import static org.junit.Assert.assertNotEquals;
-import org.immregistries.smm.transform.TestCaseMessage;
-import org.immregistries.smm.transform.Transformer;
+import org.immregistries.hart.transform.TestCaseMessage;
+import org.immregistries.hart.transform.Transformer;
 import org.junit.Test;
 import junit.framework.TestCase;
 
