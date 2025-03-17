@@ -21,18 +21,18 @@ Ensure that you have Java SE (or OpenJDK) version 8.0 (also displayed as 1.8) or
 |AbstractSuffixVariation|For working with patient name suffixes|
 |AbstractTypoProcedure|Handle repeat Fields (eg. phone or email)|
 |AckAnalyzer|Determine IIS response Ack type and unmarshal|
-|AddFundingEligibilityToAllRxa|implements `ProcedureInterface` / "adds funding eligibility to all rxa" (pharmacy administration) segments|
-|AddFundingToRxa|implements `ProcedureInterface` / adds funding eligibility to a single RXA segment|
-|AddressStreetVariation|implements `ProcedureCommon` / allows for variation of street/address|
-|AddVariation|implements `ProcedureCommon` / capitalizes/shuffles all fields (in field list) in a transform|
-|AdministrativeSexVariation||
-|AffirmationMessage||
-|AlternativeBeginnings||
-|AlternativeEndings||
-|AlternativeEndingVowels||
-|AlternativeSpellings||
-|AlternativeVowels||
-|AnonymizeAndUpdateRecord||
+|AddFundingEligibilityToAllRxa|"adds funding eligibility to all rxa" (pharmacy administration) segments|
+|AddFundingToRxa|adds funding eligibility to a single RXA segment|
+|AddressStreetVariation|allows for variation of street/address in a transform|
+|AddVariation|capitalizes/shuffles all fields (in field list) in a transform|
+|AdministrativeSexVariation|rotates admin sex through M->F->M U->F or U if none in a transform|
+|AffirmationMessage|Data class for affirmation messages|
+|AlternativeBeginnings|Name field manipulation in transforms|
+|AlternativeEndings|Name field manipulation in transforms|
+|AlternativeEndingVowels|Name field manipulation in transforms|
+|AlternativeSpellings|Name field manipulation in transforms|
+|AlternativeVowels|Name field manipulation in transforms|
+|AnonymizeAndUpdateRecord|remove PII from a transform's fields|
 |Assertion|Data container used only by nist/ValidationReport|
 |CDCWSDLServer|For printing CDC WSDL XML and processing CDC XML messages|
 |Certify|Loads data from `certify.txt` on `init()`, manipulation of `CertifyItem` data class|
@@ -43,23 +43,17 @@ Ensure that you have Java SE (or OpenJDK) version 8.0 (also displayed as 1.8) or
 |Comment|Data class within `TestCaseMessage`|
 |CompareManager|For comparing IIS messages|
 |Comparison|Used in `CompareManager` for message prioritization and execution attributes|
-|ConnectivityTest||
-|ConnectivityTestRequestType||
-|ConnectivityTestResponse||
-|ConnectivityTestResponseType||
+|ConnectivityTest|Auto-generated tlep connector connectivity tester|
+|ConnectivityTestRequestType|Auto-generated tlep connector connectivity tester request types|
+|ConnectivityTestResponse|Auto-generated tlep connector connectivity tester response handler|
+|ConnectivityTestResponseType|Auto-generated tlep connector connectivity tester response types|
 |Connector|Abstract class for IIS connections & message handling|
 |ConnectorFactory|@Deprecated Manufactures `Connector`s (Just use `new SoapConnector(...)`)|
-|ConnectorTest||
 |DateOfBirthDayShift||
-|DateOfBirthDayShiftTest||
 |DateOfBirthMonthDaySwap||
-|DateOfBirthMonthDaySwapTest||
 |DateOfBirthMonthShift||
-|DateOfBirthMonthShiftTest||
 |DateOfBirthRectify||
-|DateOfBirthRectifyTest||
 |DateOfBirthYearShift||
-|DateOfBirthYearShiftTest||
 |EvaluationActual|Data class used in `ForecastTesterManager` and `TestCaseMessage` (why "Actual"?)|
 |ExtensionMapper||
 |Factory||
