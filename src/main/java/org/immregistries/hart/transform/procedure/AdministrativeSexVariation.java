@@ -42,39 +42,6 @@ public class AdministrativeSexVariation extends ProcedureCommon {
     return administrativeSex;
   }
 
-  //TODO (klindgren): Does this belong here?
-  protected static int findFirstConsonantAfterVowel(String firstName) {
-    int pos = 0;
-    String fn = firstName.toUpperCase();
-    boolean foundVowel = false;
-    while (pos < fn.length()) {
-      char c = fn.charAt(pos);
-      if (c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
-        foundVowel = true;
-      } else if (foundVowel) {
-        return pos;
-      }
-      pos++;
-    }
-    return -1;
-  }
-
-  //TODO (klindgren): Does this belong here?
-  protected static int findAnotherCapital(String firstName) {
-    if (firstName.equals(firstName.toUpperCase())) {
-      return -1;
-    }
-    int pos = 1;
-    while (pos < firstName.length()) {
-      char c = firstName.charAt(pos);
-      if (c < 'a') {
-        return pos;
-      }
-      pos++;
-    }
-    return -1;
-  }
-
   public void setTransformer(Transformer transformer) {
     // not needed
   }

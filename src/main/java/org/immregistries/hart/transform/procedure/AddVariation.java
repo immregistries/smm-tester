@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.immregistries.hart.transform.TransformRequest;
 import org.immregistries.hart.transform.Transformer;
+import org.immregistries.hart.util.StringManipulation;
 
 public class AddVariation extends ProcedureCommon {
 
@@ -82,9 +83,9 @@ public class AddVariation extends ProcedureCommon {
     } else if (hasSpace) {
       name = name.substring(0, posSpace) + capitalizeFirst(name.substring(posSpace + 1));
     } else {
-      int pos = findAnotherCapital(name);
+      int pos = StringManipulation.indexOfSecondUppercase(name);
       if (pos == -1) {
-        pos = findFirstConsonantAfterVowel(name);
+        pos = StringManipulation.indexOfFirstConsonantAfterVowel(name);
       }
       if (pos > 0 && pos < name.length()) {
         if (field == Field.EMAIL || System.currentTimeMillis() % 2 == 0) {
@@ -106,39 +107,6 @@ public class AddVariation extends ProcedureCommon {
       name = name.toLowerCase();
     }
     return name;
-  }
-
-  //TODO (klindgren): Does this belong here?
-  protected static int findFirstConsonantAfterVowel(String name) {
-    int pos = 0;
-    String fn = name.toUpperCase();
-    boolean foundVowel = false;
-    while (pos < fn.length()) {
-      char c = fn.charAt(pos);
-      if (c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
-        foundVowel = true;
-      } else if (foundVowel) {
-        return pos;
-      }
-      pos++;
-    }
-    return -1;
-  }
-
-  //TODO (klindgren): Does this belong here?
-  protected static int findAnotherCapital(String name) {
-    if (name.equals(name.toUpperCase())) {
-      return -1;
-    }
-    int pos = 1;
-    while (pos < name.length()) {
-      char c = name.charAt(pos);
-      if (c < 'a') {
-        return pos;
-      }
-      pos++;
-    }
-    return -1;
   }
 
   public void setTransformer(Transformer transformer) {
