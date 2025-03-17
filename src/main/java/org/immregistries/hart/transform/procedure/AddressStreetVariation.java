@@ -10,8 +10,7 @@ public class AddressStreetVariation extends ProcedureCommon {
 
   public AddressStreetVariation() {}
 
-  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
-      throws IOException {
+  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList) throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
     for (String[] fields : fieldsList) {
       String segmentName = fields[0];
@@ -30,7 +29,8 @@ public class AddressStreetVariation extends ProcedureCommon {
     return replaceAddressStreet(address, transformer.getRandomValue("STREET_NAME"));
   }
 
-  protected static int findFirstConsentAfterVowel(String firstName) {
+  //TODO (klindgren): Does this belong here?
+  protected static int findFirstConsonantAfterVowel(String firstName) {
     int pos = 0;
     String fn = firstName.toUpperCase();
     boolean foundVowel = false;
@@ -46,13 +46,14 @@ public class AddressStreetVariation extends ProcedureCommon {
     return -1;
   }
 
-  protected static int findAnotherCapital(String firstName) {
-    if (firstName.equals(firstName.toUpperCase())) {
+  //TODO (klindgren): Does this belong here?
+  protected static int findAnotherCapital(String input) {
+    if (input.equals(input.toUpperCase())) {
       return -1;
     }
     int pos = 1;
-    while (pos < firstName.length()) {
-      char c = firstName.charAt(pos);
+    while (pos < input.length()) {
+      char c = input.charAt(pos);
       if (c < 'a') {
         return pos;
       }

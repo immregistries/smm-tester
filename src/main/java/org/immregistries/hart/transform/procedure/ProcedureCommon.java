@@ -261,8 +261,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
     if (posStart > 0) {
       int posEnd = address.indexOf(' ', posStart + 1);
       if (posEnd > 0) {
-        address =
-            address.substring(0, posStart) + " " + newStreetAddress + address.substring(posEnd);
+        address = address.substring(0, posStart) + " " + newStreetAddress + address.substring(posEnd);
       }
     }
     if (upperCase) {

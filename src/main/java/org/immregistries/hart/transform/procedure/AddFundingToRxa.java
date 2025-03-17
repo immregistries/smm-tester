@@ -11,10 +11,8 @@ public class AddFundingToRxa implements ProcedureInterface {
 
   private static final String SOURCE_LOINC = "30963-3";
   private static final String ELIGIBILITY_LOINC = "64994-7";
-  private static final String ELIGIBILITY_OBX =
-      "OBX|%d|CE|64994-7^Vaccine funding program eligibility category^LN|%d|V01^Not VFC eligible^HL70064||||||F|||20150817|||VXC40^Eligibility captured at the immunization level^CDCPHINVS|";
-  private static final String SOURCE_OBX =
-      "OBX|%d|CE|30963-3^Vaccine Funding Source^LN|%d|VXC50^Public^CDCPHINVS||||||F|";
+  private static final String ELIGIBILITY_OBX = "OBX|%d|CE|64994-7^Vaccine funding program eligibility category^LN|%d|V01^Not VFC eligible^HL70064||||||F|||20150817|||VXC40^Eligibility captured at the immunization level^CDCPHINVS|";
+  private static final String SOURCE_OBX = "OBX|%d|CE|30963-3^Vaccine Funding Source^LN|%d|VXC50^Public^CDCPHINVS||||||F|";
 
   public static enum Type {
                            SOURCE,

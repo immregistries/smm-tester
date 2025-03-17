@@ -83,8 +83,7 @@ public class Certify {
   protected void init() {
     try {
       conceptMap = new HashMap<String, List<String[]>>();
-      BufferedReader in =
-          new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("certify.txt")));
+      BufferedReader in = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("certify.txt")));
       String line;
       while ((line = in.readLine()) != null) {
         int equals = line.indexOf("=");

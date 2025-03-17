@@ -35,8 +35,7 @@ public class AddVariation extends ProcedureCommon {
     this.field = field;
   }
 
-  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
-      throws IOException {
+  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList) throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
 
     for (String[] fields : fieldsList) {
@@ -109,6 +108,7 @@ public class AddVariation extends ProcedureCommon {
     return name;
   }
 
+  //TODO (klindgren): Does this belong here?
   protected static int findFirstConsonantAfterVowel(String name) {
     int pos = 0;
     String fn = name.toUpperCase();
@@ -125,6 +125,7 @@ public class AddVariation extends ProcedureCommon {
     return -1;
   }
 
+  //TODO (klindgren): Does this belong here?
   protected static int findAnotherCapital(String name) {
     if (name.equals(name.toUpperCase())) {
       return -1;

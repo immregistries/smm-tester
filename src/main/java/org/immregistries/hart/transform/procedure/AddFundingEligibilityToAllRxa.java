@@ -15,12 +15,9 @@ public class AddFundingEligibilityToAllRxa implements ProcedureInterface {
     // not needed
   }
 
-
   // run procedure ADD_FUNDING_ELGIBILITY_TO_ALL_RXA
-  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
-      throws IOException {
-    BufferedReader inResult =
-        new BufferedReader(new StringReader(transformRequest.getResultText()));
+  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList) throws IOException {
+    BufferedReader inResult = new BufferedReader(new StringReader(transformRequest.getResultText()));
     String lineResult;
     String finalMessage = "";
     boolean needToAddOBX = false;
