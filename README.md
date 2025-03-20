@@ -34,7 +34,7 @@ Ensure that you have Java SE (or OpenJDK) version 8.0 (also displayed as 1.8) or
 |AlternativeEndingVowels|Name field manipulation in transforms|
 |AlternativeSpellings|Name field manipulation in transforms|
 |AlternativeVowels|Name field manipulation in transforms|
-|AnonymizeAndUpdateRecord|remove PII from a transform's fields|
+|AnonymizeAndUpdateRecord|`ProcedureCommon`: remove PII from a transform's fields|
 |Assertion|Data container used only by nist/ValidationReport|
 |CDCWSDLServer|For printing CDC WSDL XML and processing CDC XML messages|
 |Certify|Loads data from `certify.txt` on `init()`, manipulation of `CertifyItem` data class|
