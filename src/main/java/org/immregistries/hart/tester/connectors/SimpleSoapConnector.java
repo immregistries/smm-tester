@@ -36,7 +36,6 @@ public class SimpleSoapConnector extends Connector {
     cc.setUrl(url);
     String result = "";
     try {
-
       result = sendRequest(message, cc);
     } catch (Exception e) {
       return "Unable to relay message, received this error: " + e.getMessage();

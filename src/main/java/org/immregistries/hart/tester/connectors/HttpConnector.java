@@ -51,8 +51,7 @@ public class HttpConnector extends Connector {
   private boolean stripXML = false;
   private boolean deduplicate = false;
   private AuthenticationMethod authenticationMethod = AuthenticationMethod.FORM;
-  private String[] fieldNames =
-      {FIELD_USERID, FIELD_PASSWORD, FIELD_FACILITYID, FIELD_MESSAGEDATA, FIELD_OTHERID};
+  private String[] fieldNames = {FIELD_USERID, FIELD_PASSWORD, FIELD_FACILITYID, FIELD_MESSAGEDATA, FIELD_OTHERID};
 
   public AuthenticationMethod getAuthenticationMethod() {
     return authenticationMethod;
@@ -157,133 +156,127 @@ public class HttpConnector extends Connector {
 
   public String sendRequest(String request, ClientConnection conn, boolean debug)
       throws IOException {
-    StringBuilder debugLog = null;
-    if (debug) {
-      debugLog = new StringBuilder();
-    }
-    try {
-      SSLSocketFactory factory = setupSSLSocketFactory(debug, debugLog);
-
-      HttpURLConnection urlConn;
-      DataOutputStream printout;
-      InputStreamReader input = null;
-      URL url;
+      StringBuilder debugLog = null;
+      if (debug) { debugLog = new StringBuilder(); }
       try {
-        URI uri = new URI(conn.getUrl());
-        url = uri.toURL();
-      } catch (URISyntaxException uriEx) {
-        throw new IOException(uriEx);
-      }
+        SSLSocketFactory factory = setupSSLSocketFactory(debug, debugLog);
 
-      urlConn = (HttpURLConnection) url.openConnection();
-      if (factory != null && urlConn instanceof HttpsURLConnection) {
-        ((HttpsURLConnection) urlConn).setSSLSocketFactory(factory);
-      }
-
-      urlConn.setRequestMethod("POST");
-
-      urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-      urlConn.setDoInput(true);
-      urlConn.setDoOutput(true);
-      urlConn.setUseCaches(false);
-      String content;
-      if (authenticationMethod == AuthenticationMethod.HEADER) {
-        if (debug) {
-          debugLog.append(">> Sending credentials using HTTP headers to " + conn.getUrl() + "\r");
-          debugLog.append(">> " + fieldNames[USERID] + " = '" + conn.getUserId() + "' \r");
-          debugLog.append(">> " + fieldNames[PASSWORD] + " = '" + conn.getPassword() + "' \r");
-          debugLog.append(">> " + fieldNames[FACILITYID] + " = '" + conn.getFacilityId() + "' \r");
-        }
-        content = request;
-        urlConn.setRequestProperty(fieldNames[USERID], conn.getUserId());
-        urlConn.setRequestProperty(fieldNames[PASSWORD], conn.getPassword());
-        urlConn.setRequestProperty(fieldNames[FACILITYID], conn.getFacilityId());
-      } else if (authenticationMethod == AuthenticationMethod.BASIC) {
-        if (debug) {
-          debugLog.append(
-              ">> Sending credentials using HTTP Basic Authentication to " + conn.getUrl() + "\r");
-          debugLog.append(">> Username = '" + conn.getUserId() + "' \r");
-          debugLog.append(">> Password = '" + conn.getPassword() + "' \r");
-        }
-        urlConn.setRequestProperty("Authorization",
-            "Basic " + URLEncoder.encode(conn.getUserId() + ":" + conn.getPassword(), "UTF-8"));
-        content = request;
-      } else {
-        if (debug) {
-          debugLog.append(
-              ">> Sending credentials using standard XML Encoded form to " + conn.getUrl() + "\r");
-          debugLog.append(">> " + fieldNames[USERID] + " = '" + conn.getUserId() + "' \r");
-          debugLog.append(">> " + fieldNames[PASSWORD] + " = '" + conn.getPassword() + "' \r");
-          debugLog.append(">> " + fieldNames[FACILITYID] + " = '" + conn.getFacilityId() + "' \r");
-          debugLog.append(">> " + fieldNames[MESSAGEDATA] + " \r");
-        }
-        StringBuilder sb = new StringBuilder();
-
-        if (deduplicate) {
-          sb.append("deduplicate=deduplicate&");
+        HttpURLConnection urlConn;
+        DataOutputStream printout;
+        InputStreamReader input = null;
+        URL url;
+        try {
+          URI uri = new URI(conn.getUrl());
+          url = uri.toURL();
+        } catch (URISyntaxException uriEx) {
+          throw new IOException(uriEx);
         }
 
-        sb.append(fieldNames[USERID]);
-        sb.append("=");
-        sb.append(URLEncoder.encode(conn.getUserId(), "UTF-8"));
+        urlConn = (HttpURLConnection) url.openConnection();
+        if (factory != null && urlConn instanceof HttpsURLConnection) {
+          ((HttpsURLConnection) urlConn).setSSLSocketFactory(factory);
+        }
 
-        sb.append("&");
-        sb.append(fieldNames[PASSWORD]);
-        sb.append("=");
-        sb.append(URLEncoder.encode(conn.getPassword(), "UTF-8"));
+        urlConn.setRequestMethod("POST");
 
-        sb.append("&");
-        sb.append(fieldNames[FACILITYID]);
-        sb.append("=");
-        sb.append(URLEncoder.encode(conn.getFacilityId(), "UTF-8"));
+        urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        urlConn.setDoInput(true);
+        urlConn.setDoOutput(true);
+        urlConn.setUseCaches(false);
+        String content;
+        if (authenticationMethod == AuthenticationMethod.HEADER) {
+          if (debug) {
+            debugLog.append(">> Sending credentials using HTTP headers to " + conn.getUrl() + "\r");
+            debugLog.append(">> " + fieldNames[USERID] + " = '" + conn.getUserId() + "' \r");
+            debugLog.append(">> " + fieldNames[PASSWORD] + " = '" + conn.getPassword() + "' \r");
+            debugLog.append(">> " + fieldNames[FACILITYID] + " = '" + conn.getFacilityId() + "' \r");
+          }
+          content = request;
+          urlConn.setRequestProperty(fieldNames[USERID], conn.getUserId());
+          urlConn.setRequestProperty(fieldNames[PASSWORD], conn.getPassword());
+          urlConn.setRequestProperty(fieldNames[FACILITYID], conn.getFacilityId());
+        } else if (authenticationMethod == AuthenticationMethod.BASIC) {
+          if (debug) {
+            debugLog.append(">> Sending credentials using HTTP Basic Authentication to " + conn.getUrl() + "\r");
+            debugLog.append(">> Username = '" + conn.getUserId() + "' \r");
+            debugLog.append(">> Password = '" + conn.getPassword() + "' \r");
+          }
+          urlConn.setRequestProperty("Authorization",
+              "Basic " + URLEncoder.encode(conn.getUserId() + ":" + conn.getPassword(), "UTF-8"));
+          content = request;
+        } else {
+          if (debug) {
+            debugLog.append(">> Sending credentials using standard XML Encoded form to " + conn.getUrl() + "\r");
+            debugLog.append(">> " + fieldNames[USERID] + " = '" + conn.getUserId() + "' \r");
+            debugLog.append(">> " + fieldNames[PASSWORD] + " = '" + conn.getPassword() + "' \r");
+            debugLog.append(">> " + fieldNames[FACILITYID] + " = '" + conn.getFacilityId() + "' \r");
+            debugLog.append(">> " + fieldNames[MESSAGEDATA] + " \r");
+          }
+          StringBuilder sb = new StringBuilder();
 
-        if (conn.getOtherId() != null && !conn.getOtherId().equals("")) {
-          sb.append("&");
-          sb.append(fieldNames[OTHERID]);
+          if (deduplicate) { sb.append("deduplicate=deduplicate&"); }
+
+          sb.append(fieldNames[USERID]);
           sb.append("=");
-          sb.append(URLEncoder.encode(conn.getOtherId(), "UTF-8"));
+          sb.append(URLEncoder.encode(conn.getUserId(), "UTF-8"));
+
+          sb.append("&");
+          sb.append(fieldNames[PASSWORD]);
+          sb.append("=");
+          sb.append(URLEncoder.encode(conn.getPassword(), "UTF-8"));
+
+          sb.append("&");
+          sb.append(fieldNames[FACILITYID]);
+          sb.append("=");
+          sb.append(URLEncoder.encode(conn.getFacilityId(), "UTF-8"));
+
+          if (conn.getOtherId() != null && !conn.getOtherId().equals("")) {
+            sb.append("&");
+            sb.append(fieldNames[OTHERID]);
+            sb.append("=");
+            sb.append(URLEncoder.encode(conn.getOtherId(), "UTF-8"));
+          }
+
+          sb.append("&");
+          sb.append(fieldNames[MESSAGEDATA]);
+          sb.append("=");
+          sb.append(URLEncoder.encode(request, "UTF-8"));
+
+          content = sb.toString();
         }
-
-        sb.append("&");
-        sb.append(fieldNames[MESSAGEDATA]);
-        sb.append("=");
-        sb.append(URLEncoder.encode(request, "UTF-8"));
-
-        content = sb.toString();
+        printout = new DataOutputStream(urlConn.getOutputStream());
+        printout.writeBytes(content);
+        printout.flush();
+        printout.close();
+        input = new InputStreamReader(urlConn.getInputStream());
+        StringBuilder response = new StringBuilder();
+        BufferedReader in = new BufferedReader(input);
+        String line;
+        while ((line = in.readLine()) != null) {
+          response.append(line);
+          response.append('\r');
+        }
+        input.close();
+        if (debug) {
+          response.append("\r");
+          response.append("DEBUG LOG: \r");
+          response.append(debugLog);
+        }
+        return response.toString();
+      } catch (IOException e) {
+        if (debug) {
+          StringWriter stringWriter = new StringWriter();
+          PrintWriter out = new PrintWriter(stringWriter);
+          out.println("Unable to complete request");
+          e.printStackTrace(out);
+          out.println("DEBUG LOG: \r");
+          out.println(debugLog);
+          out.close();
+          return stringWriter.toString();
+        } else {
+          throw e;
+        }
       }
-      printout = new DataOutputStream(urlConn.getOutputStream());
-      printout.writeBytes(content);
-      printout.flush();
-      printout.close();
-      input = new InputStreamReader(urlConn.getInputStream());
-      StringBuilder response = new StringBuilder();
-      BufferedReader in = new BufferedReader(input);
-      String line;
-      while ((line = in.readLine()) != null) {
-        response.append(line);
-        response.append('\r');
-      }
-      input.close();
-      if (debug) {
-        response.append("\r");
-        response.append("DEBUG LOG: \r");
-        response.append(debugLog);
-      }
-      return response.toString();
-    } catch (IOException e) {
-      if (debug) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter out = new PrintWriter(stringWriter);
-        out.println("Unable to complete request");
-        e.printStackTrace(out);
-        out.println("DEBUG LOG: \r");
-        out.println(debugLog);
-        out.close();
-        return stringWriter.toString();
-      } else {
-        throw e;
-      }
-    }
 
   }
 
@@ -302,13 +295,11 @@ public class HttpConnector extends Connector {
 
         kmf.init(keyStore, getKeyStorePassword().toCharArray());
 
-        TrustManagerFactory tmf =
-            TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(keyStore);
         X509TrustManager defaultTrustManager = (X509TrustManager) tmf.getTrustManagers()[0];
-        if (debug) {
-          doDebug(debugLog, keyStore, defaultTrustManager);
-        }
+
+        if (debug) { doDebug(debugLog, keyStore, defaultTrustManager); }
 
         TrustManager[] trustAllCerts = null;
         if (disableServerCertificateCheck) {
@@ -316,21 +307,15 @@ public class HttpConnector extends Connector {
             public java.security.cert.X509Certificate[] getAcceptedIssuers() {
               return new X509Certificate[0];
             }
-
-            public void checkClientTrusted(java.security.cert.X509Certificate[] certs,
-                String authType) {}
-
-            public void checkServerTrusted(java.security.cert.X509Certificate[] certs,
-                String authType) {}
+            public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
+            public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {}
           }};
         }
 
         SSLContext context = SSLContext.getInstance("TLS");
         context.init(kmf.getKeyManagers(), trustAllCerts, null);
         factory = context.getSocketFactory();
-        if (debug) {
-          debugLog.append("Key store loaded \r");
-        }
+        if (debug) { debugLog.append("Key store loaded \r"); }
       } catch (Exception e) {
         e.printStackTrace();
         if (debug) {
@@ -345,8 +330,7 @@ public class HttpConnector extends Connector {
     return factory;
   }
 
-  public void doDebug(StringBuilder debugLog, KeyStore keyStore,
-      X509TrustManager defaultTrustManager) throws KeyStoreException {
+  public void doDebug(StringBuilder debugLog, KeyStore keyStore, X509TrustManager defaultTrustManager) throws KeyStoreException {
     debugLog.append("Trusted certificates: \r");
     for (X509Certificate cert : defaultTrustManager.getAcceptedIssuers()) {
       String certStr = "S:" + cert.getSubjectX500Principal().getName() + " I:" + cert.getIssuerX500Principal().getName();

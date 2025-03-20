@@ -227,35 +227,35 @@ public class TransformRequest {
   public void setCurrentTestCaseMessage(TestCaseMessage currentTestCaseMessage) {
     this.currentTestCaseMessage = currentTestCaseMessage;
   }
-  
+
   public boolean isAdministeredCheck() {
     return administeredCheck;
   }
-  
+
   public void setAdministeredCheck(boolean administeredCheck) {
     this.administeredCheck = administeredCheck;
   }
-  
+
   public boolean isHistoricalCheck() {
     return historicalCheck;
   }
-  
+
   public void setHistoricalCheck(boolean historicalCheck) {
     this.historicalCheck = historicalCheck;
   }
-  
+
   public boolean isRefusalCheck() {
     return refusalCheck;
   }
-  
+
   public void setRefusalCheck(boolean refusalCheck) {
     this.refusalCheck = refusalCheck;
   }
-  
+
   public boolean isNonAdminCheck() {
     return nonAdminCheck;
   }
-  
+
   public void setNonAdminCheck(boolean nonAdminCheck) {
     this.nonAdminCheck = nonAdminCheck;
   }

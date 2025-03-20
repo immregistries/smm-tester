@@ -18,7 +18,7 @@ public class HL7Reader {
   public String getFieldSeparator() {
     return fieldSeparator;
   }
-  
+
   public HL7Reader(String message) {
     if (message != null) {
       try {

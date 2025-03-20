@@ -22,8 +22,7 @@ public abstract class IssueCreator {
   // Vaccine Admin
   public static String createTransforms(TestCaseMessage testCaseMessage) {
     String transforms = "";
-    BufferedReader inTransform =
-        new BufferedReader(new StringReader(testCaseMessage.getCauseIssues()));
+    BufferedReader inTransform = new BufferedReader(new StringReader(testCaseMessage.getCauseIssues()));
     String line;
     try {
       while ((line = inTransform.readLine()) != null) {
@@ -42,14 +41,10 @@ public abstract class IssueCreator {
         }
         if (issue != null) {
           transforms = IssueCreatorHeader.createTransforms(testCaseMessage, issue, transforms, not);
-          transforms =
-              IssueCreatorNextOfKin.createTransforms(testCaseMessage, issue, transforms, not);
-          transforms =
-              IssueCreatorObservation.createTransforms(testCaseMessage, issue, transforms, not);
-          transforms =
-              IssueCreatorPatient.createTransforms(testCaseMessage, issue, transforms, not);
-          transforms =
-              IssueCreatorVaccination.createTransforms(testCaseMessage, issue, transforms, not);
+          transforms = IssueCreatorNextOfKin.createTransforms(testCaseMessage, issue, transforms, not);
+          transforms = IssueCreatorObservation.createTransforms(testCaseMessage, issue, transforms, not);
+          transforms = IssueCreatorPatient.createTransforms(testCaseMessage, issue, transforms, not);
+          transforms = IssueCreatorVaccination.createTransforms(testCaseMessage, issue, transforms, not);
         }
       }
     } catch (IOException ioe) {

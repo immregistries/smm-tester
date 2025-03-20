@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.immregistries.hart.transform.TransformRequest;
 
+//TODO(klindgren): Abstract name String handling into its own utils/PatientName.java file
+//TODO(klindgren): Compare doProcedure() implementations in implementing classes
 public abstract class ProcedureCommon implements ProcedureInterface {
 
   protected String readValue(String[] fields, int fieldPos) {

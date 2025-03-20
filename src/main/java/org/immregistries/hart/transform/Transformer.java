@@ -26,7 +26,6 @@ import org.immregistries.hart.transform.procedure.ProcedureFactory;
 import org.immregistries.hart.transform.procedure.ProcedureInterface;
 
 /**
- * 
  * @author nathan
  */
 public class Transformer {
@@ -122,7 +121,7 @@ public class Transformer {
   private static final String IF_19_PLUS = "if 19+";
   private static final String IF_18_MINUS = "if 18-";
   private static final String IF_19_MINUS = "if 19-";
-  
+
   private static final String IF_ADMINISTERED = "if administered";
   private static final String IF_HISTORICAL = "if historical";
   private static final String IF_REFUSAL = "if refusal";
@@ -148,7 +147,7 @@ public class Transformer {
   private static final int VACCINE_VIS3_PUB_DATE = 17;
 
   private static final String REPEAT_REF = "-?";
-  
+
   public static final String SCENARIO_WILDCARD = "*";
   public static final String SCENARIO_DELIM = ",";
   public static final String SCENARIO_NOT = "!";
@@ -495,12 +494,12 @@ public class Transformer {
   public static String transform(Connector connector, TestCaseMessage testCaseMessage) {
     String message = testCaseMessage.getMessageText();
     List<String> scenarioTransforms = new ArrayList<>();
-    
+
     // exact match lookup for scenario name
     if (connector.getScenarioTransformationsMap().containsKey(testCaseMessage.getScenario())) {
       scenarioTransforms.add(connector.getScenarioTransformationsMap().get(testCaseMessage.getScenario()));
     }
-    
+
     // wildcard lookups for test code
     // possibly don't include the exact match result here to replicate the old functionality
     // of not including the testCaseNumber lookup if the scenario lookup returned a result
@@ -508,10 +507,10 @@ public class Transformer {
       connector.getTransformsFromScenarioMap(
         testCaseMessage.getTestCaseNumber(),
         scenarioTransforms.isEmpty()));
-    
+
     // I can't tell where this field is being used so I'm not sure if separating by a newline is appropriate or not
     testCaseMessage.setScenarioTransforms(String.join("\n", scenarioTransforms));
-    
+
     String additionalTransformations = testCaseMessage.getAdditionalTransformations();
     if ("".equals(additionalTransformations)) {
       additionalTransformations = null;
@@ -1206,11 +1205,11 @@ public class Transformer {
     }
     return shouldSkipTransform;
   }
-  
+
   protected boolean checkForSpecialVaccineModifierSkip(
       TransformRequest transformRequest,
       int transformRepeat) throws IOException {
-    
+
     if (!transformRequest.isAdministeredCheck()
         && !transformRequest.isHistoricalCheck()
         && !transformRequest.isRefusalCheck()
@@ -1218,92 +1217,92 @@ public class Transformer {
       // don't skip because there was no special vaccine modifier, just a normal transform
       return false;
     }
-    
+
     Transform rxa9transform = readHL7Reference("RXA-9", "RXA-9".length());
     rxa9transform.setSegmentRepeat(transformRepeat);
-    
+
     String rxa9 = getValueFromHL7(transformRequest.getResultText(), rxa9transform, transformRequest);
-    
+
     if (transformRequest.isAdministeredCheck() && "00".equals(rxa9)) {
       return false;
     }
-    
+
     if (transformRequest.isHistoricalCheck() && ("01".equals(rxa9) || "02".equals(rxa9) ||"03".equals(rxa9) || "04".equals(rxa9) ||"05".equals(rxa9) || "06".equals(rxa9) ||"07".equals(rxa9) || "08".equals(rxa9))) {
       return false;
     }
-    
+
     Transform rxa20transform = readHL7Reference("RXA-20", "RXA-20".length());
     rxa20transform.setSegmentRepeat(transformRepeat);
-    
+
     String rxa20 = getValueFromHL7(transformRequest.getResultText(), rxa20transform, transformRequest);
-    
+
     if (transformRequest.isRefusalCheck() && StringUtils.isBlank(rxa9) && "RE".equals(rxa20)) {
       return false;
     }
-    
+
     if (transformRequest.isNonAdminCheck() && StringUtils.isBlank(rxa9) && "NA".equals(rxa20)) {
       return false;
     }
-    
+
     // skip this transform because there was a special vaccine modifier but the secondary criteria didn't match
     return true;
   }
-  
+
   protected String cleanTransformLineOfIfChecks(TransformRequest transformRequest) {
     String line = transformRequest.getLine();
-    
+
     if (transformRequest.isAdministeredCheck()) {
       line = line.substring(0, line.indexOf(IF_ADMINISTERED) - 1);
     }
-    
+
     if (transformRequest.isHistoricalCheck()) {
       line = line.substring(0, line.indexOf(IF_HISTORICAL) - 1);
     }
-    
+
     if (transformRequest.isRefusalCheck()) {
       line = line.substring(0, line.indexOf(IF_REFUSAL) - 1);
     }
-    
+
     if (transformRequest.isNonAdminCheck()) {
       line = line.substring(0, line.indexOf(IF_NON_ADMIN) - 1);
     }
-    
+
     return line;
   }
 
   public void doSetField(TransformRequest transformRequest) throws IOException {
     String resultText = transformRequest.getResultText();
-    
+
     // update with any if checks
     transformRequest.setAdministeredCheck(transformRequest.getLine().indexOf(IF_ADMINISTERED) > 0);
     transformRequest.setHistoricalCheck(transformRequest.getLine().indexOf(IF_HISTORICAL) > 0);
     transformRequest.setRefusalCheck(transformRequest.getLine().indexOf(IF_REFUSAL) > 0);
     transformRequest.setNonAdminCheck(transformRequest.getLine().indexOf(IF_NON_ADMIN) > 0);
-    
+
     // remove if checks from the transform request line
     transformRequest.setLine(cleanTransformLineOfIfChecks(transformRequest));
-    
+
     String line = transformRequest.getLine();
-    
+
     int posEqual = line.indexOf("=");
     Transform transform = readHL7Reference(line, posEqual);
     if (transform != null) {
       transform.value = line.substring(posEqual + 1).trim();
-      
+
       int count = 1;
       if (transform.all) {
         count = countSegments(resultText, transform);
       }
-      
+
       for (int i = 1; i <= count; i++) {
         if (transform.all) {
           transform.segmentRepeat = i;
         }
-        
+
         if (checkForSpecialVaccineModifierSkip(transformRequest, transform.getSegmentRepeat())) {
           continue;
         }
-        
+
         handleSometimes(transform);
         doReplacements(transform, transformRequest);
         resultText = setValueInHL7(resultText, transform, transformRequest);
@@ -2028,7 +2027,7 @@ public class Transformer {
   /**
    * This modifies the date to meet the non-standard format expected by WebIZ for MSH-7. Their only
    * deviation is they do not expect a period between the seconds and the milliseconds
-   * 
+   *
    * @param resultText
    * @return
    */

@@ -30,19 +30,19 @@ public class Transform {
   public boolean isSegmentRepeatSet() {
     return segmentRepeatSet;
   }
-  
+
   public void setSegmentRepeatSet(boolean segmentRepeatSet) {
     this.segmentRepeatSet = segmentRepeatSet;
   }
-  
+
   public boolean isFieldSet() {
     return fieldSet;
   }
-  
+
   public void setFieldSet(boolean fieldSet) {
     this.fieldSet = fieldSet;
   }
-  
+
   public String getSegment() {
     return segment;
   }
@@ -154,11 +154,11 @@ public class Transform {
   public void setValueTransform(Transform valueTransform) {
     this.valueTransform = valueTransform;
   }
-  
+
   public boolean isConcatenate() {
     return concatenate;
   }
-  
+
   public void setConcatenate(boolean concatenate) {
     this.concatenate = concatenate;
   }

@@ -30,13 +30,11 @@ public class FindMatchingSegment {
     if (posAnd > 0 && (posOr < 0 || posOr > posAnd)) {
       // next item is an and
       nextIsAnd = true;
-      nextFindMatchingSegment = new FindMatchingSegment(testCaseMessage,
-          assertResultParameter.substring(posAnd + _AND_.length()).trim());
+      nextFindMatchingSegment = new FindMatchingSegment(testCaseMessage, assertResultParameter.substring(posAnd + _AND_.length()).trim());
       assertResultParameter = assertResultParameter.substring(0, posAnd).trim();
     } else if (posOr > 0) {
       nextIsAnd = false;
-      nextFindMatchingSegment = new FindMatchingSegment(testCaseMessage,
-          assertResultParameter.substring(posOr + _OR_.length()).trim());
+      nextFindMatchingSegment = new FindMatchingSegment(testCaseMessage, assertResultParameter.substring(posOr + _OR_.length()).trim());
       assertResultParameter = assertResultParameter.substring(0, posOr).trim();
     }
     segmentReturnedReader = new HL7Reader(assertResultParameter);
@@ -44,8 +42,7 @@ public class FindMatchingSegment {
       segmentReturnedReader = null;
       testCaseMessage.log("Unable to find any segments in this: " + assertResultParameter);
     } else {
-      testCaseMessage
-          .log("Will be looking for a segment that matches this one: " + assertResultParameter);
+      testCaseMessage.log("Will be looking for a segment that matches this one: " + assertResultParameter);
     }
   }
 

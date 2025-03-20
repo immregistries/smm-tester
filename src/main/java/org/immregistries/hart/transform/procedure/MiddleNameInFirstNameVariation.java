@@ -10,8 +10,7 @@ public class MiddleNameInFirstNameVariation extends ProcedureCommon {
 
   public MiddleNameInFirstNameVariation() { }
 
-  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
-      throws IOException {
+  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList) throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
     {
       for (String[] fields : fieldsList) {
@@ -30,10 +29,8 @@ public class MiddleNameInFirstNameVariation extends ProcedureCommon {
   }
 
   protected static String[] varyName(String firstName, String middleName) {
-    boolean upperCase =
-        firstName.toUpperCase().equals(firstName) && middleName.toUpperCase().equals(middleName);
-    boolean lowerCase =
-        firstName.toLowerCase().equals(firstName) && middleName.toLowerCase().equals(middleName);
+    boolean upperCase = firstName.toUpperCase().equals(firstName) && middleName.toUpperCase().equals(middleName);
+    boolean lowerCase = firstName.toLowerCase().equals(firstName) && middleName.toLowerCase().equals(middleName);
 
     String[] names = new String[2];
 

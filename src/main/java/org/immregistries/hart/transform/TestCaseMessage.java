@@ -21,7 +21,6 @@ import org.immregistries.hart.transform.forecast.ForecastTestCase;
 import org.immregistries.hart.transform.forecast.ForecastTestPanel;
 
 /**
- * 
  * @author nathan
  */
 public class TestCaseMessage {

@@ -3,19 +3,19 @@ package org.immregistries.hart.tester.manager.query;
 import java.util.Date;
 
 public class Vaccination {
-  
+
   public static final String ACTION_CODE_ADD = "A";
   public static final String ACTION_CODE_UPDATE = "U";
   public static final String ACTION_CODE_DELETE = "D";
-  
+
   public static final String INFORMATION_SOURCE_ADMINISTERED = "00";
   public static final String INFORMATION_SOURCE_HISTORICAL = "01";
-  
+
   public static final String COMPLETION_STATUS_COMPLETE = "CP";
   public static final String COMPLETION_STATUS_REFUSED = "RE";
   public static final String COMPLETION_STATUS_NOT_ADMINISTERED = "NA";
   public static final String COMPLETION_STATUS_PARTIALLY_ADMINISTERED = "PA";
-  
+
   private Date administrationDate = null;
   private String vaccineCvx = "";
   private String vaccineLabel = "";
@@ -29,7 +29,7 @@ public class Vaccination {
   private String manufacturerLabel = "";
   private String refusalReason = "";
   private String completionStatus = "";
-  
+
   public String getInformationSourceLabel() {
     return informationSourceLabel;
   }

@@ -77,21 +77,18 @@ public class HyphenateVariation extends ProcedureCommon {
 
     int pos = name.indexOf('-');
     if (!isSpecialCase && pos > 0 && (pos + 1) < name.length()) {
-      name =
-          capitalizeFirst(name.substring(0, pos)) + " " + capitalizeFirst(name.substring(pos + 1));
+      name = capitalizeFirst(name.substring(0, pos)) + " " + capitalizeFirst(name.substring(pos + 1));
     } else {
       pos = name.indexOf(' ');
       if (!isSpecialCase && pos > 0 && (pos + 1) < name.length()) {
-        name = capitalizeFirst(name.substring(0, pos)) + "-"
-            + capitalizeFirst(name.substring(pos + 1));
+        name = capitalizeFirst(name.substring(0, pos)) + "-" + capitalizeFirst(name.substring(pos + 1));
       } else {
         try {
           String randomValue;
           switch (field) {
             case FIRST_NAME:
             case MIDDLE_NAME:
-              randomValue = transformer
-                  .getRandomValue(transformer.getRandom().nextBoolean() ? "BOY" : "GIRL");
+              randomValue = transformer.getRandomValue(transformer.getRandom().nextBoolean() ? "BOY" : "GIRL");
               break;
             case MOTHERS_FIRST_NAME:
               randomValue = transformer.getRandomValue("GIRL");
@@ -115,8 +112,7 @@ public class HyphenateVariation extends ProcedureCommon {
 
           if (field == Field.EMAIL) {
             String[] emailParts = name.split("\\@");
-            name = capitalizeFirst(emailParts[0]) + "-" + capitalizeFirst(randomValue) + "@"
-                + emailParts[1];
+            name = capitalizeFirst(emailParts[0]) + "-" + capitalizeFirst(randomValue) + "@" + emailParts[1];
             name = name.replaceAll("\\s+", "");
           } else if (field == Field.ADDRESS_STREET) {
             String original = getAddressStreetName(name);

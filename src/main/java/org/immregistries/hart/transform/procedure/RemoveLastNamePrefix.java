@@ -23,8 +23,7 @@ public class RemoveLastNamePrefix extends ProcedureCommon {
   }
 
   @Override
-  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList)
-      throws IOException {
+  public void doProcedure(TransformRequest transformRequest, LinkedList<String> tokenList) throws IOException {
     List<String[]> fieldsList = readMessage(transformRequest);
 
     for (String[] fields : fieldsList) {

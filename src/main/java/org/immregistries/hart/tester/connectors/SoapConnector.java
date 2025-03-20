@@ -15,7 +15,6 @@ import org.immregistries.hart.tester.connectors.tlep.SubmitSingleMessageRequestT
 import org.immregistries.hart.tester.connectors.tlep.SubmitSingleMessageResponse;
 
 /**
- * 
  * @author nathan
  */
 public class SoapConnector extends HttpConnector {
@@ -29,7 +28,7 @@ public class SoapConnector extends HttpConnector {
     super(label, url, "SOAP");
     clientService = new Client_ServiceStub(this.url, sslContext);
   }
-  
+
   @Override
   public boolean connectivityTestSupported() {
     return true;
@@ -45,14 +44,11 @@ public class SoapConnector extends HttpConnector {
     request.setUsername(this.userid);
     submitSingleMessage.setSubmitSingleMessage(request);
     SubmitSingleMessageResponse response = clientService.submitSingleMessage(submitSingleMessage);
-    String responseMessage =
-
-        response.getSubmitSingleMessageResponse().get_return();
+    String responseMessage = response.getSubmitSingleMessageResponse().get_return();
     if (responseMessage != null && responseMessage.startsWith("MSH%7C")) {
       responseMessage = URLDecoder.decode(responseMessage, "UTF-8");
     }
     return responseMessage;
-
   }
 
   @Override
@@ -73,7 +69,6 @@ public class SoapConnector extends HttpConnector {
   @Override
   protected void setupFields(List<String> fields) {
     super.setupFields(fields);
-
   }
 
 }

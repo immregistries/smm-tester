@@ -5,44 +5,28 @@ public class ScenarioManager {
   public static final String SCENARIO_BLANK = "Blank";
   public static final String SCENARIO_1_1_ADMIN_CHILD = "NIST MU2.1.1 - Admin Child";
   public static final String SCENARIO_1_R_ADMIN_CHILD = "NIST MU2.1.r - Admin Child (replica)";
-  public static final String SCENARIO_1_R_ADMIN_TWO_MONTHS_OLD =
-      "NIST MU2.1.r - Admin Child (replica) - 2 Months Old";
-  public static final String SCENARIO_1_R_ADMIN_TWO_YEARS_OLD =
-      "NIST MU2.1.r - Admin Child (replica) - 2 Years Old";
-  public static final String SCENARIO_1_R_ADMIN_FOUR_YEARS_OLD =
-      "NIST MU2.1.r - Admin Child (replica) - 4 Years Old";
-  public static final String SCENARIO_1_R_ADMIN_TWELVE_YEARS_OLD =
-      "NIST MU2.1.r - Admin Child (replica) - 12 Years Old";
+  public static final String SCENARIO_1_R_ADMIN_TWO_MONTHS_OLD = "NIST MU2.1.r - Admin Child (replica) - 2 Months Old";
+  public static final String SCENARIO_1_R_ADMIN_TWO_YEARS_OLD = "NIST MU2.1.r - Admin Child (replica) - 2 Years Old";
+  public static final String SCENARIO_1_R_ADMIN_FOUR_YEARS_OLD = "NIST MU2.1.r - Admin Child (replica) - 4 Years Old";
+  public static final String SCENARIO_1_R_ADMIN_TWELVE_YEARS_OLD = "NIST MU2.1.r - Admin Child (replica) - 12 Years Old";
   public static final String SCENARIO_2_1_ADMIN_ADULT = "NIST MU2.2.1 - Admin Adult";
   public static final String SCENARIO_2_R_ADMIN_ADULT = "NIST MU2.2.r - Admin Adult (replica)";
   public static final String SCENARIO_3_1_HISTORICAL_CHILD = "NIST MU2.3.1 - Historical Child";
-  public static final String SCENARIO_3_R_HISTORICAL_CHILD =
-      "NIST MU2.3.r - Historical Child (replica)";
-  public static final String SCENARIO_3_R_HISTORICAL_TWO_MONTHS_OLD =
-      "NIST MU2.3.r - Historical Child (replica) - 2 Months Old";
-  public static final String SCENARIO_3_R_HISTORICAL_TWO_YEARS_OLD =
-      "NIST MU2.3.r - Historical Child (replica) - 2 Years Old";
-  public static final String SCENARIO_3_R_HISTORICAL_FOUR_YEARS_OLD =
-      "NIST MU2.3.r - Historical Child (replica) - 4 Years Old";
-  public static final String SCENARIO_3_R_HISTORICAL_TWELVE_YEARS_OLD =
-      "NIST MU2.3.r - Historical Child (replica) - 12 Years Old";
+  public static final String SCENARIO_3_R_HISTORICAL_CHILD = "NIST MU2.3.r - Historical Child (replica)";
+  public static final String SCENARIO_3_R_HISTORICAL_TWO_MONTHS_OLD = "NIST MU2.3.r - Historical Child (replica) - 2 Months Old";
+  public static final String SCENARIO_3_R_HISTORICAL_TWO_YEARS_OLD = "NIST MU2.3.r - Historical Child (replica) - 2 Years Old";
+  public static final String SCENARIO_3_R_HISTORICAL_FOUR_YEARS_OLD = "NIST MU2.3.r - Historical Child (replica) - 4 Years Old";
+  public static final String SCENARIO_3_R_HISTORICAL_TWELVE_YEARS_OLD = "NIST MU2.3.r - Historical Child (replica) - 12 Years Old";
   public static final String SCENARIO_4_1_CONSENTED_CHILD = "NIST MU2.4.1 - Consented Child";
-  public static final String SCENARIO_4_R_CONSENTED_CHILD =
-      "NIST MU2.4.r - Consented Child (replica)";
+  public static final String SCENARIO_4_R_CONSENTED_CHILD = "NIST MU2.4.r - Consented Child (replica)";
   public static final String SCENARIO_5_1_REFUSED_TODDLER = "NIST MU2.5.1 - Refused Toddler";
-  public static final String SCENARIO_5_R_REFUSED_TODDLER =
-      "NIST MU2.5.r - Refused Toddler (replica)";
-  public static final String SCENARIO_5_P_REFUSED_TODDLER =
-      "NIST MU2.5.p - Refused Toddler (replica plus immunization)";
-  public static final String SCENARIO_6_1_VARICELLA_HISTORY_CHILD =
-      "NIST MU2.6.1 - Varicella History Child";
-  public static final String SCENARIO_6_R_VARICELLA_HISTORY_CHILD =
-      "NIST MU2.6.r - Varicella History Child (replica)";
-  public static final String SCENARIO_6_P_VARICELLA_HISTORY_CHILD =
-      "NIST MU2.6.p - Varicella History Child (replica plus immunization)";
+  public static final String SCENARIO_5_R_REFUSED_TODDLER = "NIST MU2.5.r - Refused Toddler (replica)";
+  public static final String SCENARIO_5_P_REFUSED_TODDLER = "NIST MU2.5.p - Refused Toddler (replica plus immunization)";
+  public static final String SCENARIO_6_1_VARICELLA_HISTORY_CHILD = "NIST MU2.6.1 - Varicella History Child";
+  public static final String SCENARIO_6_R_VARICELLA_HISTORY_CHILD = "NIST MU2.6.r - Varicella History Child (replica)";
+  public static final String SCENARIO_6_P_VARICELLA_HISTORY_CHILD = "NIST MU2.6.p - Varicella History Child (replica plus immunization)";
   public static final String SCENARIO_7_1_COMPLETE_RECORD = "NIST MU2.7.1 - Complete Record";
-  public static final String SCENARIO_7_R_COMPLETE_RECORD =
-      "NIST MU2.7.r - Complete Record (replica)";
+  public static final String SCENARIO_7_R_COMPLETE_RECORD = "NIST MU2.7.r - Complete Record (replica)";
   public static final String SCENARIO_FULL_RECORD_FOR_PROFILING = "Full Record for Profiling";
   public static final String SCENARIO_ADD_DELETE = "Add and then Delete - Admin Child";
   public static final String SCENARIO_MCIR_MPI = "MCIR MPI Test";
