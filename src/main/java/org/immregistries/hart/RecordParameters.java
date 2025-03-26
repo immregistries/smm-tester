@@ -1,4 +1,4 @@
-package hart;
+package org.immregistries.hart;
 
 
 public abstract class RecordParameters {
