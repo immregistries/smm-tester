@@ -60,7 +60,7 @@ public abstract class CDCWSDLServer {
 
   public abstract String getEchoBackMessage(String message);
 
-  private static String getBody(InputStream inputStream) throws IOException {
+  public static String getBody(InputStream inputStream) throws IOException {
     // param: http req.getInputStream()
 
     String body = null;
