@@ -16,7 +16,7 @@ public abstract class ProcedureCommon implements ProcedureInterface {
   }
 
 
-  protected String readValue(String[] fields, int fieldPos, int subPos) {
+  public static String readValue(String[] fields, int fieldPos, int subPos) {
     String value = "";
     if (fields[0].equals("MSH") || fields[0].equals("FHS") || fields[0].equals("BHS")) {
       fieldPos--;
