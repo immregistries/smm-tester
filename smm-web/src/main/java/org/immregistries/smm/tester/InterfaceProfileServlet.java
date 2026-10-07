@@ -24,6 +24,7 @@ import org.immregistries.smm.tester.run.TestRunner;
 import org.immregistries.smm.tester.transform.Issue;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.Transformer;
+import org.immregistries.smm.web.auth.SmmUser;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -58,9 +59,9 @@ public class InterfaceProfileServlet extends ClientServlet {
     response.setContentType("text/html;charset=UTF-8");
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
-    Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+    SmmUser user = (SmmUser) session.getAttribute("user");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
       PrintWriter out = response.getWriter();
       try {
@@ -491,7 +492,7 @@ public class InterfaceProfileServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
       PrintWriter out = response.getWriter();
       try {
@@ -544,7 +545,7 @@ public class InterfaceProfileServlet extends ClientServlet {
         out.println(
             "          <td><textarea name=\"expected\" cols=\"70\" rows=\"10\" wrap=\"off\"></textarea></td>");
         out.println("        </tr>");
-        Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+        SmmUser user = (SmmUser) session.getAttribute("user");
         if (user.hasSendData()) {
           out.println("        <tr>");
           out.println("          <td>Save Sample Count</td>");

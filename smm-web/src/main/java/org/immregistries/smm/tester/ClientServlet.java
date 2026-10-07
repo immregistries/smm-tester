@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import org.immregistries.smm.SoftwareVersion;
 import org.immregistries.smm.tester.connectors.Connector;
+import org.immregistries.smm.web.auth.SmmUser;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -58,13 +59,15 @@ public class ClientServlet extends HttpServlet {
     return makeMenu(request, "&nbsp;");
   }
 
+  public static final String APP_DEFAULT_HOME = "HomeServlet";
+
   private static final String[][] MENU_LOGGED_OUT =
-      {{Authenticate.APP_DEFAULT_HOME, MENU_HEADER_HOME}, {"LoginServlet", "Login"}};
+      {{APP_DEFAULT_HOME, MENU_HEADER_HOME}, {"login", "Sign in"}};
   private static final String[][] MENU_LOGGED_IN =
-      {{Authenticate.APP_DEFAULT_HOME, MENU_HEADER_HOME}, {"ConnectServlet", MENU_HEADER_CONNECT},
+      {{APP_DEFAULT_HOME, MENU_HEADER_HOME}, {"ConnectServlet", MENU_HEADER_CONNECT},
           {"SetupServlet", MENU_HEADER_SETUP}, {"CreateTestCaseServlet", MENU_HEADER_EDIT},
           {"SubmitServlet", MENU_HEADER_SEND},
-          {"LoginServlet?action=Logout", "Logout"}};
+          {"logout", "Sign out"}};
 
   public static String makeMenu(HttpServletRequest request, String title) {
     boolean loggedIn = false;
@@ -95,7 +98,7 @@ public class ClientServlet extends HttpServlet {
     }
     result.append("</td><td align=\"right\">");
     if (loggedIn) {
-      Authenticate.User user = Authenticate.getUser((String) session.getAttribute("username"));
+      SmmUser user = (SmmUser) session.getAttribute("user");
       if (user != null) {
         if (user.getName().equals("")) {
           result.append(user.getUsername());

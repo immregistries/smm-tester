@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import org.immregistries.smm.transform.TestCaseMessage;
+import org.immregistries.smm.web.auth.SmmUser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ public class DownloadServlet extends HttpServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
 
       String action = request.getParameter("action");
@@ -60,7 +61,7 @@ public class DownloadServlet extends HttpServlet {
           if (action.equals("Download Script")) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             out.println("-- HL7 Script downloaded " + sdf.format(new Date()) + "");
-            Authenticate.User user = Authenticate.getUser(username);
+            SmmUser user = (SmmUser) session.getAttribute("user");
             if (!user.getName().equals("")) {
               out.println("-- User: " + user.getName() + " (" + user.getUsername() + ")");
             } else {

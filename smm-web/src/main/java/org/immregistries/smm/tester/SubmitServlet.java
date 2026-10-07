@@ -57,7 +57,7 @@ public class SubmitServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
       // For example purposes, determine what method to perform based on
       // a "method" request parameter in the URL.
@@ -177,7 +177,7 @@ public class SubmitServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
       int id = 0;
       List<Connector> connectors = ConnectServlet.getConnectors(session);

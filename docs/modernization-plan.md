@@ -34,6 +34,8 @@ SMM is where the implementation is built. It already handles IIS endpoint config
 
 ### 3. Replace authentication and add authorization
 
+First version done 2026-10-07; see [interophub-signon.md](interophub-signon.md).
+
 - **Remove** SMM's old local username/password mechanism from the new line. Do not keep it as an alternate sign-on option.
 - Integrate **InteropHub sign-on** using [InteropHub-Client](https://github.com/immregistries/InteropHub-Client).
 - After sign-on, the application creates **its own session** and checks access to each workspace and operation.
@@ -81,9 +83,11 @@ These pieces belong to the same overall demonstration but are not SMM code:
 - [x] Preserve the stable branch.
 - [x] Confirm the artifact AART currently consumes. It's `org.immregistries:hart:0.3.3`, built from this repo's `hart` branch, not the SMM client JAR. See [java17-core-web-split.md](java17-core-web-split.md).
 - [x] Plan the Java 17 upgrade and the core/web build split ([java17-core-web-split.md](java17-core-web-split.md)).
-- [ ] Remove the old web authentication and set up an application-level session/authorization boundary.
-- [ ] Integrate AIRA Web and InteropHub sign-on.
-- [ ] Set up an isolated synthetic-data demonstration deployment and the user workspace model.
+- [x] Remove the old web authentication and set up an application-level session/authorization boundary. See [interophub-signon.md](interophub-signon.md).
+- [x] Integrate InteropHub sign-on ([interophub-signon.md](interophub-signon.md)).
+- [ ] Integrate AIRA Web.
+- [x] Set up the user workspace model: file-based, one empty workspace per user on first sign-in.
+- [ ] Set up an isolated synthetic-data demonstration deployment.
 - [ ] Prototype file submission and processing around SMM's existing HL7 folders, connections, and response handling.
 - [ ] Define a representative synthetic roster file and draft the school-readable result format.
 - [ ] Prepare initial HL7 examples (for refinement by the technical small group).

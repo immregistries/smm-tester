@@ -36,7 +36,7 @@ public class SetupServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
 
       String testSetSelected = request.getParameter("testSet");

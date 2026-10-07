@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import org.immregistries.smm.web.auth.SmmUser;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -63,7 +64,7 @@ public class HomeServlet extends ClientServlet {
         out.println(
             "    <td>Send multiple messages to an IIS to verify it's ability to handle many different requests at the same time. </td>");
         out.println("  </tr>");
-        Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+        SmmUser user = (SmmUser) session.getAttribute("user");
         if (user.hasSendData()) {
           out.println("  <tr>");
           out.println("    <td><a href=\"InstallCertServlet\">Install Cert</a></td>");

@@ -9,6 +9,7 @@ import java.util.List;
 import org.immregistries.smm.mover.SendData;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.connectors.InstallCert;
+import org.immregistries.smm.web.auth.SmmUser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,11 +35,11 @@ public class InstallCertServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
-      Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+      SmmUser user = (SmmUser) session.getAttribute("user");
       if (user.getSendData() == null) {
-        response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+        response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
         return;
       }
       SendData sendData = user.getSendData();

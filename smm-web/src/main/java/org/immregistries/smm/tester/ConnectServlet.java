@@ -13,6 +13,7 @@ import org.immregistries.smm.mover.SendData;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.connectors.ConnectorFactory;
 import org.immregistries.smm.transform.TestCaseMessage;
+import org.immregistries.smm.web.auth.SmmUser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,9 +39,9 @@ public class ConnectServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
-      Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+      SmmUser user = (SmmUser) session.getAttribute("user");
       String testScript = request.getParameter("testScript");
       List<TestCaseMessage> selectedTestCaseMessageList = null;
       if (testScript == null) {

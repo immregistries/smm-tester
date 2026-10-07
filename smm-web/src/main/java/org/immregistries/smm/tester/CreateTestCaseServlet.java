@@ -25,6 +25,7 @@ import org.immregistries.smm.transform.PatientType;
 import org.immregistries.smm.transform.ScenarioManager;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.Transformer;
+import org.immregistries.smm.web.auth.SmmUser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -54,7 +55,7 @@ public class CreateTestCaseServlet extends ClientServlet {
 
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
       List<Connector> connectors = ConnectServlet.getConnectors(session);
       PrintWriter out = response.getWriter();
@@ -772,7 +773,7 @@ public class CreateTestCaseServlet extends ClientServlet {
   protected static void saveTestCase(TestCaseMessage testCaseMessage, HttpSession session) {
     if (testCaseMessage.getTestCaseNumber() != null
         && !testCaseMessage.getTestCaseNumber().equals("")) {
-      Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+      SmmUser user = (SmmUser) session.getAttribute("user");
       if (testCaseMessage.isGlobal()) {
         File testCaseDir = getOrCreateTestCaseDir(testCaseMessage, user);
         File testCaseFile =
@@ -802,7 +803,7 @@ public class CreateTestCaseServlet extends ClientServlet {
   }
 
   protected static void saveTestCaseHtml(TestCaseMessage testCaseMessage, HttpSession session) {
-    Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+    SmmUser user = (SmmUser) session.getAttribute("user");
     if (user != null && user.hasSendData()) {
       File testCaseDir = getOrCreateTestCaseDir(testCaseMessage, user);
       if (testCaseMessage.getTestCaseNumber() != null
@@ -832,7 +833,7 @@ public class CreateTestCaseServlet extends ClientServlet {
   }
 
   public static File getOrCreateTestCaseDir(TestCaseMessage testCaseMessage,
-      Authenticate.User user) {
+      SmmUser user) {
     if (testCaseMessage.isGlobal() && ConnectionManager.getGlobalFolders().size() > 0) {
       File globalDir = ConnectionManager.getGlobalFolders().get(0);
       if (!globalDir.exists()) {
@@ -858,7 +859,7 @@ public class CreateTestCaseServlet extends ClientServlet {
     }
   }
 
-  public static File getTestDataFile(Authenticate.User user) {
+  public static File getTestDataFile(SmmUser user) {
     SendData sendData = user.getSendData();
     return getTestDataFile(sendData);
   }
@@ -875,7 +876,7 @@ public class CreateTestCaseServlet extends ClientServlet {
   }
 
   protected static void loadTestCases(HttpSession session) throws ServletException, IOException {
-    Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+    SmmUser user = (SmmUser) session.getAttribute("user");
     if (user != null && user.hasSendData()) {
       File testCaseDir = user.getSendData().getTestCaseDir(false);
       if (testCaseDir != null) {

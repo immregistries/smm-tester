@@ -39,7 +39,7 @@ public class MessageViewerServlet extends ClientServlet {
     String action = request.getParameter(PARAM_ACTION);
     String problem = null;
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     }
     QueryRequest queryRequest = new QueryRequest();
     session.setAttribute("queryRequest", queryRequest);
@@ -68,7 +68,7 @@ public class MessageViewerServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
       doGet(request, response, session, null);
     }

@@ -9,6 +9,7 @@ import org.immregistries.smm.mover.SendData;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.manager.query.QueryType;
 import org.immregistries.smm.tester.query.QueryRunner;
+import org.immregistries.smm.web.auth.SmmUser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,10 +31,10 @@ public class BulkQueryServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
       return;
     }
-    Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+    SmmUser user = (SmmUser) session.getAttribute("user");
 
     QueryType queryType = QueryType.NONE;
     if (request.getParameter("queryType") != null) {

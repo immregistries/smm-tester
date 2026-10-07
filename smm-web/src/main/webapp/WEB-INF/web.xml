@@ -8,6 +8,47 @@
   <request-character-encoding>UTF-8</request-character-encoding>
   <response-character-encoding>UTF-8</response-character-encoding>
 
+  <!--
+    Deployment settings. Each can also be set with a Java system property of the same name
+    (-Dsmm.hub.url=...) or an environment variable (SMM_HUB_URL), which take precedence.
+  -->
+  <context-param>
+    <description>Base URL of the InteropHub that signs people in</description>
+    <param-name>smm.hub.url</param-name>
+    <param-value>http://localhost:8080/hub</param-value>
+  </context-param>
+  <context-param>
+    <description>Code SMM is registered under in InteropHub</description>
+    <param-name>smm.app.code</param-name>
+    <param-value>smm</param-value>
+  </context-param>
+  <context-param>
+    <description>Public base URL of SMM, for example https://example.org/smm; when empty it is
+      taken from each request</description>
+    <param-name>smm.external.url</param-name>
+    <param-value></param-value>
+  </context-param>
+  <context-param>
+    <description>Directory holding user workspaces; when empty, CATALINA_BASE/smm/workspaces
+      is used</description>
+    <param-name>smm.workspace.dir</param-name>
+    <param-value></param-value>
+  </context-param>
+  <context-param>
+    <description>Email addresses of SMM administrators, separated by commas</description>
+    <param-name>smm.admin.emails</param-name>
+    <param-value></param-value>
+  </context-param>
+
+  <filter>
+    <filter-name>AuthenticationFilter</filter-name>
+    <filter-class>org.immregistries.smm.web.auth.AuthenticationFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <servlet>
     <servlet-name>ManagerServlet</servlet-name>
     <servlet-class>org.immregistries.smm.mover.ManagerServlet</servlet-class>
@@ -48,14 +89,6 @@
       <param-name>software.dir</param-name>
       <param-value>/var/lib/tomcat9/work/smm</param-value>
       <!-- /home/oisptorg/ois-pt.org/data/dist C:\data\work\product\smm\dist -->
-    </init-param>
-    <init-param>
-      <param-name>admin.username</param-name>
-      <param-value></param-value>
-    </init-param>
-    <init-param>
-      <param-name>admin.password</param-name>
-      <param-value></param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -132,8 +165,12 @@
     <servlet-class>org.immregistries.smm.tester.InstallCertServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>LoginServlet</servlet-name>
-    <servlet-class>org.immregistries.smm.tester.LoginServlet</servlet-class>
+    <servlet-name>SignInServlet</servlet-name>
+    <servlet-class>org.immregistries.smm.web.auth.SignInServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SignOutServlet</servlet-name>
+    <servlet-class>org.immregistries.smm.web.auth.SignOutServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>InterfaceProfileServlet</servlet-name>
@@ -216,8 +253,12 @@
     <url-pattern>/MessageViewerServlet</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>LoginServlet</servlet-name>
-    <url-pattern>/LoginServlet</url-pattern>
+    <servlet-name>SignInServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SignOutServlet</servlet-name>
+    <url-pattern>/logout</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>InterfaceProfileServlet</servlet-name>

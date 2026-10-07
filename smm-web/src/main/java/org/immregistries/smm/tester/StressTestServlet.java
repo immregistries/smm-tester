@@ -20,6 +20,7 @@ import org.immregistries.smm.tester.manager.TestCaseMessageManager;
 import org.immregistries.smm.tester.run.TestRunner;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.Transformer;
+import org.immregistries.smm.web.auth.SmmUser;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -46,12 +47,12 @@ public class StressTestServlet extends ClientServlet {
     response.setContentType("text/html;charset=UTF-8");
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
-    Authenticate.User user = (Authenticate.User) session.getAttribute("user");
+    SmmUser user = (SmmUser) session.getAttribute("user");
     String action = request.getParameter("action");
     String problem = null;
     List<StressRunner> stressRunnerList = getStressRunnerList(session);
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else if (action.equals("Start")) {
 
       int id = 0;
@@ -202,7 +203,7 @@ public class StressTestServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
       doGet(request, response, session, null);
     }
@@ -456,7 +457,7 @@ public class StressTestServlet extends ClientServlet {
     private String lastResult = "";
     private StringBuilder log = new StringBuilder();
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS Z");
-    private Authenticate.User user = null;
+    private SmmUser user = null;
     private int pos = 0;
     private String saveDirName = null;
     private boolean saveTestMessages = false;
@@ -490,7 +491,7 @@ public class StressTestServlet extends ClientServlet {
       this.pos = pos;
     }
 
-    public void setUser(Authenticate.User user) {
+    public void setUser(SmmUser user) {
       this.user = user;
     }
 

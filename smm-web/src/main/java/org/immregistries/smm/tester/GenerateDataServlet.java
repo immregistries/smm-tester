@@ -38,7 +38,7 @@ public class GenerateDataServlet extends ClientServlet {
     String username = (String) session.getAttribute("username");
     String problem = null;
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     }
     doGet(request, response, session, problem);
   }
@@ -61,7 +61,7 @@ public class GenerateDataServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     if (username == null) {
-      response.sendRedirect(Authenticate.APP_DEFAULT_HOME);
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
     } else {
       doGet(request, response, session, null);
     }

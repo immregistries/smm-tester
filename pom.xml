@@ -80,6 +80,16 @@
                 <version>1.13.1</version>
             </dependency>
             <dependency>
+                <groupId>org.immregistries</groupId>
+                <artifactId>interophub-client</artifactId>
+                <version>1.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>2.0.16</version>
+            </dependency>
+            <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
                 <version>6.1.0</version>
@@ -91,6 +101,20 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <!-- InteropHub-Client is not yet published to Maven Central; a copy is kept in repo/ -->
+        <repository>
+            <id>smm-local</id>
+            <url>file://${maven.multiModuleProjectDirectory}/repo</url>
+            <releases>
+                <checksumPolicy>fail</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <pluginManagement>
