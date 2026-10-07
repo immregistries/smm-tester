@@ -15,7 +15,7 @@ Sources: `aira-web` 0.1.12 (`docs/adoption-guide.md`, `docs/components-guide.md`
 ## Dependency
 
 - **Artifacts:** add `org.immregistries:aira-web-components:0.1.12`, which brings in `aira-web-theme`. They aren't on Maven Central, so keep copies (and the `aira-web` parent POM) in `repo/`, the same as InteropHub-Client.
-- **Ticket:** open an aira-web ticket like [InteropHub-Client#1](https://github.com/immregistries/InteropHub-Client/issues/1). Mismo already depends on aira-web-components and can only build where the artifact is in the local Maven cache.
+- **Ticket:** publishing to Maven Central is tracked in [aira-web#1](https://github.com/immregistries/aira-web/issues/1) (like [InteropHub-Client#1](https://github.com/immregistries/InteropHub-Client/issues/1)). Mismo already depends on aira-web-components and can only build where the artifact is in the local Maven cache.
 - **Resources:** the theme JAR serves `/aira/css/aira.css` and the AIRA logo from `META-INF/resources`. `AuthenticationFilter` already leaves `.css` and `.png` public, so they load on the sign-in error page too.
 
 ## Shell
