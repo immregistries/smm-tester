@@ -89,16 +89,11 @@ public class ConnectionManager {
   private static String randomId = "";
   private static String supportCenterUrl = null;
   private static String supportCenterCode = "";
-  private static File softwareDir = null;
   private static boolean scanDirectories = true;
   private static List<File> globalFolders = new ArrayList<File>();
 
   public static List<File> getGlobalFolders() {
     return globalFolders;
-  }
-
-  public static void setSoftwareDir(File softwareDir) {
-    ConnectionManager.softwareDir = softwareDir;
   }
 
   private static final boolean ENABLE_SUPPORT_CENTER = false;
@@ -109,10 +104,6 @@ public class ConnectionManager {
 
   public static void setScanDirectories(boolean scanDirectories) {
     ConnectionManager.scanDirectories = scanDirectories;
-  }
-
-  public static File getSoftwareDir() {
-    return softwareDir;
   }
 
   public static String getStableSystemId() {

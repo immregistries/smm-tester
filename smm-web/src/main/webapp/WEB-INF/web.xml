@@ -85,11 +85,6 @@
       <param-name>support_center.url</param-name>
       <param-value>http://ois-dqa.net/dqa/remote</param-value>
     </init-param>
-    <init-param>
-      <param-name>software.dir</param-name>
-      <param-value>/var/lib/tomcat9/work/smm</param-value>
-      <!-- /home/oisptorg/ois-pt.org/data/dist C:\data\work\product\smm\dist -->
-    </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet>
@@ -107,10 +102,6 @@
   <servlet>
     <servlet-name>CatchServlet</servlet-name>
     <servlet-class>org.immregistries.smm.tester.CatchServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>DashboardServlet</servlet-name>
-    <servlet-class>org.immregistries.smm.tester.DashboardServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>GenerateDataServlet</servlet-name>
@@ -184,30 +175,6 @@
     <servlet-name>ConnectServlet</servlet-name>
     <servlet-class>org.immregistries.smm.tester.ConnectServlet</servlet-class>
   </servlet>
-  <servlet>
-    <servlet-name>smm.install.ConfigureServlet</servlet-name>
-    <servlet-class>org.immregistries.smm.mover.install.ConfigureServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>smm.install.DownloadServlet</servlet-name>
-    <servlet-class>org.immregistries.smm.mover.install.DownloadServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>smm.install.PrepareServlet</servlet-name>
-    <servlet-class>org.immregistries.smm.mover.install.PrepareServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>smm.install.InstallServlet</servlet-name>
-    <servlet-class>org.immregistries.smm.mover.install.InstallServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>dqa.install.DownloadServlet</servlet-name>
-    <servlet-class>org.immregistries.smm.install.DownloadServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>DashboardServlet</servlet-name>
-    <url-pattern>/dash</url-pattern>
-  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>CreateTestCaseServlet</servlet-name>
     <url-pattern>/CreateTestCaseServlet</url-pattern>
@@ -281,32 +248,12 @@
     <url-pattern>/HomeServlet</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>smm.install.ConfigureServlet</servlet-name>
-    <url-pattern>/install/ConfigureServlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>smm.install.DownloadServlet</servlet-name>
-    <url-pattern>/install/DownloadServlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>dqa.install.DownloadServlet</servlet-name>
-    <url-pattern>/installDQA/DownloadServlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>smm.install.PrepareServlet</servlet-name>
-    <url-pattern>/install/PrepareServlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>ModifyMessageServlet</servlet-name>
     <url-pattern>/ModifyMessageServlet</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>GenerateExamplesServlet</servlet-name>
     <url-pattern>/GenerateExamplesServlet</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>smm.install.InstallServlet</servlet-name>
-    <url-pattern>/install/InstallServlet</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
   <servlet-name>ManagerServlet</servlet-name>
@@ -320,4 +267,7 @@
   <servlet-name>WSDLDemoServlet</servlet-name>
     <url-pattern>/wsdl-demo/*</url-pattern>
   </servlet-mapping>
+  <welcome-file-list>
+    <welcome-file>HomeServlet</welcome-file>
+  </welcome-file-list>
 </web-app>

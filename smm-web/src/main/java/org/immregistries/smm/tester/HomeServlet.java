@@ -1,153 +1,159 @@
 package org.immregistries.smm.tester;
 
-import org.immregistries.smm.web.auth.SmmUser;
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import org.immregistries.smm.tester.connectors.Connector;
+import org.immregistries.smm.web.SmmNavigation;
+import org.immregistries.smm.web.SmmNavigation.Area;
+import org.immregistries.smm.web.SmmNavigation.Page;
+import org.immregistries.smm.web.auth.SmmSession;
+import org.immregistries.smm.web.auth.SmmUser;
+import org.immregistries.smm.workspace.Workspace;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 /**
- * @author nathan
+ * The home page: who is signed in, their workspace and IIS connections, and the main areas of the
+ * application.
  */
 public class HomeServlet extends ClientServlet {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-   * 
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
+  private static final String[][] AREA_DESCRIPTIONS = {
+      {"CONNECT", "Set up and test the connection to an IIS."},
+      {"SEND", "Send a message or a query to an IIS and read the response."},
+      {"TEST_CASES", "Load, edit, and run test case scripts."},
+      {"TOOLS", "View, modify, and generate HL7 messages, and other utilities."}};
+
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     response.setContentType("text/html;charset=UTF-8");
-    HttpSession session = request.getSession(true);
-    String username = (String) session.getAttribute("username");
-
+    SmmUser user = SmmSession.getUser(request);
     PrintWriter out = response.getWriter();
     try {
-      printHtmlHead(out, MENU_HEADER_HOME, request);
-      if (username == null) {
-        out.println("<h1>HL7 IIS Tester &amp; Simple Message Mover</h1>");
-      } else {
-        out.println("<h2>Primary Test Functions</h2>");
-        out.println("<table border=\"1\" cellspacing=\"0\">");
-        out.println("  <tr>");
-        out.println("    <th>Function</th>");
-        out.println("    <th>Details</th>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td><a href=\"ConnectServlet\">" + MENU_HEADER_CONNECT + "</a></td>");
-        out.println("    <td>Setup connection to an IIS. </td>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td><a href=\"SetupServlet\">" + MENU_HEADER_SETUP + "</a></td>");
-        out.println("    <td>Load, select, and download test case scripts.</td>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td><a href=\"CreateTestCaseServlet\">" + MENU_HEADER_EDIT + "</a></td>");
-        out.println("    <td>Edit a selected test case or create a new test case. </td>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td><a href=\"SubmitServlet\">" + MENU_HEADER_SEND + "</a></td>");
-        out.println("    <td>Submit a message or a test case to an IIS for processing.</td>");
-        out.println("  </tr>");
-        out.println("</table>");
-        out.println("<h2>Other Functions</h2>");
-        out.println("<table border=\"1\" cellspacing=\"0\">");
-        out.println("  <tr>");
-        out.println("    <td><a href=\"StressTestServlet\">Stress Test</a></td>");
-        out.println(
-            "    <td>Send multiple messages to an IIS to verify it's ability to handle many different requests at the same time. </td>");
-        out.println("  </tr>");
-        SmmUser user = (SmmUser) session.getAttribute("user");
-        if (user.hasSendData()) {
-          out.println("  <tr>");
-          out.println("    <td><a href=\"InstallCertServlet\">Install Cert</a></td>");
-          out.println("    <td>Install certificate for use on a particular connection.</td>");
-          out.println("  </tr>");
-          out.println("  <tr>");
-          out.println("    <td><a href=\"ManualQueryServlet\">Query IIS</a></td>");
-          out.println("    <td>Query and read response from IIS.</td>");
-          out.println("  </tr>");
-          out.println("  <tr>");
-          out.println("    <td><a href=\"BulkQueryServlet\">Bulk Query IIS</a></td>");
-          out.println("    <td>Query and read response from IIS.</td>");
-          out.println("  </tr>");
-        }
-        out.println("  <tr>");
-        out.println("    <td><a href=\"MessageViewerServlet\">Message Viewer</a></td>");
-        out.println("    <td>View Message Details</td>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td><a href=\"ModifyMessageServlet\">Modify Message</a></td>");
-        out.println("    <td>Apply a modification script to an HL7 message and see the result.</td>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td><a href=\"GenerateDataServlet\">Generate Data</a></td>");
-        out.println("    <td>Create sample messages </td>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td><a href=\"testCase\">Run Tests</a></td>");
-        out.println(
-            "    <td>This is a deprecated function that is now covered by the Test IIS. </td>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td><a href=\"interfaceProfile\">Profile Interface</a></td>");
-        out.println(
-            "    <td>This is a deprecated function that is now covered by the Test IIS. </td>");
-        out.println("  </tr>");        
-        out.println("</table>");
-      }
-      printHtmlFoot(out);
+      printHtmlHead(out, "Home", request);
+      String contextPath = request.getContextPath();
 
+      out.println("<div class=\"aira-stack\">");
+      out.println("  <div class=\"aira-page-header\"><div>");
+      out.println("    <h1 class=\"aira-page-title\">Welcome"
+          + (user == null ? "" : ", " + escapeHtml(user.getName())) + "</h1>");
+      out.println("    <p class=\"aira-page-intro\">Connect to an Immunization Information System "
+          + "(IIS), send HL7 messages, and run tests.</p>");
+      out.println("  </div></div>");
+
+      out.println("  <div class=\"aira-grid\">");
+      printWorkspacePanel(out, user);
+      printConnectionsPanel(out, request, contextPath);
+      out.println("  </div>");
+
+      out.println("  <div class=\"aira-card-grid\">");
+      for (String[] areaDescription : AREA_DESCRIPTIONS) {
+        printAreaCard(out, Area.valueOf(areaDescription[0]), areaDescription[1], contextPath,
+            user != null && user.hasSendData());
+      }
+      out.println("  </div>");
+      out.println("</div>");
+
+      printHtmlFoot(out);
     } finally {
       out.close();
     }
   }
 
-  // <editor-fold defaultstate="collapsed"
-  // desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+  private static void printWorkspacePanel(PrintWriter out, SmmUser user) {
+    out.println("  <section class=\"aira-panel\">");
+    out.println("    <div class=\"aira-panel__header\">"
+        + "<h2 class=\"aira-panel__title\">Your Workspace</h2></div>");
+    out.println("    <div class=\"aira-panel__body\">");
+    if (user == null) {
+      out.println("      <p>Not signed in.</p>");
+    } else {
+      Workspace workspace = user.getWorkspace();
+      out.println("      <dl class=\"smm-details\">");
+      printDetail(out, "Name", user.getName());
+      printDetail(out, "Organization", user.getOrganization());
+      printDetail(out, "Email", user.getEmail());
+      if (workspace != null) {
+        printDetail(out, "Workspace", workspace.getId());
+      }
+      out.println("      </dl>");
+    }
+    out.println("    </div>");
+    out.println("  </section>");
+  }
 
-  /**
-   * Handles the HTTP <code>GET</code> method.
-   * 
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
+  private static void printConnectionsPanel(PrintWriter out, HttpServletRequest request,
+      String contextPath) {
+    List<Connector> connectors = ConnectServlet.getConnectors(request.getSession());
+    out.println("  <section class=\"aira-panel\">");
+    out.println("    <div class=\"aira-panel__header\">"
+        + "<h2 class=\"aira-panel__title\">IIS Connections</h2></div>");
+    out.println("    <div class=\"aira-panel__body\">");
+    if (connectors.isEmpty()) {
+      out.println("      <p>No IIS connection has been set up for this session.</p>");
+    } else {
+      out.println("      <div class=\"aira-table-wrap\">");
+      out.println("        <table class=\"aira-table\">");
+      out.println("          <caption class=\"aira-visually-hidden\">IIS connections</caption>");
+      out.println("          <thead><tr><th scope=\"col\">Connection</th>"
+          + "<th scope=\"col\">Type</th><th scope=\"col\">URL</th></tr></thead>");
+      out.println("          <tbody>");
+      for (Connector connector : connectors) {
+        out.println("            <tr><th scope=\"row\" class=\"aira-table__cell--primary\">"
+            + escapeHtml(connector.getLabelDisplay()) + "</th><td>"
+            + escapeHtml(connector.getType()) + "</td><td class=\"aira-table__cell--code\">"
+            + escapeHtml(connector.getUrl()) + "</td></tr>");
+      }
+      out.println("          </tbody>");
+      out.println("        </table>");
+      out.println("      </div>");
+    }
+    out.println("      <p><a class=\"aira-button aira-button--secondary aira-button--small\" href=\""
+        + contextPath + Area.CONNECT.getHref() + "\">"
+        + (connectors.isEmpty() ? "Connect to an IIS" : "Manage connections") + "</a></p>");
+    out.println("    </div>");
+    out.println("  </section>");
+  }
+
+  private static void printAreaCard(PrintWriter out, Area area, String description,
+      String contextPath, boolean hasMoverConnection) {
+    out.println("    <section class=\"aira-section-card\">");
+    out.println("      <div class=\"aira-section-card__header\"><h2 class=\"aira-section-card__title\">"
+        + "<a href=\"" + contextPath + area.getHref() + "\">" + area.getLabel() + "</a></h2></div>");
+    out.println("      <div class=\"aira-section-card__body\">");
+    out.println("        <p>" + description + "</p>");
+    out.println("        <ul class=\"smm-link-list\">");
+    for (Page page : SmmNavigation.getRailPages(area, hasMoverConnection)) {
+      String href = contextPath + page.getPath() + (page.getPath().equals("/wsdl-demo") ? "/" : "");
+      out.println("          <li><a href=\"" + href + "\">" + page.getLabel() + "</a></li>");
+    }
+    out.println("        </ul>");
+    out.println("      </div>");
+    out.println("    </section>");
+  }
+
+  private static void printDetail(PrintWriter out, String label, String value) {
+    out.println("        <dt>" + label + "</dt><dd>" + escapeHtml(value) + "</dd>");
+  }
+
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     processRequest(request, response);
   }
 
-  /**
-   * Handles the HTTP <code>POST</code> method.
-   * 
-   * @param request servlet request
-   * @param response servlet response
-   * @throws ServletException if a servlet-specific error occurs
-   * @throws IOException if an I/O error occurs
-   */
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     processRequest(request, response);
   }
 
-  /**
-   * Returns a short description of the servlet.
-   * 
-   * @return a String containing servlet description
-   */
   @Override
   public String getServletInfo() {
-    return "DQA Tester Home Page";
-  }// </editor-fold>
+    return "Simple Message Mover home page";
+  }
 }

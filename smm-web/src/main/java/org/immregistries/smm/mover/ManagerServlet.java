@@ -15,7 +15,6 @@ public class ManagerServlet extends ClientServlet {
   public static final String INIT_PARAM_SUN_SECURITY_SSL_ALLOW_UNSAFE_RENEGOTIATION =
       "sun.security.ssl.allowUnsafeRenegotiation";
   public static final String INIT_PARAM_KEY_STORE = "keyStore";
-  public static final String INIT_PARAM_SOFTWARE_DIR = "software.dir";
   public static final String INIT_PARAM_SUPPORT_CENTER_CODE = "support_center.code";
   public static final String INIT_PARAM_SUPPORT_CENTER_URL = "support_center.url";
   public static final String INIT_PARAM_FOLDER_SCAN_ENABLED = "folderScanEnabled";
@@ -62,10 +61,6 @@ public class ManagerServlet extends ClientServlet {
     ConnectionManager.setSupportCenterCode(getInitParameter(INIT_PARAM_SUPPORT_CENTER_CODE));
     ConnectionManager.setSupportCenterUrl(getInitParameter(INIT_PARAM_SUPPORT_CENTER_URL));
 
-    String softwareDirString = getInitParameter(INIT_PARAM_SOFTWARE_DIR);
-    if (softwareDirString != null && softwareDirString.length() > 0) {
-      ConnectionManager.setSoftwareDir(new File(softwareDirString));
-    }
 
     connectionManager.setKeyStore(getInitParameter(INIT_PARAM_KEY_STORE));
     connectionManager.setKeyStorePassword(getInitParameter(INIT_PARAM_KEY_STORE_PASSWORD));

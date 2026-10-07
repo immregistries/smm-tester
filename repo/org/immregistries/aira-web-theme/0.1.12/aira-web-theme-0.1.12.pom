@@ -1,0 +1,74 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.immregistries</groupId>
+    <artifactId>aira-web</artifactId>
+    <version>0.1.12</version>
+  </parent>
+
+  <artifactId>aira-web-theme</artifactId>
+  <packaging>jar</packaging>
+
+  <name>AIRA Web Theme</name>
+  <description>Shared AIRA web resources exposed through META-INF/resources.</description>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>${project.build.directory}/generated-resources/aira-theme</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>build-theme-stylesheet</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <mkdir dir="${project.build.directory}/generated-resources/aira-theme/META-INF/resources/aira/css"/>
+                <concat destfile="${project.build.directory}/generated-resources/aira-theme/META-INF/resources/aira/css/aira.css"
+                        fixlastline="yes">
+                  <filelist dir="${project.basedir}/src/main/theme-css"
+                            files="00-banner.css,01-tokens.css,02-reset-base.css,03-accessibility.css,04-global-shell.css,05-context-nav.css,06-layout.css,07-typography.css,08-buttons-actions.css,09-forms.css,10-badges-tags.css,11-cards-panels-choice-rows.css,12-event-lists.css,13-topic-dashboard.css,14-tables.css,15-dialog.css,15-alerts.css,16-management.css,17-footer.css,18-utilities.css,19-responsive.css,20-print.css,21-reduced-motion.css"/>
+                </concat>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
+            <id>verify-theme-resource-in-jar</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <fail message="Theme JAR is missing META-INF/resources/aira/css/aira.css">
+                  <condition>
+                    <not>
+                      <resourceexists>
+                        <zipentry zipfile="${project.build.directory}/${project.build.finalName}.jar"
+                                  name="META-INF/resources/aira/css/aira.css"/>
+                      </resourceexists>
+                    </not>
+                  </condition>
+                </fail>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.immregistries.aira.web.AiraPage;
+import org.immregistries.smm.web.SmmNavigation.Area;
+import org.immregistries.smm.web.SmmPage;
 import org.immregistries.smm.web.SmmWebConfig;
 import org.immregistries.smm.workspace.Workspace;
 import jakarta.servlet.ServletException;
@@ -62,15 +65,21 @@ public class SignInServlet extends HttpServlet {
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
-    out.println("<!DOCTYPE html>");
-    out.println("<html><head><meta charset=\"UTF-8\"><title>Sign-in Problem</title>");
-    out.println("<link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\" /></head><body>");
-    out.println("<h1>Unable to Sign In</h1>");
-    out.println("<p>" + escapeHtml(message) + "</p>");
-    out.println("<p><a href=\"" + request.getContextPath() + "/login\">Try again</a> or return to "
-        + "<a href=\"" + escapeHtml(provider.getSignOutUrl(request)) + "\">"
-        + escapeHtml(provider.getName()) + "</a>.</p>");
-    out.println("</body></html>");
+    AiraPage page = SmmPage.buildAiraPage(request, Area.HOME, "Unable to Sign In");
+    page.writeStart(out);
+    out.println("    <div class=\"aira-container--narrow aira-stack\">");
+    out.println("      <h1 class=\"aira-page-title\">Unable to Sign In</h1>");
+    out.println("      <div class=\"aira-alert aira-alert--error\" role=\"alert\"><p>"
+        + escapeHtml(message) + "</p></div>");
+    out.println("      <div class=\"aira-cluster\">");
+    out.println("        <a class=\"aira-button aira-button--primary\" href=\""
+        + request.getContextPath() + "/login\">Try again</a>");
+    out.println("        <a class=\"aira-button aira-button--secondary\" href=\""
+        + escapeHtml(provider.getSignOutUrl(request)) + "\">Return to "
+        + escapeHtml(provider.getName()) + "</a>");
+    out.println("      </div>");
+    out.println("    </div>");
+    page.writeEnd(out);
   }
 
   static String escapeHtml(String value) {

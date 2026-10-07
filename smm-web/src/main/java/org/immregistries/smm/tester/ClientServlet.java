@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.util.List;
 import org.immregistries.smm.SoftwareVersion;
 import org.immregistries.smm.tester.connectors.Connector;
+import org.immregistries.smm.web.SmmPage;
 import org.immregistries.smm.web.auth.SmmUser;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,109 +22,32 @@ public class ClientServlet extends HttpServlet {
   protected static final String MENU_HEADER_EDIT = "Edit Test Case";
   protected static final String MENU_HEADER_SEND = "Send Message";
   
-  protected static void printHtmlHead(PrintWriter out, String title, HttpServletRequest request) {
-    out.println("<html>");
-    out.println("  <head>");
-    out.println("    <title>" + title + "</title>");
-    out.println("    <link rel=\"stylesheet\" type=\"text/css\" href=\"index.css\" />");
-    out.println("    <script>");
-    out.println("      function toggleLayer(whichLayer) ");
-    out.println("      {");
-    out.println("        var elem, vis;");
-    out.println("        if (document.getElementById) ");
-    out.println("          elem = document.getElementById(whichLayer);");
-    out.println("        else if (document.all) ");
-    out.println("          elem = document.all[whichLayer] ");
-    out.println("        else if (document.layers) ");
-    out.println("          elem = document.layers[whichLayer]");
-    out.println("        vis = elem.style;");
-    out.println(
-        "        if (vis.display == '' && elem.offsetWidth != undefined && elem.offsetHeight != undefined) ");
-    out.println(
-        "          vis.display = (elem.offsetWidth != 0 && elem.offsetHeight != 0) ? 'block' : 'none';");
-    out.println(
-        "        vis.display = (vis.display == '' || vis.display == 'block') ? 'none' : 'block';");
-    out.println("      }");
-    out.println("    </script>");
-    out.println("  </head>");
-    out.println("  <body>");
-    out.println(makeMenu(request, title));
-    String message = (String) request.getAttribute("message");
-    if (message != null) {
-      out.println("<p class=\"fail\">" + message + "</p>");
-    }
-
-  }
-
-  public static String makeMenu(HttpServletRequest request) {
-    return makeMenu(request, "&nbsp;");
-  }
-
   public static final String APP_DEFAULT_HOME = "HomeServlet";
 
-  private static final String[][] MENU_LOGGED_OUT =
-      {{APP_DEFAULT_HOME, MENU_HEADER_HOME}, {"login", "Sign in"}};
-  private static final String[][] MENU_LOGGED_IN =
-      {{APP_DEFAULT_HOME, MENU_HEADER_HOME}, {"ConnectServlet", MENU_HEADER_CONNECT},
-          {"SetupServlet", MENU_HEADER_SETUP}, {"CreateTestCaseServlet", MENU_HEADER_EDIT},
-          {"SubmitServlet", MENU_HEADER_SEND},
-          {"logout", "Sign out"}};
-
-  public static String makeMenu(HttpServletRequest request, String title) {
-    boolean loggedIn = false;
-    HttpSession session = request.getSession();
-    if (session != null) {
-      loggedIn = session.getAttribute("username") != null;
+  /**
+   * Writes the AIRA application shell and opens the page content. Any "message" request attribute
+   * is shown as an alert at the top of the content.
+   */
+  protected static void printHtmlHead(PrintWriter out, String title, HttpServletRequest request) {
+    SmmPage.writeStart(out, request, title);
+    String message = (String) request.getAttribute("message");
+    if (message != null) {
+      out.println("<div class=\"aira-alert aira-alert--warning\" role=\"status\"><p>" + message
+          + "</p></div>");
     }
-    String[][] menu = loggedIn ? MENU_LOGGED_IN : MENU_LOGGED_OUT;
-    StringBuilder result = new StringBuilder();
-    result.append("    <table class=\"menu\"><tr><td>");
-    for (int i = 0; i < menu.length; i++) {
-      if (i > 0) {
-        // result.append(" &bull; ");
-        result.append(" ");
-      }
-      String styleClass = "menuLink";
-      if (menu[i][1].equals(title)) {
-        styleClass = "menuLinkSelected";
-      }
-      result.append("<a class=\"");
-      result.append(styleClass);
-      result.append("\" href=\"");
-      result.append(menu[i][0]);
-      result.append("\">");
-      result.append(menu[i][1]);
-      result.append("</a>");
-
-    }
-    result.append("</td><td align=\"right\">");
-    if (loggedIn) {
-      SmmUser user = (SmmUser) session.getAttribute("user");
-      if (user != null) {
-        if (user.getName().equals("")) {
-          result.append(user.getUsername());
-        } else {
-          result.append(user.getName());
-        }
-      }
-    } else {
-      result.append("&nbsp;");
-    }
-    result.append("</td></tr></table><br>");
-    return result.toString();
   }
 
   public static void printFooter(PrintWriter out) {
     out.println(
-        "    <p>American Immunization Registry Association - IIS HL7 Tester &amp; Simple Message Mover - Version "
+        "    <p>American Immunization Registry Association - Simple Message Mover - Version "
             + SoftwareVersion.VERSION + "</p>");
-
   }
 
+  /**
+   * Closes the page content and writes the rest of the AIRA application shell.
+   */
   public static void printHtmlFoot(PrintWriter out) {
-    printFooter(out);
-    out.println("  </body>");
-    out.println("</html>");
+    SmmPage.writeEnd(out);
   }
 
   public static void printHtmlFootForFile(PrintWriter out) {

@@ -1,0 +1,159 @@
+/*
+ * Simple Message Mover styles, loaded after the shared AIRA Web stylesheet (aira.css).
+ * Use aira- classes for new content; the rules here cover SMM-specific content and the
+ * classes older pages still use until they are converted.
+ */
+
+/* Page content beside the right rail */
+.smm-content {
+  min-width: 0;
+}
+
+.smm-content > :first-child {
+  margin-top: 0;
+}
+
+/* HL7 and other technical text */
+.smm-content pre,
+.smm-hl7 {
+  font-family: var(--aira-font-mono);
+  font-size: 0.875rem;
+  background: var(--aira-surface-muted);
+  border: 1px solid var(--aira-border-subtle);
+  border-radius: var(--aira-radius-control);
+  padding: var(--aira-space-2) var(--aira-space-3);
+  margin: var(--aira-space-2) 0;
+  overflow: auto;
+  white-space: pre;
+}
+
+.smm-content textarea {
+  font-family: var(--aira-font-mono);
+  max-width: 100%;
+}
+
+/* Tables on pages not yet converted to aira-table */
+.smm-content table[border="1"],
+.smm-content table.boxed,
+.smm-content table.dashTable {
+  border-collapse: collapse;
+  margin: var(--aira-space-2) 0;
+}
+
+.smm-content table[border="1"] th,
+.smm-content table[border="1"] td,
+.smm-content table.boxed th,
+.smm-content table.boxed td,
+.smm-content table.dashTable th,
+.smm-content table.dashTable td {
+  border: 1px solid var(--aira-border);
+  padding: var(--aira-space-1) var(--aira-space-2);
+  vertical-align: top;
+  text-align: left;
+}
+
+.smm-content table[border="1"] th,
+.smm-content table.boxed th,
+.smm-content table.dashTable th {
+  background: var(--aira-surface-muted);
+  font-weight: 600;
+}
+
+/* Test and comparison results */
+.pass {
+  background: var(--aira-success-surface);
+  padding-left: var(--aira-space-1);
+}
+
+.fail,
+.different {
+  background: var(--aira-error-surface);
+  padding-left: var(--aira-space-1);
+}
+
+.running {
+  background: var(--aira-warning-surface);
+  padding-left: var(--aira-space-1);
+}
+
+.nottested {
+  padding-left: var(--aira-space-1);
+}
+
+.blank {
+  background: var(--aira-surface-disabled);
+}
+
+/* Older layout helpers */
+.scrollbox {
+  max-width: 100%;
+  overflow: auto;
+}
+
+.help {
+  max-width: var(--aira-reading-max);
+  padding: var(--aira-space-2) 0;
+}
+
+.smallTitle {
+  padding: 0 var(--aira-space-1);
+  border: 1px solid var(--aira-border);
+}
+
+.boxed {
+  border: 1px solid var(--aira-border);
+  border-collapse: collapse;
+  padding: 0 var(--aira-space-1);
+}
+
+.viewMenu,
+.submenu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--aira-space-2);
+  padding: var(--aira-space-2) var(--aira-space-3);
+  background: var(--aira-surface-muted);
+  border: 1px solid var(--aira-border-subtle);
+  border-radius: var(--aira-radius-control);
+}
+
+/* Links on individual HL7 fields in the message viewers */
+.smm-content a.hl7 {
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--aira-radius-xs);
+}
+
+.smm-content a.hl7:hover,
+.smm-content a.hl7:focus {
+  background: var(--aira-info-surface);
+  text-decoration: none;
+}
+
+/* Label/value details, for example the workspace panel on the home page */
+.smm-details {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--aira-space-1) var(--aira-space-4);
+  margin: 0;
+}
+
+.smm-details dt {
+  color: var(--aira-text-secondary);
+  font-weight: 600;
+}
+
+.smm-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Plain list of links, for example a navigation area's pages on the home page */
+.smm-link-list {
+  margin: var(--aira-space-2) 0 0;
+  padding-left: var(--aira-space-5);
+}
+
+.smm-link-list li + li {
+  margin-top: var(--aira-space-1);
+}

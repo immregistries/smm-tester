@@ -34,6 +34,10 @@
             <artifactId>interophub-client</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.immregistries</groupId>
+            <artifactId>aira-web-components</artifactId>
+        </dependency>
+        <dependency>
             <!-- Sends InteropHub-Client's SLF4J logging to the container's java.util.logging -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>

@@ -36,6 +36,23 @@
     </dependencies>
 
     <build>
+        <resources>
+            <!-- Only the version file is filtered; the other resources are copied unchanged -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>org/immregistries/smm/smm-version.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>org/immregistries/smm/smm-version.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

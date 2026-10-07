@@ -35,6 +35,11 @@ public class BulkQueryServlet extends ClientServlet {
       return;
     }
     SmmUser user = (SmmUser) session.getAttribute("user");
+    if (user == null || user.getSendData() == null) {
+      // Bulk queries read from and write to a folder-based mover connection
+      response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
+      return;
+    }
 
     QueryType queryType = QueryType.NONE;
     if (request.getParameter("queryType") != null) {
