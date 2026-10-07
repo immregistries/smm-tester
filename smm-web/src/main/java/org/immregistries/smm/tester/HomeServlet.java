@@ -41,7 +41,7 @@ public class HomeServlet extends ClientServlet {
         out.println("    <th>Details</th>");
         out.println("  </tr>");
         out.println("  <tr>");
-        out.println("    <td><a href=\"SetupServlet\">" + MENU_HEADER_CONNECT + "</a></td>");
+        out.println("    <td><a href=\"ConnectServlet\">" + MENU_HEADER_CONNECT + "</a></td>");
         out.println("    <td>Setup connection to an IIS. </td>");
         out.println("  </tr>");
         out.println("  <tr>");
@@ -82,6 +82,10 @@ public class HomeServlet extends ClientServlet {
         out.println("  <tr>");
         out.println("    <td><a href=\"MessageViewerServlet\">Message Viewer</a></td>");
         out.println("    <td>View Message Details</td>");
+        out.println("  </tr>");
+        out.println("  <tr>");
+        out.println("    <td><a href=\"ModifyMessageServlet\">Modify Message</a></td>");
+        out.println("    <td>Apply a modification script to an HL7 message and see the result.</td>");
         out.println("  </tr>");
         out.println("  <tr>");
         out.println("    <td><a href=\"GenerateDataServlet\">Generate Data</a></td>");
