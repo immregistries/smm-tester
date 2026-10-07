@@ -86,7 +86,7 @@ The legacy login let someone sign in as one of those connections. Now only users
 
 ## Dependency note
 
-InteropHub-Client is not on Maven Central. Following StepIntoCDSI, a copy of 1.1.0 (with SHA-1 checksums) is committed in `repo/` and declared as the `smm-local` repository in the parent POM. A build with an empty Maven cache resolves it from there. Publishing InteropHub-Client to Maven Central would remove the need for `repo/`.
+InteropHub-Client is not on Maven Central. Following StepIntoCDSI, a copy of 1.1.0 (with SHA-1 checksums) is committed in `repo/` and declared as the `smm-local` repository in the parent POM. A build with an empty Maven cache resolves it from there. Publishing InteropHub-Client to Maven Central would remove the need for `repo/`; that is tracked in [InteropHub-Client#1](https://github.com/immregistries/InteropHub-Client/issues/1).
 
 The client logs through SLF4J. `slf4j-jdk14` sends those messages to Tomcat's log.
 
