@@ -85,7 +85,7 @@ These pieces belong to the same overall demonstration but are not SMM code:
 - [x] Plan the Java 17 upgrade and the core/web build split ([java17-core-web-split.md](java17-core-web-split.md)).
 - [x] Remove the old web authentication and set up an application-level session/authorization boundary. See [interophub-signon.md](interophub-signon.md).
 - [x] Integrate InteropHub sign-on ([interophub-signon.md](interophub-signon.md)).
-- [ ] Integrate AIRA Web.
+- [ ] Integrate AIRA Web. Planned in [aira-web-plan.md](aira-web-plan.md).
 - [x] Set up the user workspace model: file-based, one empty workspace per user on first sign-in.
 - [ ] Set up an isolated synthetic-data demonstration deployment.
 - [ ] Prototype file submission and processing around SMM's existing HL7 folders, connections, and response handling.
