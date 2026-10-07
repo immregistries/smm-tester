@@ -13,8 +13,8 @@ SMM is where the implementation is built. It already handles IIS endpoint config
 ## Starting point
 
 - Latest release: `v3.1.0` (Feb 2025). `master` has 8 unreleased Dependabot bumps after it, including CXF 3.5.5 → 4.1.1.
-- Single Maven module, `org.immregistries:smm-tester`, packaged as a WAR. It compiles for Java 1.8.
-- The build also produces a `client` classified JAR. AART consumes this JAR (we still need to confirm the exact artifact and version).
+- Single Maven module, `org.immregistries:smm-tester`, packaged as a WAR. It compiles for Java 1.8. `modernize` is now `4.0.0-SNAPSHOT`.
+- The build also produces a `client` classified JAR. AART used to consume it but moved to `hart` in 2025.
 - Pushing any tag runs `.github/workflows/maven-publish.yml`, which deploys to Maven Central. **Do not push tags from `modernize`** until publishing for the new modules is set up on purpose.
 - Main code is in `org.immregistries.smm` (`mover`, `tester`, `transform`, `install`, `cdc`), plus generated SOAP/web-service client code under `com.microsoft`, `faultcontracts`, `gov.nist`, and `servicecontracts`.
 
@@ -23,7 +23,7 @@ SMM is where the implementation is built. It already handles IIS endpoint config
 ### 1. Preserve the stable line ✅ (branches created)
 
 - `maintenance/3.x` keeps the current code so existing users can stay on it.
-- Still to do: confirm which artifact and version AART consumes.
+- AART now consumes `hart` (from the `hart` branch), not the SMM client JAR. EHR-Sandbox uses `smm-tester:2.31.0:client`.
 
 ### 2. Java 17 and the core/web split
 
@@ -79,8 +79,8 @@ These pieces belong to the same overall demonstration but are not SMM code:
 ## Work that can begin now (SMM items)
 
 - [x] Preserve the stable branch.
-- [ ] Confirm the artifact AART currently consumes.
-- [ ] Plan the Java 17 upgrade and the core/web build split, keeping the current client JAR available to AART.
+- [x] Confirm the artifact AART currently consumes. It's `org.immregistries:hart:0.3.3`, built from this repo's `hart` branch, not the SMM client JAR. See [java17-core-web-split.md](java17-core-web-split.md).
+- [x] Plan the Java 17 upgrade and the core/web build split ([java17-core-web-split.md](java17-core-web-split.md)).
 - [ ] Remove the old web authentication and set up an application-level session/authorization boundary.
 - [ ] Integrate AIRA Web and InteropHub sign-on.
 - [ ] Set up an isolated synthetic-data demonstration deployment and the user workspace model.
