@@ -54,7 +54,7 @@ smm-tester/                  (parent pom, packaging=pom)
 │     tester/run, tester/certify, tester/query, mover (engine, not servlets),
 │     mover/install/templates + ConnectionConfiguration, org.immregistries.smm root,
 │     generated SOAP stubs (gov.nist, com.microsoft, faultcontracts, servicecontracts)
-└── smm-web/                 (war)  org.immregistries:smm-web  (or keep artifactId smm-tester)
+└── smm-web/                 (war)  org.immregistries:smm-web
       all 32 servlets, cdc/**, tester/Authenticate (until replaced),
       src/main/webapp, web.xml
 ```
@@ -73,20 +73,47 @@ Each step is its own commit, and `mvn test` must pass after each one (step 0 mak
    - Move CI workflows to JDK 17 and add `modernize` to the `pull-request` branch triggers.
    - Remove Jetty 8, `maven-eclipse-plugin`, and `lib.zip`.
 2. **Dependency cleanup:**
-   - Align CXF on 4.x with `jakarta.jws`, or drop it if the NIST validator is retired.
+   - Remove the NIST validator (see "NIST validator" below), then remove CXF.
    - Remove the unused Axis2/Axiom/Neethi/Geronimo/httpclient5 dependencies, once runtime checks confirm they aren't needed.
    - Convert source encoding to UTF-8.
 3. **Break the five back-edges** listed above, still inside the single module.
-4. **Restructure into parent + `smm-core` + `smm-web`.** Drop the `client` classifier JAR and the `jar-with-dependencies` assembly (`CertifyClient` main) unless someone still needs them.
+4. **Restructure into parent + `smm-core` + `smm-web`.** `smm-core` replaces the `client` classifier JAR as the published library, and it should be the JAR AART can eventually move to.
 5. **Smoke-test the WAR** on a current servlet-6 container (Tomcat 10.1+ or 11): start up, the mover manager, the CDC WSDL endpoint, and sending a test message to IIS Sandbox.
 6. **Publishing:** move `maven-publish.yml` to the Sonatype Central Portal and publish only `smm-core` (the WAR is deployed, not consumed). Keep tag-triggered publishing off `modernize` until this is done.
 
 Workstream 3 (removing `Authenticate`/`LoginServlet`, adding InteropHub sign-on) builds on step 4 and isn't part of this plan.
 
+## NIST validator
+
+**What it does:** it sends an HL7 message to NIST's HL7 v2 web-service validator (EVS, `SoftwareVersion.EVS_URL`), together with a conformance-profile OID. It then shows the returned assertions (errors, warnings, pass/fail).
+
+- **Profiles** (`ValidationResource`): VXU (IG 1.4), VXU Z22, ACK Z23 / AIRA ACK, QBP Z34/Z44, RSP Z31/Z32/Z33/Z42 (IG 1.5). `TestRunner.ascertainValidationResource` picks one from MSH-9/MSH-21.
+- **The one live entry point:** the **"Validate NIST" checkbox on the Submit page** (`SubmitServlet`). It validates both the sent message and the IIS response, and shows the results inline. `TestCaseMessageViewerServlet` also shows a validation report if a test case has one.
+- **Dormant path:** `TestRunner.setValidateResponse(true)` would validate every test-run response, but nothing turns it on. `CertifyClient`, `TestConnect`, and `TestCovidReporting` all set it to `false`.
+- `MessageGenerationV2SoapClient` (NIST message generation) is never called.
+
+**The endpoint is gone.** On 2026-10-07, `hl7v2.ws.nist.gov` had no DNS address, so the feature can't work today, regardless of the CXF version problem.
+
+**Removal scope:**
+- `gov.nist.healthcare.hl7ws.**`
+- `tester.manager.nist.**`
+- `SoftwareVersion.EVS_URL`
+- `TestRunner`'s `validateResponse` flag, `validateResponseWithNIST`, and `ascertainValidationResource`
+- the validation fields on `TestCaseMessage`
+- the checkbox and result rendering in `SubmitServlet` and `TestCaseMessageViewerServlet`
+- the CXF, `javax.jws`, and related dependencies
+
+Remaining check before removing it: confirm that nobody still uses the checkbox on deployed instances (for example, app.immregistries.org/tester).
+
+## Decisions
+
+- 2026-10-07: Modules are named `smm-core` (JAR) and `smm-web` (WAR).
+- 2026-10-07: Remove the NIST validator, once nobody turns out to rely on it.
+- 2026-10-07: Keep a published library JAR (`smm-core`) as AART's future migration target.
+- 2026-10-07: The legacy `Authenticate`/`LoginServlet` moves to `smm-web` temporarily and is removed when InteropHub sign-on replaces it (workstream 3).
+
 ## Open questions
 
-- Artifact names: `smm-core` + `smm-web`, or keep `smm-tester` as the WAR's artifactId?
-- Is the NIST HL7 web-service validator still needed? If not, the CXF problem goes away.
-- Should 4.x still produce a runnable `CertifyClient` JAR?
+- Should 4.x still produce the standalone runnable `CertifyClient` JAR (`jar-with-dependencies`)?
 - Should EHR-Sandbox be told about 4.x and `smm-core`, or left on 2.31.0?
 - What happens to the `hart` branch? It is AART's real dependency source. Keep it as is, or move it to its own repo?
