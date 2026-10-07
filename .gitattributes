@@ -1,0 +1,2 @@
+# Maven repository files must keep their exact bytes so their checksums match
+repo/** -text
