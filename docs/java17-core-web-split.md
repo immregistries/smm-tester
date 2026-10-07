@@ -19,7 +19,7 @@ Working plan for workstream 2 in [modernization-plan.md](modernization-plan.md).
 
 - ~~**CXF versions are mixed.**~~ Resolved: CXF was used only by the NIST validator, and both have been removed (see "NIST validator" below).
 - ~~**Axis2 and related libraries.**~~ Resolved: they were used only by the Axis2-generated connector stubs. Those connectors were removed and `SoapConnector` was rewritten (see "Connectors" below). Axis2, Axiom, Neethi, jakarta.activation, jakarta.xml.bind-api, commons-logging, and httpclient5 are gone. The WAR now bundles only commons-codec, commons-lang3, commons-text, and json.
-- **Obsolete build pieces:** Jetty 8, `maven-eclipse-plugin`, and `lib.zip` were removed in step 1. The source encoding is still `iso-8859-1` (step 2).
+- **Obsolete build pieces:** Jetty 8, `maven-eclipse-plugin`, and `lib.zip` were removed in step 1. The source encoding was switched to UTF-8 in step 2.
 - **Publishing.** `maven-publish.yml` deploys to `s01.oss.sonatype.org` (OSSRH) through `nexus-staging-maven-plugin`. Sonatype retired OSSRH in favor of the Central Portal, so this path probably no longer works. Verify before the first 4.x release.
 
 ### Who consumes SMM as a library
@@ -71,10 +71,15 @@ Each step is its own commit, and `mvn test` must pass after each one (step 0 mak
      - `lib.zip`
      - the unused `PartnerHIEHTTPSService.wsdl`
    - Still unreferenced: `src/test/resources/florence_immregistries_org.jks`.
-2. **Dependency cleanup:**
+2. ~~**Dependency cleanup:**~~ Done.
    - ~~Remove the NIST validator and CXF.~~ Done.
    - ~~Remove the jurisdiction connectors, rewrite `SoapConnector`, and remove Axis2 and the unused dependencies.~~ Done.
-   - Convert source encoding to UTF-8.
+   - ~~Convert source encoding to UTF-8.~~ Done.
+     - The compiler and `project.build.sourceEncoding` are UTF-8.
+     - Three `tximmtrac` files were converted from ISO-8859-1, and three more had a corrupted `©` repaired.
+     - Non-ASCII characters in `main` code appear only in comments, so compiled behavior is unchanged.
+     - The unused `tester.Certify` class and its Windows-1252 `certify.txt` were removed.
+     - **Still open:** runtime file reads (`FileReader`, `InputStreamReader` without a charset, for example in `SendData`, `Transformer`, and `QueryRunner`) use the JVM default charset. That is Windows-1252 on Windows with Java 17, and UTF-8 on Linux or Java 18+. Decide on an explicit charset for HL7 and config files when touching that code.
 3. **Break the four remaining back-edges** listed above, still inside the single module.
 4. **Restructure into parent + `smm-core` + `smm-web`.** `smm-core` replaces the `client` classifier JAR as the published library, and it should be the JAR AART can eventually move to.
 5. **Smoke-test the WAR** on a current servlet-6 container (Tomcat 10.1+ or 11): start up, the mover manager, the CDC WSDL endpoint, and sending a test message to IIS Sandbox. Include a live `SoapConnector` connectivity test and submission. From this development machine `florence.immregistries.org` resolves to a private address and couldn't be reached, so run it from inside the network or against a local IIS Sandbox.

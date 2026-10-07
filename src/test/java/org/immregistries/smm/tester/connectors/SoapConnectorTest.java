@@ -56,7 +56,7 @@ public class SoapConnectorTest {
     connector.setPassword("p<w>");
     connector.setFacilityid("FAC");
 
-    String response = connector.submitMessage("MSH|^~\\&|SMM|é\rPID|1||123\r", false);
+    String response = connector.submitMessage("MSH|^~\\&|SMM|\u00e9\rPID|1||123\r", false);
 
     assertEquals("MSH|^~\\&|IIS\rMSA|AA|1\r", response);
     assertEquals(
@@ -68,7 +68,7 @@ public class SoapConnectorTest {
         + "<ns1:submitSingleMessage xmlns:ns1=\"urn:cdc:iisb:2011\">"
         + "<ns1:username>user&amp;1</ns1:username><ns1:password>p&lt;w&gt;</ns1:password>"
         + "<ns1:facilityID>FAC</ns1:facilityID>"
-        + "<ns1:hl7Message>MSH|^~\\&amp;|SMM|é&#13;PID|1||123&#13;</ns1:hl7Message>"
+        + "<ns1:hl7Message>MSH|^~\\&amp;|SMM|\u00e9&#13;PID|1||123&#13;</ns1:hl7Message>"
         + "</ns1:submitSingleMessage></soapenv:Body></soapenv:Envelope>", requestBody);
   }
 
