@@ -30,7 +30,6 @@ public class ConnectionTemplateFactory {
       new ID_IRIS_Template();
       new IL_ICARE_Template();
       new IN_CHIRP_Template();
-      new KS_WEBIZ_Template();
       new LA_LINKS_Template();
       new MA_MIIS_Template();
       new MD_IMMUNET_Template();

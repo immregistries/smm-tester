@@ -11,7 +11,6 @@ public class ConnectorFactory {
   public static final String TYPE_AZ_SOAP = "AZ SOAP";
   public static final String TYPE_FL_SOAP = "FL SOAP";
   public static final String TYPE_CO_SOAP = "CO SOAP";
-  public static final String TYPE_KS_SOAP = "KS SOAP";
   public static final String TYPE_KY_KHIE = "KY KHIE";
   public static final String TYPE_IL_WS = "IL WS";
   public static final String TYPE_IL_SOAP = "IL SOAP";
@@ -32,7 +31,7 @@ public class ConnectorFactory {
 
   public static final String[][] TYPES = {{TYPE_SOAP, "SOAP"}, {TYPE_POST, "POST"},
       {TYPE_RAW, "Raw"}, {TYPE_MLLP, "MLLP"}, {TYPE_AL_SOAP, "AL SOAP"}, {TYPE_AZ_SOAP, "AZ SOAP"},
-      {TYPE_CA_SOAP, "CA SOAP"}, {TYPE_CO_SOAP, "CO SOAP"}, {TYPE_KS_SOAP, "KS SOAP"},
+      {TYPE_CA_SOAP, "CA SOAP"}, {TYPE_CO_SOAP, "CO SOAP"},
       {TYPE_KY_KHIE, "KY KHIE"}, {TYPE_FL_SOAP, "FL SOAP"}, {TYPE_MA_SOAP, "MA SOAP"},
       {TYPE_MA_SOAP_2020, "MA SOAP 2020"}, {TYPE_MO_SOAP, "MO SOAP"}, {TYPE_ND_SOAP, "ND SOAP"},
       {TYPE_NJ_SOAP, "NJ SOAP"}, {TYPE_NM_SOAP, "NM SOAP"}, {TYPE_ENVISION_SOAP, "Envision SOAP"},
@@ -88,8 +87,6 @@ public class ConnectorFactory {
       connector = new COSoapConnector(label, url);
     } else if (type.equals(TYPE_FL_SOAP)) {
       connector = new FLSoapConnector(label, url);
-    } else if (type.equals(TYPE_KS_SOAP)) {
-      connector = new KSSoapConnector(label, url);
     } else if (type.equals(TYPE_KY_KHIE)) {
       connector = new KYKHIEConnector(label, url);
     } else if (type.equals(TYPE_AZ_SOAP)) {

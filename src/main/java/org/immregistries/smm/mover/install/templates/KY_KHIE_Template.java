@@ -5,7 +5,6 @@ import org.immregistries.smm.mover.install.ConnectionConfiguration;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.connectors.Connector.TransferType;
 import org.immregistries.smm.tester.connectors.ConnectorFactory;
-import org.immregistries.smm.tester.connectors.KSSoapConnector;
 
 public class KY_KHIE_Template extends ConnectionTemplate {
   public KY_KHIE_Template() {
@@ -46,7 +45,7 @@ public class KY_KHIE_Template extends ConnectionTemplate {
 
   @Override
   public void setupConnection(String templateName, Connector connector) {
-    KSSoapConnector con = (KSSoapConnector) connector;
+    Connector con = connector;
     con.addCustomTransformation("MSH-4=[OTHERID]");
     con.addCustomTransformation("MSH-6=KS0000");
     con.addCustomTransformation("ORC-17.1*=");
