@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.immregistries.smm.mover.SendData;
-import org.immregistries.smm.tester.CreateTestCaseServlet;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.manager.CsvReader;
 import org.immregistries.smm.tester.manager.forecast.EvaluationActual;
@@ -27,6 +26,8 @@ import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.Transformer;
 
 public class QueryRunner extends Thread {
+
+  public static final String IIS_TEST_REPORT_FILENAME_PREFIX = "IIS Test Report";
 
 
   private Connector connector;
@@ -134,7 +135,7 @@ public class QueryRunner extends Thread {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
     testCaseSet =
-        CreateTestCaseServlet.IIS_TEST_REPORT_FILENAME_PREFIX + " " + sdf.format(new Date());
+        IIS_TEST_REPORT_FILENAME_PREFIX + " " + sdf.format(new Date());
 
     sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
     statusMessageList = new ArrayList<String>();

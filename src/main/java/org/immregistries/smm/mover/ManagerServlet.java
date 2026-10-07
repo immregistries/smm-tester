@@ -3,6 +3,7 @@ package org.immregistries.smm.mover;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.immregistries.smm.tester.Authenticate;
 import org.immregistries.smm.tester.ClientServlet;
 import org.immregistries.smm.tester.connectors.Connector;
 import jakarta.servlet.ServletException;
@@ -69,8 +70,12 @@ public class ManagerServlet extends ClientServlet {
       ConnectionManager.setSoftwareDir(new File(softwareDirString));
     }
 
-    connectionManager.setAdminUsername(getInitParameter(INIT_PARAM_ADMIN_USERNAME));
-    connectionManager.setAdminPassword(getInitParameter(INIT_PARAM_ADMIN_PASSWORD));
+    String adminUsername = getInitParameter(INIT_PARAM_ADMIN_USERNAME);
+    String adminPassword = getInitParameter(INIT_PARAM_ADMIN_PASSWORD);
+    if (adminUsername != null && !adminUsername.equals("") && adminPassword != null
+        && !adminPassword.equals("")) {
+      Authenticate.setupAdminUser(adminUsername, adminPassword);
+    }
     connectionManager.setKeyStore(getInitParameter(INIT_PARAM_KEY_STORE));
     connectionManager.setKeyStorePassword(getInitParameter(INIT_PARAM_KEY_STORE_PASSWORD));
 

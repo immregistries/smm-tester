@@ -20,14 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import org.immregistries.smm.tester.Authenticate;
 
 public class ConnectionManager {
   private String keyStorePassword = "";
   private boolean sunSecuritySslAllowUnsafeRenegotiation = false;
   private String keyStore = "";
-  private String adminPassword = "";
-  private String adminUsername = "";
   private String scanStartFolders = "";
 
   public String getKeyStorePassword() {
@@ -53,22 +50,6 @@ public class ConnectionManager {
 
   public void setKeyStore(String keyStore) {
     this.keyStore = keyStore;
-  }
-
-  public String getAdminPassword() {
-    return adminPassword;
-  }
-
-  public void setAdminPassword(String adminPassword) {
-    this.adminPassword = adminPassword;
-  }
-
-  public String getAdminUsername() {
-    return adminUsername;
-  }
-
-  public void setAdminUsername(String adminUsername) {
-    this.adminUsername = adminUsername;
   }
 
   public boolean isFolderScanEnabled() {
@@ -292,11 +273,6 @@ public class ConnectionManager {
     if (!ENABLE_SUPPORT_CENTER) {
       supportCenterUrl = null;
       supportCenterCode = null;
-    }
-
-    if (adminUsername != null && !adminUsername.equals("") && adminPassword != null
-        && !adminPassword.equals("")) {
-      Authenticate.setupAdminUser(adminUsername, adminPassword);
     }
 
     if (keyStore != null && keyStore.length() > 0) {

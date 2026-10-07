@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ModifyMessageServlet extends ClientServlet {
   private static final long serialVersionUID = 1L;
   
-  public static final String IIS_TEST_REPORT_FILENAME_PREFIX = "IIS Test Report";
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.

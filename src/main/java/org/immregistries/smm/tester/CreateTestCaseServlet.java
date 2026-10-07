@@ -20,6 +20,7 @@ import org.immregistries.smm.RecordServletInterface;
 import org.immregistries.smm.mover.ConnectionManager;
 import org.immregistries.smm.mover.SendData;
 import org.immregistries.smm.tester.connectors.Connector;
+import org.immregistries.smm.tester.query.QueryRunner;
 import org.immregistries.smm.transform.PatientType;
 import org.immregistries.smm.transform.ScenarioManager;
 import org.immregistries.smm.transform.TestCaseMessage;
@@ -35,7 +36,8 @@ import jakarta.servlet.http.HttpSession;
 public class CreateTestCaseServlet extends ClientServlet {
   private static final long serialVersionUID = 1L;
   
-  public static final String IIS_TEST_REPORT_FILENAME_PREFIX = "IIS Test Report";
+  public static final String IIS_TEST_REPORT_FILENAME_PREFIX =
+      QueryRunner.IIS_TEST_REPORT_FILENAME_PREFIX;
 
   /**
    * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.

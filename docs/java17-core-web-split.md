@@ -91,7 +91,12 @@ Each step is its own commit, and `mvn test` must pass after each one (step 0 mak
        - The WSDL responses declare `text/xml;charset=UTF-8`.
      - **Other:** `getBytes()` and `new String(byte[])` calls (password encryption, hashing, Base64, XML parsing) use UTF-8.
      - **Fixed afterward:** `HttpConnector`'s BASIC authentication sent `URLEncoder.encode(user:password)` instead of Base64, which isn't valid HTTP Basic auth. It now sends `Base64(user:password)` (UTF-8), covered by `HttpConnectorTest`.
-3. **Break the four remaining back-edges** listed above, still inside the single module.
+3. ~~**Break the four remaining back-edges**~~ Done. All 168 planned core classes now compile with `javac` alone, without the servlet API on the classpath. The 49 web classes are the 32 servlets, `cdc.*`, and `tester.Authenticate`.
+   - **`cdc.Processor*`:** no change; the whole `cdc` package goes to `smm-web`.
+   - **`ConnectionManager`:** no longer holds the admin username and password or calls `Authenticate`. `ManagerServlet` reads those init parameters and calls `Authenticate.setupAdminUser` itself.
+   - **`QueryRunner`:** now owns `IIS_TEST_REPORT_FILENAME_PREFIX`, and `CreateTestCaseServlet` refers to it. An unused duplicate in `ModifyMessageServlet` was removed.
+   - **`ConnectionConfiguration`:** no change. `"ConfigureServlet"` appears only as text in generated HTML, not as a compile dependency.
+   - **Tests:** none depend on web classes. `CatchServletTest` and `UsiisLogReader` only mention servlet names in strings, so every test moves to `smm-core`.
 4. **Restructure into parent + `smm-core` + `smm-web`.** `smm-core` replaces the `client` classifier JAR as the published library, and it should be the JAR AART can eventually move to.
 5. **Smoke-test the WAR** on a current servlet-6 container (Tomcat 10.1+ or 11): start up, the mover manager, the CDC WSDL endpoint, and sending a test message to IIS Sandbox. Include a live `SoapConnector` connectivity test and submission. From this development machine `florence.immregistries.org` resolves to a private address and couldn't be reached, so run it from inside the network or against a local IIS Sandbox.
 6. **Publishing:** move `maven-publish.yml` to the Sonatype Central Portal and publish only `smm-core` (the WAR is deployed, not consumed). Keep tag-triggered publishing off `modernize` until this is done.
