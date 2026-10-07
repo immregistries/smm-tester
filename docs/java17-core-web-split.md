@@ -79,7 +79,18 @@ Each step is its own commit, and `mvn test` must pass after each one (step 0 mak
      - Three `tximmtrac` files were converted from ISO-8859-1, and three more had a corrupted `©` repaired.
      - Non-ASCII characters in `main` code appear only in comments, so compiled behavior is unchanged.
      - The unused `tester.Certify` class and its Windows-1252 `certify.txt` were removed.
-     - **Still open:** runtime file reads (`FileReader`, `InputStreamReader` without a charset, for example in `SendData`, `Transformer`, and `QueryRunner`) use the JVM default charset. That is Windows-1252 on Windows with Java 17, and UTF-8 on Linux or Java 18+. Decide on an explicit charset for HL7 and config files when touching that code.
+   - ~~Use UTF-8 at runtime.~~ Done. SMM no longer depends on the JVM default charset, so new installations behave the same on Windows and Linux. Existing installations with non-ASCII text in Windows-1252 files would need to convert them.
+     - **Files:** HL7 message and work files, `smm.config.txt`, status and log files, test case, query, and profile files, plus the bundled `transform.txt`, `defaultConnections.txt`, and `nicknames.csv` are all read and written as UTF-8.
+     - **Connections:**
+       - POST, Raw, and IZ Gateway send UTF-8 bytes. Previously `writeBytes` dropped the high byte of every non-ASCII character.
+       - All HTTP responses are read as UTF-8.
+       - MLLP sends UTF-8 and decodes only the bytes actually received. Previously it ignored the read count and dropped non-ASCII bytes.
+     - **Web:**
+       - `web.xml` is now a Jakarta EE 6.0 descriptor (`metadata-complete="true"`, so there's still no annotation scanning) with UTF-8 request and response character encoding.
+       - Servlets that wrapped `resp.getOutputStream()` now write UTF-8, matching their declared `charset=UTF-8`.
+       - The WSDL responses declare `text/xml;charset=UTF-8`.
+     - **Other:** `getBytes()` and `new String(byte[])` calls (password encryption, hashing, Base64, XML parsing) use UTF-8.
+     - **Noticed, not changed:** `HttpConnector`'s BASIC authentication sends `URLEncoder.encode(user:password)` instead of Base64, so it isn't valid HTTP Basic auth.
 3. **Break the four remaining back-edges** listed above, still inside the single module.
 4. **Restructure into parent + `smm-core` + `smm-web`.** `smm-core` replaces the `client` classifier JAR as the published library, and it should be the JAR AART can eventually move to.
 5. **Smoke-test the WAR** on a current servlet-6 container (Tomcat 10.1+ or 11): start up, the mover manager, the CDC WSDL endpoint, and sending a test message to IIS Sandbox. Include a live `SoapConnector` connectivity test and submission. From this development machine `florence.immregistries.org` resolves to a private address and couldn't be reached, so run it from inside the network or against a local IIS Sandbox.

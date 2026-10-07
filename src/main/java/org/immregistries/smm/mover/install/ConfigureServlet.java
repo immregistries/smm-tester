@@ -1,5 +1,7 @@
 package org.immregistries.smm.mover.install;
 
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
@@ -124,7 +126,7 @@ public class ConfigureServlet extends ClientServlet {
                 resp.setContentType("text/plain;charset=UTF-8");
                 resp.setHeader("Content-Disposition", "attachment; filename=\""
                     + URLEncoder.encode("smm.config.txt", "UTF-8") + "\"");
-                PrintWriter out = new PrintWriter(resp.getOutputStream());
+                PrintWriter out = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
                 out.print(connector.getScript());
                 out.close();
                 return;
@@ -141,7 +143,7 @@ public class ConfigureServlet extends ClientServlet {
       }
     }
     resp.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = new PrintWriter(resp.getOutputStream());
+    PrintWriter out = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
     try {
       printHtmlHead(out, softwareType, "2. Configure", req);
 

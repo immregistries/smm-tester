@@ -4,6 +4,7 @@ import static org.immregistries.smm.mover.RemoteConnectionReportingInterface.LOG
 import static org.immregistries.smm.mover.RemoteConnectionReportingInterface.LOG_LEVEL_ERROR;
 import static org.immregistries.smm.mover.RemoteConnectionReportingInterface.LOG_LEVEL_INFO;
 import static org.immregistries.smm.mover.RemoteConnectionReportingInterface.LOG_LEVEL_WARNING;
+import java.nio.charset.StandardCharsets;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class StatusLogger {
       oldLogFile.delete();
     }
     logStatusFile();
-    out = new PrintWriter(new FileWriter(statusLoggerFile));
+    out = new PrintWriter(new FileWriter(statusLoggerFile, StandardCharsets.UTF_8));
     out.println("--- SIMPLE MESSAGE MOVER ----------------------------------------------------- ");
     String label = "";
     if (sendData.getConnector() != null) {
@@ -72,7 +73,7 @@ public class StatusLogger {
   private void writeStatusOrDelete(File file, ScanStatus scanStatusExpected,
       ScanStatus scanStatusActual) throws IOException {
     if (scanStatusExpected == scanStatusActual) {
-      PrintWriter out = new PrintWriter(file);
+      PrintWriter out = new PrintWriter(file, StandardCharsets.UTF_8);
       out.println(scanStatusActual);
       out.close();
     } else if (file.exists()) {

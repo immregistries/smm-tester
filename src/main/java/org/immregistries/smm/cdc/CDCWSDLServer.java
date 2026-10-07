@@ -1,5 +1,7 @@
 package org.immregistries.smm.cdc;
 
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +25,7 @@ public abstract class CDCWSDLServer {
     String xmlMessage = getBody(req);
     resp.setContentType(
         "application/soap+xml; charset=UTF-8; action=\"urn:cdc:iisb:2011:connectivityTest\"");
-    PrintWriter out = new PrintWriter(resp.getOutputStream());
+    PrintWriter out = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
     try {
       if (isConnectivityTest(xmlMessage)) {
         String echoBack = getEchoBack(xmlMessage);
@@ -60,7 +62,7 @@ public abstract class CDCWSDLServer {
   public PrintWriter quitelyResetBuffer(HttpServletResponse resp, PrintWriter out) {
     try {
       resp.resetBuffer();
-      return new PrintWriter(resp.getOutputStream());
+      return new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
     } catch (IOException ioe) {
       ioe.printStackTrace();
       // ignore, will just have to print as buffer has already been flushed
@@ -86,7 +88,7 @@ public abstract class CDCWSDLServer {
     try {
       InputStream inputStream = req.getInputStream();
       if (inputStream != null) {
-        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         char[] charBuffer = new char[128];
         int bytesRead = -1;
         while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {

@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -775,7 +776,7 @@ public class CreateTestCaseServlet extends ClientServlet {
         File testCaseFile =
             new File(testCaseDir, "TC-" + testCaseMessage.getTestCaseNumber() + ".txt");
         try {
-          PrintWriter out = new PrintWriter(new FileWriter(testCaseFile));
+          PrintWriter out = new PrintWriter(new FileWriter(testCaseFile, StandardCharsets.UTF_8));
           out.print(testCaseMessage.createText());
           out.close();
         } catch (IOException ioe) {
@@ -787,7 +788,7 @@ public class CreateTestCaseServlet extends ClientServlet {
         File testCaseFile =
             new File(testCaseDir, "TC-" + testCaseMessage.getTestCaseNumber() + ".txt");
         try {
-          PrintWriter out = new PrintWriter(new FileWriter(testCaseFile));
+          PrintWriter out = new PrintWriter(new FileWriter(testCaseFile, StandardCharsets.UTF_8));
           out.print(testCaseMessage.createText());
           out.close();
         } catch (IOException ioe) {
@@ -813,7 +814,7 @@ public class CreateTestCaseServlet extends ClientServlet {
     File testCaseFile =
         new File(testCaseDir, "TC-" + testCaseMessage.getTestCaseNumber() + ".html");
     try {
-      PrintWriter out = new PrintWriter(new FileWriter(testCaseFile));
+      PrintWriter out = new PrintWriter(new FileWriter(testCaseFile, StandardCharsets.UTF_8));
       String title = "Test Case Message " + testCaseMessage.getTestCaseNumber() + ": "
           + testCaseMessage.getDescription();
       ClientServlet.printHtmlHeadForFile(out, title);
@@ -963,7 +964,7 @@ public class CreateTestCaseServlet extends ClientServlet {
     }
     if (filenames != null) {
       for (String filename : filenames) {
-        BufferedReader in = new BufferedReader(new FileReader(new File(testCaseDir, filename)));
+        BufferedReader in = new BufferedReader(new FileReader(new File(testCaseDir, filename), StandardCharsets.UTF_8));
         String line;
         StringBuilder testScript = new StringBuilder();
         while ((line = in.readLine()) != null) {

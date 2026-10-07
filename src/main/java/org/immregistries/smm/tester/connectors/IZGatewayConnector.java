@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester.connectors;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -76,7 +77,7 @@ public class IZGatewayConnector extends HttpConnector {
     out.println("      </urn:ConnectivityTestRequest>");
     out.println("   </soap:Body>");
     out.println("</soap:Envelope>");
-    printout.writeBytes(stringWriter.toString());
+    printout.write(stringWriter.toString().getBytes(StandardCharsets.UTF_8));
     printout.flush();
     printout.close();
     input = getInputAndLog(urlConn);
@@ -128,7 +129,7 @@ public class IZGatewayConnector extends HttpConnector {
     out.println("      </urn1:SubmitSingleMessageRequest>");
     out.println("   </soap:Body>");
     out.println("</soap:Envelope>");
-    printout.writeBytes(stringWriter.toString());
+    printout.write(stringWriter.toString().getBytes(StandardCharsets.UTF_8));
     printout.flush();
     printout.close();
     input = getInputAndLog(urlConn);
@@ -148,11 +149,11 @@ public class IZGatewayConnector extends HttpConnector {
   public InputStreamReader getInputAndLog(URLConnection urlConn) throws IOException {
     InputStreamReader input;
     try {
-      input = new InputStreamReader(urlConn.getInputStream());
+      input = new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8);
     } catch (IOException e) {
       e.printStackTrace(System.err);
       HttpURLConnection httpURL = (HttpURLConnection) urlConn;
-      input = new InputStreamReader(httpURL.getErrorStream());
+      input = new InputStreamReader(httpURL.getErrorStream(), StandardCharsets.UTF_8);
       String line;
       BufferedReader in = new BufferedReader(input);
       while ((line = in.readLine()) != null) {

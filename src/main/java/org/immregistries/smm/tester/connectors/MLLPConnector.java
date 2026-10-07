@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,15 +136,18 @@ public class MLLPConnector extends Connector {
       //															// without blocking.
 
       //This will block the thread until something is received back from the server. 
-      socketInputStream.read(byteBuffer);
-      String responseString = "";
-      for (byte b : byteBuffer) {
-        if (b == 13) {
-          responseString += "\n\r";
-        } else if (b >= 32) {
-          responseString += (char) b;
+      int bytesRead = socketInputStream.read(byteBuffer);
+      String received =
+          bytesRead > 0 ? new String(byteBuffer, 0, bytesRead, StandardCharsets.UTF_8) : "";
+      StringBuilder responseBuilder = new StringBuilder();
+      for (char c : received.toCharArray()) {
+        if (c == '\r') {
+          responseBuilder.append("\n\r");
+        } else if (c >= ' ') {
+          responseBuilder.append(c);
         }
       }
+      String responseString = responseBuilder.toString();
 
       System.out.println("Received a response: ");
       System.out.println(responseString);
@@ -185,7 +189,7 @@ public class MLLPConnector extends Connector {
   public boolean sendAnMLLPMessage(String message, OutputStream out) throws IOException {
     String mllpMsgOutgoing = this.buildMllpPacket(message);
     // Send the MLLP wrapped message to the server!
-    out.write(mllpMsgOutgoing.getBytes());
+    out.write(mllpMsgOutgoing.getBytes(StandardCharsets.UTF_8));
     return true;
   }
 

@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import java.nio.charset.StandardCharsets;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -23,9 +24,9 @@ public class PasswordEncryptUtil {
     IvParameterSpec ivSpec = new IvParameterSpec(IV);
     Cipher cipher = Cipher.getInstance("DESede/CBC/NoPadding");
     cipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
-    byte[] er = cipher.doFinal(plainText.getBytes());
+    byte[] er = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
     byte[] er2 = Base64.encodeBase64(er);
-    String encryptedResult = new String(er2);
+    String encryptedResult = new String(er2, StandardCharsets.UTF_8);
 
     return PREPEND + encryptedResult;
   }
@@ -33,13 +34,13 @@ public class PasswordEncryptUtil {
   public static String decrypt(String encryptedText) throws Exception {
     if (encryptedText.startsWith(PREPEND)) {
       encryptedText = encryptedText.substring(PREPEND.length());
-      byte[] et = Base64.decodeBase64(encryptedText.getBytes());
+      byte[] et = Base64.decodeBase64(encryptedText.getBytes(StandardCharsets.UTF_8));
 
       SecretKeySpec key = new SecretKeySpec(KEY, "DESede");
       IvParameterSpec ivSpec = new IvParameterSpec(IV);
       Cipher cipher = Cipher.getInstance("DESede/CBC/NoPadding");
       cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
-      String plainText = new String(cipher.doFinal(et));
+      String plainText = new String(cipher.doFinal(et), StandardCharsets.UTF_8);
       return plainText.trim();
     } else {
       return encryptedText;

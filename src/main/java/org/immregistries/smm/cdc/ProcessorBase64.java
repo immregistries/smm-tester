@@ -1,5 +1,6 @@
 package org.immregistries.smm.cdc;
 
+import java.nio.charset.StandardCharsets;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.apache.commons.codec.binary.Base64;
@@ -26,7 +27,7 @@ public class ProcessorBase64 extends Processor {
     PrintWriter outIgnore = new PrintWriter(sw);
     server.process(ssm, outIgnore);
     outIgnore.close();
-    out.print(new String(Base64.encodeBase64(sw.toString().getBytes())));
+    out.print(new String(Base64.encodeBase64(sw.toString().getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8));
     out.println("</return>");
     out.println("      </submitSingleMessageResponse>");
     out.println("  </Body>");
@@ -39,7 +40,7 @@ public class ProcessorBase64 extends Processor {
     out.println("  <Body>");
     out.println("    <connectivityTestResponse xmlns=\"urn:cdc:iisb:2011\">");
     out.println("      <return>"
-        + new String(Base64.encodeBase64(server.getEchoBackMessage(echoBack).getBytes()))
+        + new String(Base64.encodeBase64(server.getEchoBackMessage(echoBack).getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8)
         + "</return>   ");
     out.println("    </connectivityTestResponse>");
     out.println("  </Body>");

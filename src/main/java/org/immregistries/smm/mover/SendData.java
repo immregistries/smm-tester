@@ -1,5 +1,6 @@
 package org.immregistries.smm.mover;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -174,7 +175,7 @@ public class SendData extends Thread {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         File file = new File(requestDir, "rbu-query-" + sdf.format(today) + ".hl7");
         try {
-          PrintWriter out = new PrintWriter(new java.io.FileWriter(file));
+          PrintWriter out = new PrintWriter(new java.io.FileWriter(file, StandardCharsets.UTF_8));
           out.print(HL7_RBU_QUERY);
           out.close();
           prepareDataToSend();
@@ -517,7 +518,7 @@ public class SendData extends Thread {
             StringBuilder sb = new StringBuilder();
             String line = null;
             String firstLine = null;
-            BufferedReader in = new BufferedReader(new FileReader(workFile));
+            BufferedReader in = new BufferedReader(new FileReader(workFile, StandardCharsets.UTF_8));
             connector.setCurrentControlId("" + System.currentTimeMillis() + attemptCount);
             while ((line = in.readLine()) != null) {
               if (firstLine == null && connectorListForRxaFilter != null) {
@@ -712,7 +713,7 @@ public class SendData extends Thread {
     backupFileOut = new FileOut(new File(backupDir, filename), false);
     messageNumber = 0;
     StringBuilder message = new StringBuilder();
-    BufferedReader in = new BufferedReader(new FileReader(requestFile));
+    BufferedReader in = new BufferedReader(new FileReader(requestFile, StandardCharsets.UTF_8));
     String line = readRealFirstLine(in);
     String messageType = null;
     boolean first = true;
@@ -891,7 +892,7 @@ public class SendData extends Thread {
           workDir.mkdir();
         }
         File workFile = new File(workDir, filename + "-m" + getMessageNumberString());
-        PrintWriter out = new PrintWriter(workFile);
+        PrintWriter out = new PrintWriter(workFile, StandardCharsets.UTF_8);
         out.print(messageText);
         out.close();
       } else {
@@ -907,7 +908,7 @@ public class SendData extends Thread {
               workDir.mkdir();
             }
             File workFile = new File(workDir, filename + "-m" + getMessageNumberString());
-            PrintWriter out = new PrintWriter(workFile);
+            PrintWriter out = new PrintWriter(workFile, StandardCharsets.UTF_8);
             out.print(c.getRxaFilterFacilityId() + "\r");
             out.print(messageText);
             out.close();
@@ -1182,7 +1183,7 @@ public class SendData extends Thread {
    * @throws IOException
    */
   private boolean fileContainsHL7(File inFile) throws IOException {
-    BufferedReader in = new BufferedReader(new FileReader(inFile));
+    BufferedReader in = new BufferedReader(new FileReader(inFile, StandardCharsets.UTF_8));
     boolean okay;
     try {
       String line = readRealFirstLine(in);
@@ -1277,7 +1278,7 @@ public class SendData extends Thread {
 
   private String readScript() throws FileNotFoundException, IOException {
     StringBuilder script = new StringBuilder();
-    BufferedReader in = new BufferedReader(new FileReader(configFile));
+    BufferedReader in = new BufferedReader(new FileReader(configFile, StandardCharsets.UTF_8));
     String line = null;
     while ((line = in.readLine()) != null) {
       script.append(line);

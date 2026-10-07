@@ -1,5 +1,6 @@
 package org.immregistries.smm.transform;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -172,7 +173,7 @@ public class Transformer {
   }
 
   public Transformer(File testDataFile) throws IOException {
-    BufferedReader in = new BufferedReader(new FileReader(testDataFile));
+    BufferedReader in = new BufferedReader(new FileReader(testDataFile, StandardCharsets.UTF_8));
     testDataMap = readDataIn(in);
     in.close();
   }
@@ -450,7 +451,7 @@ public class Transformer {
   protected void init() {
     try {
       BufferedReader in = new BufferedReader(
-          new InputStreamReader(getClass().getResourceAsStream("transform.txt")));
+          new InputStreamReader(getClass().getResourceAsStream("transform.txt"), StandardCharsets.UTF_8));
       conceptMap = readDataIn(in);
     } catch (IOException e) {
       e.printStackTrace();

@@ -1,5 +1,6 @@
 package org.immregistries.smm.mover;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -14,7 +15,7 @@ public class FileOut {
 
   private void init() throws IOException {
     if (out == null) {
-      out = new PrintWriter(new FileWriter(file, append));
+      out = new PrintWriter(new FileWriter(file, StandardCharsets.UTF_8, append));
     }
   }
 

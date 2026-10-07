@@ -109,13 +109,8 @@ public class LastNamePrefixVariation extends ProcedureCommon implements Procedur
 
   protected static class Prefix {
     private Prefix(String prefix) {
-      prefixNoSpace = "";
       prefixSpace = prefix.trim() + " ";
-      for (byte b : prefixSpace.getBytes()) {
-        if (b != ' ') {
-          prefixNoSpace += (char) b;
-        }
-      }
+      prefixNoSpace = prefixSpace.replace(" ", "");
       prefixNoSpaceCapitalized = prefixNoSpace.toUpperCase();
       prefixSpaceCapitalized = prefixSpace.toUpperCase();
     }

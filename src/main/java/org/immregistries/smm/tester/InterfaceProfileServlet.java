@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import java.nio.charset.StandardCharsets;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -93,7 +94,7 @@ public class InterfaceProfileServlet extends ClientServlet {
           try {
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-            Document doc = docBuilder.parse(new ByteArrayInputStream(expectedText.getBytes()));
+            Document doc = docBuilder.parse(new ByteArrayInputStream(expectedText.getBytes(StandardCharsets.UTF_8)));
             doc.getDocumentElement().normalize();
             NodeList nodes = doc.getChildNodes();
             if (nodes.getLength() == 1) {
@@ -186,9 +187,9 @@ public class InterfaceProfileServlet extends ClientServlet {
 
               File generatedDir = user.getSendData().getGeneratedDir();
               File file = new File(generatedDir, filenameBase + "-000 Base Messages.txt");
-              PrintWriter fileOut = new PrintWriter(new FileWriter(file));
+              PrintWriter fileOut = new PrintWriter(new FileWriter(file, StandardCharsets.UTF_8));
               file = new File(generatedDir, filenameBase + " Sample Messages.txt");
-              sampleFileOut = new PrintWriter(new FileWriter(file));
+              sampleFileOut = new PrintWriter(new FileWriter(file, StandardCharsets.UTF_8));
               for (int i = 0; i < batchSize; i++) {
                 testCaseMessage = new TestCaseMessage(testCaseMessageBase);
                 testCaseMessage
@@ -292,7 +293,7 @@ public class InterfaceProfileServlet extends ClientServlet {
                 try {
                   File file = new File(user.getSendData().getGeneratedDir(),
                       filenameBase + "-" + countText + " " + issue.getName() + ".txt");
-                  PrintWriter fileOut = new PrintWriter(new FileWriter(file));
+                  PrintWriter fileOut = new PrintWriter(new FileWriter(file, StandardCharsets.UTF_8));
                   for (int i = 0; i < batchSize; i++) {
                     testCaseMessage = new TestCaseMessage(testCaseMessageBase);
                     testCaseMessage

@@ -7,6 +7,8 @@
  */
 package org.immregistries.smm.mover;
 
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.immregistries.smm.cdc.CDCWSDLServer;
@@ -31,8 +33,8 @@ public class CDCWSDLServlet extends ClientServlet {
       throws ServletException, IOException {
     String wsdl = req.getParameter("wsdl");
     if (wsdl != null) {
-      resp.setContentType("text/xml");
-      PrintWriter out = new PrintWriter(resp.getOutputStream());
+      resp.setContentType("text/xml;charset=UTF-8");
+      PrintWriter out = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
       CDCWSDLServer.printWSDL(out, "http://localhost:8282/wsdl");
       out.close();
     } else {

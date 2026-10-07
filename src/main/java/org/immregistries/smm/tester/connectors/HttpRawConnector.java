@@ -3,6 +3,7 @@
  */
 package org.immregistries.smm.tester.connectors;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -115,10 +116,10 @@ public class HttpRawConnector extends Connector {
       }
 
       printout = new DataOutputStream(urlConn.getOutputStream());
-      printout.writeBytes(content.toString());
+      printout.write(content.toString().getBytes(StandardCharsets.UTF_8));
       printout.flush();
       printout.close();
-      input = new InputStreamReader(urlConn.getInputStream());
+      input = new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8);
       StringBuilder response = new StringBuilder();
       BufferedReader in = new BufferedReader(input);
       String line;

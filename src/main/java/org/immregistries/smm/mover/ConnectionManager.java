@@ -1,5 +1,6 @@
 package org.immregistries.smm.mover;
 
+import java.nio.charset.StandardCharsets;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -325,7 +326,7 @@ public class ConnectionManager {
     String valueOut = null;
     try {
       MessageDigest md = MessageDigest.getInstance("MD5");
-      byte[] hashed = md.digest(valueIn.getBytes());
+      byte[] hashed = md.digest(valueIn.getBytes(StandardCharsets.UTF_8));
       valueOut = "";
       for (byte b : hashed) {
         valueOut += String.format("%02X", b);

@@ -1,5 +1,6 @@
 package org.immregistries.smm.mover;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -193,10 +194,10 @@ public class StatusReporter extends Thread implements RemoteConnectionReportingI
           }
         }
         printout = new DataOutputStream(urlConn.getOutputStream());
-        printout.writeBytes(content.toString());
+        printout.write(content.toString().getBytes(StandardCharsets.UTF_8));
         printout.flush();
         printout.close();
-        input = new InputStreamReader(urlConn.getInputStream());
+        input = new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8);
         BufferedReader in = new BufferedReader(input);
         String response = in.readLine();
         input.close();

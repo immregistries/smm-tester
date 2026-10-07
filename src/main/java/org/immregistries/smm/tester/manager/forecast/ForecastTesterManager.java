@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester.manager.forecast;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class ForecastTesterManager {
     ForecastTestEvent forecastTestEvent = null;
 
     InputStreamReader input = null;
-    input = new InputStreamReader(urlConn.getInputStream());
+    input = new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8);
     BufferedReader in = new BufferedReader(input);
     String line;
     while ((line = in.readLine()) != null) {
@@ -294,11 +295,11 @@ public class ForecastTesterManager {
       }
     }
     printout = new DataOutputStream(urlConn.getOutputStream());
-    printout.writeBytes(sb.toString());
+    printout.write(sb.toString().getBytes(StandardCharsets.UTF_8));
     printout.flush();
     printout.close();
     InputStreamReader input = null;
-    input = new InputStreamReader(urlConn.getInputStream());
+    input = new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8);
     BufferedReader in = new BufferedReader(input);
     submittedResults.append(sb + "\n");
     if ((line = in.readLine()) != null) {

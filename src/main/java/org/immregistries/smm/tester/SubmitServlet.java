@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -333,7 +334,7 @@ public class SubmitServlet extends ClientServlet {
           urlConn.setDoInput(true);
           urlConn.setUseCaches(false);
 
-          input = new InputStreamReader(urlConn.getInputStream());
+          input = new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8);
           BufferedReader in = new BufferedReader(input);
           boolean escape = !urlConn.getContentType().startsWith("text/html");
           String line;

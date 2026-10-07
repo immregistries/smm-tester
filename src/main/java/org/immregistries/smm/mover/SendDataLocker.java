@@ -1,5 +1,6 @@
 package org.immregistries.smm.mover;
 
+import java.nio.charset.StandardCharsets;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -36,7 +37,7 @@ public class SendDataLocker {
 
   public void renewLock() throws IOException {
     SimpleDateFormat sdf = new SimpleDateFormat(ConnectionManager.STANDARD_DATE_FORMAT);
-    PrintWriter out = new PrintWriter(lockFile);
+    PrintWriter out = new PrintWriter(lockFile, StandardCharsets.UTF_8);
     out.println("Simple Message Mover (SMM) currently working in this directory");
     out.println("");
     out.println("SMM started:  " + sdf.format(ConnectionManager.getStartDate()));

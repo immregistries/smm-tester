@@ -1,8 +1,8 @@
 package org.immregistries.smm.tester.query;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
@@ -235,7 +235,7 @@ public class QueryRunner extends Thread {
     if (transforms != null) {
       String fn = queryFile.getName() + ".response.hl7";
       File saveFile = new File(queryFile.getParentFile(), fn);
-      saveOut = new PrintWriter(new FileWriter(saveFile));
+      saveOut = new PrintWriter(new FileWriter(saveFile, StandardCharsets.UTF_8));
     }
 
     String line;
@@ -299,9 +299,9 @@ public class QueryRunner extends Thread {
     }
   }
 
-  private BufferedReader setupReader(File queryFile) throws FileNotFoundException {
+  private BufferedReader setupReader(File queryFile) throws IOException {
     logStatusMessage("Reading from file: " + queryFile.getName());
-    BufferedReader in = new BufferedReader(new FileReader(queryFile));
+    BufferedReader in = new BufferedReader(new FileReader(queryFile, StandardCharsets.UTF_8));
     return in;
   }
 

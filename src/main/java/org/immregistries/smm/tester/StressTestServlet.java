@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import java.nio.charset.StandardCharsets;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -632,12 +633,12 @@ public class StressTestServlet extends ClientServlet {
               File file =
                   new File(generatedDir, filenameBase + "-" + (pos + 1) + " Stress Messages.txt");
               log("Saving example message to: " + file.getCanonicalPath());
-              fileOutExampleMessage = new PrintWriter(new FileWriter(file));
+              fileOutExampleMessage = new PrintWriter(new FileWriter(file, StandardCharsets.UTF_8));
             }
             {
               File file = new File(generatedDir, filenameBase + "-" + (pos + 1) + " Log.txt");
               log("Saving logs to: " + file.getCanonicalPath());
-              fileOutLog = new PrintWriter(new FileWriter(file));
+              fileOutLog = new PrintWriter(new FileWriter(file, StandardCharsets.UTF_8));
             }
           }
         } catch (IOException ioe) {

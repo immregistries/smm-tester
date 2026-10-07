@@ -1,5 +1,6 @@
 package org.immregistries.smm.transform.procedure;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -532,8 +533,7 @@ public class FirstNameConvertNickname extends ProcedureCommon implements Procedu
   }
 
   public static void loadFileNicknames() {
-    try (BufferedReader br = new BufferedReader(new InputStreamReader(
-        FirstNameConvertNickname.class.getResourceAsStream(("/nicknames.csv"))))) {
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(FirstNameConvertNickname.class.getResourceAsStream(("/nicknames.csv")), StandardCharsets.UTF_8))) {
       
       // skip header
       br.readLine();

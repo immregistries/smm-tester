@@ -1,5 +1,7 @@
 package org.immregistries.smm.install;
 
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -163,8 +165,8 @@ public class DownloadServlet extends ClientServlet {
                 final String[] params =
                     {paramDriver, paramUrl, paramUsername, paramDialect, paramPassword};
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(zis));
-                PrintWriter out = new PrintWriter(newFile);
+                BufferedReader br = new BufferedReader(new InputStreamReader(zis, StandardCharsets.UTF_8));
+                PrintWriter out = new PrintWriter(newFile, StandardCharsets.UTF_8);
                 String line;
                 while ((line = br.readLine()) != null) {
                   boolean replaced = false;
@@ -253,7 +255,7 @@ public class DownloadServlet extends ClientServlet {
     }
 
     resp.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = new PrintWriter(resp.getOutputStream());
+    PrintWriter out = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
     List<String> versionList = new ArrayList<String>();
     File[] warFiles = null;
     if (ConnectionManager.getSoftwareDir() != null) {

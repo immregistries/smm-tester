@@ -1,5 +1,7 @@
 package org.immregistries.smm.mover.install;
 
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.immregistries.smm.mover.install.templates.ConnectionTemplateFactory;
@@ -18,7 +20,7 @@ public class PrepareServlet extends ClientServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     resp.setContentType("text/html;charset=UTF-8");
-    PrintWriter out = new PrintWriter(resp.getOutputStream());
+    PrintWriter out = new PrintWriter(new OutputStreamWriter(resp.getOutputStream(), StandardCharsets.UTF_8));
     SoftwareType softwareType = getSoftwareType(req);
 
     try {
