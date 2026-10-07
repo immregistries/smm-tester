@@ -3,7 +3,6 @@
  */
 package org.immregistries.smm.tester.connectors;
 
-import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -13,10 +12,12 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
@@ -199,7 +200,8 @@ public class HttpConnector extends Connector {
           debugLog.append(">> Password = '" + conn.getPassword() + "' \r");
         }
         urlConn.setRequestProperty("Authorization",
-            "Basic " + URLEncoder.encode(conn.getUserId() + ":" + conn.getPassword(), "UTF-8"));
+            "Basic " + Base64.getEncoder().encodeToString(
+                (conn.getUserId() + ":" + conn.getPassword()).getBytes(StandardCharsets.UTF_8)));
         content = request;
       } else {
         if (debug) {

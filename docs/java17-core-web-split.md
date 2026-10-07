@@ -90,7 +90,7 @@ Each step is its own commit, and `mvn test` must pass after each one (step 0 mak
        - Servlets that wrapped `resp.getOutputStream()` now write UTF-8, matching their declared `charset=UTF-8`.
        - The WSDL responses declare `text/xml;charset=UTF-8`.
      - **Other:** `getBytes()` and `new String(byte[])` calls (password encryption, hashing, Base64, XML parsing) use UTF-8.
-     - **Noticed, not changed:** `HttpConnector`'s BASIC authentication sends `URLEncoder.encode(user:password)` instead of Base64, so it isn't valid HTTP Basic auth.
+     - **Fixed afterward:** `HttpConnector`'s BASIC authentication sent `URLEncoder.encode(user:password)` instead of Base64, which isn't valid HTTP Basic auth. It now sends `Base64(user:password)` (UTF-8), covered by `HttpConnectorTest`.
 3. **Break the four remaining back-edges** listed above, still inside the single module.
 4. **Restructure into parent + `smm-core` + `smm-web`.** `smm-core` replaces the `client` classifier JAR as the published library, and it should be the JAR AART can eventually move to.
 5. **Smoke-test the WAR** on a current servlet-6 container (Tomcat 10.1+ or 11): start up, the mover manager, the CDC WSDL endpoint, and sending a test message to IIS Sandbox. Include a live `SoapConnector` connectivity test and submission. From this development machine `florence.immregistries.org` resolves to a private address and couldn't be reached, so run it from inside the network or against a local IIS Sandbox.

@@ -7,10 +7,10 @@
  */
 package org.immregistries.smm.mover;
 
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import org.immregistries.smm.cdc.CDCWSDLServer;
 import org.immregistries.smm.cdc.Fault;
 import org.immregistries.smm.cdc.SecurityFault;

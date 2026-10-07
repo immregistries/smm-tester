@@ -1,6 +1,5 @@
 package org.immregistries.smm.tester.connectors;
 
-import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 public class IZGatewayConnector extends HttpConnector {
   public IZGatewayConnector(String label, String url) throws Exception {
