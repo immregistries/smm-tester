@@ -7,7 +7,7 @@ import org.immregistries.smm.tester.connectors.HttpConnector;
 
 public class AZ_ASIIS_Template extends ConnectionTemplate {
   public AZ_ASIIS_Template() {
-    super("AZ ASIIS");
+    super("AZ ASIIS", new String[] {_PROD});
   }
 
   @Override
@@ -20,18 +20,6 @@ public class AZ_ASIIS_Template extends ConnectionTemplate {
       cc.setTypeShow(false);
       cc.setInstructions(
           "In order to connect to ASIIS Production you will need to request a Username, Password and IRMS ID from the <a href=\"https://www.asiis.state.az.us/\" target=\"_blank\">ASIIS User Support help desk</a>. Please provide the User Id, Password, and IRMS ID before continuing. ");
-      cc.setReceiverName("ASIIS");
-      cc.setUseridRequired(true);
-      cc.setPasswordRequired(true);
-      cc.setFacilityidRequired(true);
-    } else if (templateName.endsWith(_TEST)) {
-      cc.setType(ConnectorFactory.TYPE_AZ_SOAP);
-      cc.setUrl("https://appqa.azdhs.gov/asiis/hl7Services/ASIIS.asmx");
-      cc.setFacilityidShow(true);
-      cc.setFacilityidLabel("IRMS ID");
-      cc.setTypeShow(false);
-      cc.setInstructions(
-          "In order to connect to ASIIS Test you will need to request a Username, Password and IRMS ID from the <a href=\"https://test-asiis.azdhs.gov/\" target=\"_blank\">ASIIS User Support help desk</a>. Please provide the User Id, Password and IRMS ID before continuing.");
       cc.setReceiverName("ASIIS");
       cc.setUseridRequired(true);
       cc.setPasswordRequired(true);

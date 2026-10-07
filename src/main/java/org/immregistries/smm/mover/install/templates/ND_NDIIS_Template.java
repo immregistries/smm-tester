@@ -5,7 +5,6 @@ import org.immregistries.smm.mover.install.ConnectionConfiguration;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.connectors.Connector.TransferType;
 import org.immregistries.smm.tester.connectors.ConnectorFactory;
-import org.immregistries.smm.tester.connectors.NDSoapConnector;
 
 public class ND_NDIIS_Template extends ConnectionTemplate {
   public ND_NDIIS_Template() {
@@ -43,7 +42,7 @@ public class ND_NDIIS_Template extends ConnectionTemplate {
 
   @Override
   public void setupConnection(String templateName, Connector connector) {
-    NDSoapConnector con = (NDSoapConnector) connector;
+    Connector con = connector;
     con.addCustomTransformation("MSH-4=[OTHERID]");
     con.addCustomTransformation("MSH-5=NDIIS");
     con.addCustomTransformation("MSH-6=ND0000");

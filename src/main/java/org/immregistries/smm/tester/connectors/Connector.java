@@ -68,44 +68,6 @@ public abstract class Connector {
         connector = new MLLPConnector(label, url);
       } else if (type.equals(ConnectorFactory.TYPE_RAW)) {
         connector = new HttpRawConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_HI_SOAP)) {
-        connector = new HISoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_ENVISION_SOAP)) {
-        connector = new EnvisionConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_ENVISION_SOAP11)) {
-        connector = new EnvisionConnector(label, url, true);
-      } else if (type.equals(ConnectorFactory.TYPE_OR_SOAP)) {
-        connector = new ORConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_WI_SOAP)) {
-        connector = new WIConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_IL_WS)) {
-        connector = new ILConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_IL_SOAP)) {
-        connector = new ILSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_MA_SOAP)) {
-        connector = new MAConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_MA_SOAP_2020)) {
-        connector = new MAConnector2020(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_MO_SOAP)) {
-        connector = new MOConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_NJ_SOAP)) {
-        connector = new NJConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_CA_SOAP)) {
-        connector = new CASoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_SC_SOAP)) {
-        connector = new SCSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_AL_SOAP)) {
-        connector = new ALSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_CO_SOAP)) {
-        connector = new COSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_FL_SOAP)) {
-        connector = new FLSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_KY_KHIE)) {
-        connector = new KYKHIEConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_AZ_SOAP)) {
-        connector = new AZSoapConnector(label, url);
-      } else if (type.equals(ConnectorFactory.TYPE_ND_SOAP)) {
-        connector = new NDSoapConnector(label, url);
       } else if (type.equals(ConnectorFactory.TYPE_IZ_GATEWAY)) {
         connector = new IZGatewayConnector(label, url);
       } else {

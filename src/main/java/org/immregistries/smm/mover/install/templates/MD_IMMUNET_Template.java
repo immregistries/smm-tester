@@ -5,7 +5,6 @@ import org.immregistries.smm.mover.install.ConnectionConfiguration;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.connectors.Connector.TransferType;
 import org.immregistries.smm.tester.connectors.ConnectorFactory;
-import org.immregistries.smm.tester.connectors.EnvisionConnector;
 
 public class MD_IMMUNET_Template extends ConnectionTemplate {
   public MD_IMMUNET_Template() {
@@ -42,7 +41,7 @@ public class MD_IMMUNET_Template extends ConnectionTemplate {
 
   @Override
   public void setupConnection(String templateName, Connector connector) {
-    EnvisionConnector con = (EnvisionConnector) connector;
+    Connector con = connector;
     con.addCustomTransformation("MSH-4.2=[FACILITYID]");
     con.setAckType(AckAnalyzer.AckType.HP_WIR_DEFAULT);
     con.setTransferType(TransferType.NEAR_REAL_TIME_LINK);
