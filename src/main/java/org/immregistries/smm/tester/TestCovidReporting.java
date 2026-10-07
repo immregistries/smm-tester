@@ -153,7 +153,6 @@ public class TestCovidReporting {
       testCaseMessage.setMessageText(testCaseMessage.getOriginalMessage());
       System.out.print(testCaseMessage.getMessageText());
       TestRunner testRunner = new TestRunner();
-      testRunner.setValidateResponse(false);
       try {
         testRunner.runTest(connector, testCaseMessage);
         System.out.println("Message sent to " + sendData.getConnector().getLabel());

@@ -3,11 +3,6 @@ package org.immregistries.smm;
 
 public class SoftwareVersion {
 
-  public static final String EVS_URL =
-      "http://hl7v2.ws.nist.gov/hl7v2ws//services/soap/MessageValidationV2";
-  // OLD URL: http://hit-testing2.nist.gov:8090/hl7v2ws/services/soap/MessageValidationV2
-  // Better URL because it won't move:
-  // http://hl7v2.ws.nist.gov/hl7v2ws//services/soap/MessageValidationV2
 
 
   public static String VERSION = "2.24";

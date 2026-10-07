@@ -66,7 +66,6 @@ public class TestConnect {
       TestCaseMessage testCaseMessage = new TestCaseMessage();
       testCaseMessage.setPreparedMessage("MSH|^~\\&|Test EHR Application|X68||NIST Test Iz Reg|20120701082240-0500||VXU^V04^VXU_V04|NIST-IZ-001.00|P|2.5.1|||ER|AL|||||Z22^CDCPHINVS\rPID|\rORC|\rRXA|\r");
       TestRunner testRunner = new TestRunner();
-      testRunner.setValidateResponse(false);
       try {
         testRunner.runTest(connector, testCaseMessage);
         System.out.println("  + message sent, response received");

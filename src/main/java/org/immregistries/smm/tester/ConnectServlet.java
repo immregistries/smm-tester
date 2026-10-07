@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import org.immregistries.smm.mover.ConnectionManager;
 import org.immregistries.smm.mover.SendData;
-import org.immregistries.smm.tester.certify.CertifyRunner;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.connectors.ConnectorFactory;
 import org.immregistries.smm.transform.TestCaseMessage;
@@ -298,27 +297,8 @@ public class ConnectServlet extends ClientServlet {
         }
         CreateTestCaseServlet.loadTestCases(session);
       }
-      // sendData.setTestParticipant(CertifyRunner.getParticipantResponse(sendData));
     }
     return sendData;
-  }
-
-  public static void readNewConnection(CertifyClient certifyClient, int internalId)
-      throws ServletException, IOException {
-    if (internalId != 0) {
-      SendData sendData = ConnectionManager.getSendData(internalId);
-      certifyClient.setSendData(sendData);
-      if (sendData.getConnector().isSetupGlobalKeyStore()) {
-        try {
-          setupKeystore(sendData);
-        } catch (IOException ioe) {
-          ioe.printStackTrace();
-        }
-      } else {
-        sendData.readKeyStore();
-      }
-      sendData.setTestParticipant(CertifyRunner.getParticipantResponse(certifyClient));
-    }
   }
 
   public static void setupKeystore(SendData sendData) throws IOException {

@@ -27,9 +27,6 @@ import org.immregistries.smm.mover.AckAnalyzer;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.manager.HL7Reader;
 import org.immregistries.smm.tester.manager.forecast.ForecastTesterManager;
-import org.immregistries.smm.tester.manager.nist.NISTValidator;
-import org.immregistries.smm.tester.manager.nist.ValidationReport;
-import org.immregistries.smm.tester.manager.nist.ValidationResource;
 import org.immregistries.smm.transform.TestCaseMessage;
 import org.immregistries.smm.transform.TestError;
 import org.immregistries.smm.transform.Transform;
@@ -64,7 +61,6 @@ public class TestRunner {
   private long startTime = 0;
   private long endTime = 0;
   private boolean wasRun = false;
-  private boolean validateResponse = false;
   private String testSectionType = "";
 
   public String getTestSectionType() {
@@ -73,14 +69,6 @@ public class TestRunner {
 
   public void setTestSectionType(String testSectionType) {
     this.testSectionType = testSectionType;
-  }
-
-  public boolean isValidateResponse() {
-    return validateResponse;
-  }
-
-  public void setValidateResponse(boolean validateResponse) {
-    this.validateResponse = validateResponse;
   }
 
   public boolean isWasRun() {
@@ -162,9 +150,6 @@ public class TestRunner {
     doRunTest(connector, testCaseMessage, message);
     testCaseMessage.setTotalRunTime(getTotalRunTime());
     evaluateRunTest(connector, testCaseMessage);
-    if (validateResponse) {
-      validateResponseWithNIST(testCaseMessage, actualResponseMessage);
-    }
     return passedTest;
   }
 
@@ -581,51 +566,6 @@ public class TestRunner {
     passedTest = false;
     actualResponseMessage = null;
     testCaseMessage.setMessageTextSent(message);
-  }
-
-  public static void validateResponseWithNIST(TestCaseMessage testCaseMessage, String messageText) {
-    ascertainValidationResource(testCaseMessage, messageText);
-    if (testCaseMessage.getValidationResource() != null) {
-      ValidationReport validationReport =
-          NISTValidator.validate(messageText, testCaseMessage.getValidationResource());
-      testCaseMessage.setValidationReport(validationReport);
-      if (validationReport != null) {
-        testCaseMessage.setValidationReportPass(
-            validationReport.getHeaderReport().getValidationStatus().equals("Complete")
-                && validationReport.getHeaderReport().getErrorCount() == 0);
-      }
-    }
-  }
-
-  public static void ascertainValidationResource(TestCaseMessage testCaseMessage,
-      String messageText) {
-    ValidationResource validationResource = null;
-    HL7Reader hl7Reader = new HL7Reader(messageText);
-    if (hl7Reader.advanceToSegment("MSH")) {
-      String messageType = hl7Reader.getValue(9);
-      String profileId = hl7Reader.getValue(21);
-      if (profileId.equals("Z31") && messageType.equals("RSP")) {
-        validationResource = ValidationResource.IZ_RSP_Z31;
-      } else if (profileId.equals("Z32") && messageType.equals("RSP")) {
-        validationResource = ValidationResource.IZ_RSP_Z32;
-      } else if (profileId.equals("Z42") && messageType.equals("RSP")) {
-        validationResource = ValidationResource.IZ_RSP_Z42;
-      } else if (profileId.equals("Z33") && messageType.equals("RSP")) {
-        validationResource = ValidationResource.IZ_RSP_Z33;
-      } else if (profileId.equals("Z34") && messageType.equals("QBP")) {
-        validationResource = ValidationResource.IZ_QBP_Z34;
-      } else if (profileId.equals("Z44") && messageType.equals("QBP")) {
-        validationResource = ValidationResource.IZ_QBP_Z44;
-      } else if (profileId.equals("Z22") && messageType.equals("VXU")) {
-        validationResource = ValidationResource.IZ_VXU_Z22;
-      } else if (profileId.equals("") && messageType.equals("VXU")) {
-        validationResource = ValidationResource.IZ_VXU;
-      } else if (profileId.equals("Z23") || messageType.equals("ACK")) {
-        validationResource = ValidationResource.IZ_ACK_FOR_AIRA;
-        // validationResource = ValidationResource.IZ_ACK_Z23;
-      }
-    }
-    testCaseMessage.setValidationResource(validationResource);
   }
 
 }

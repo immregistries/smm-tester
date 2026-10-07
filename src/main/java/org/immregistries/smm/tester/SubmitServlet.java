@@ -17,7 +17,6 @@ import org.immregistries.smm.mover.AckAnalyzer;
 import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.manager.HL7Reader;
 import org.immregistries.smm.tester.manager.TestCaseMessageManager;
-import org.immregistries.smm.tester.manager.nist.Assertion;
 import org.immregistries.smm.tester.manager.query.QueryConverter;
 import org.immregistries.smm.tester.manager.query.QueryType;
 import org.immregistries.smm.tester.run.TestRunner;
@@ -157,19 +156,6 @@ public class SubmitServlet extends ClientServlet {
       String responseText = connector.submitMessage(message, debug);
       request.setAttribute("responseText", responseText);
 
-      boolean validateNIST = request.getParameter("validateNIST") != null;
-      if (validateNIST) {
-        {
-          TestCaseMessage validateRequestTestCaseMessage = new TestCaseMessage();
-          TestRunner.validateResponseWithNIST(validateRequestTestCaseMessage, message);
-          request.setAttribute("validateRequestTestCaseMessage", validateRequestTestCaseMessage);
-        }
-        {
-          TestCaseMessage validateResponseTestCaseMessage = new TestCaseMessage();
-          TestRunner.validateResponseWithNIST(validateResponseTestCaseMessage, responseText);
-          request.setAttribute("validateResponseTestCaseMessage", validateResponseTestCaseMessage);
-        }
-      }
     }
   }
 
@@ -270,13 +256,6 @@ public class SubmitServlet extends ClientServlet {
             out.print("<pre>");
             out.print(responseText.replace("<", "&lt;").replace(">", "&gt;"));
             out.println("</pre>");
-            {
-              TestCaseMessage validateResponseTestCaseMessage =
-                  (TestCaseMessage) request.getAttribute("validateResponseTestCaseMessage");
-              if (validateResponseTestCaseMessage != null) {
-                printValidationResults(out, validateResponseTestCaseMessage);
-              }
-            }
           }
           String requestText = (String) request.getAttribute("requestText");
           if (requestText != null) {
@@ -285,13 +264,6 @@ public class SubmitServlet extends ClientServlet {
             out.print("<pre>");
             out.print(requestText);
             out.println("</pre>");
-            {
-              TestCaseMessage validateRequestTestCaseMessage =
-                  (TestCaseMessage) request.getAttribute("validateRequestTestCaseMessage");
-              if (validateRequestTestCaseMessage != null) {
-                printValidationResults(out, validateRequestTestCaseMessage);
-              }
-            }
           }
 
 
@@ -396,30 +368,6 @@ public class SubmitServlet extends ClientServlet {
     }
   }
 
-  public void printValidationResults(PrintWriter out, TestCaseMessage testMessage) {
-    if (testMessage.isValidationReportPass()) {
-      out.println("<h4>Passed NIST Validation</h4>");
-    } else {
-      out.println("<h4>Failed NIST Validation</h4>");
-    }
-    out.println("<table border=\"0\">");
-    out.println("  <tr>");
-    out.println("    <th>Result</th>");
-    out.println("    <th>Type</th>");
-    out.println("    <th>Description</th>");
-    out.println("    <th>Path</th>");
-    out.println("  </tr>");
-    for (Assertion assertion : testMessage.getValidationReport().getAssertionList()) {
-      out.println("  <tr>");
-      out.println("    <td>" + assertion.getResult() + "</td>");
-      out.println("    <td>" + assertion.getType() + "</td>");
-      out.println("    <td>" + assertion.getDescription() + "</td>");
-      out.println("    <td>" + assertion.getPath() + "</td>");
-      out.println("  </tr>");
-    }
-    out.println("</table>");
-  }
-
   private void printForm(int id, List<Connector> connectors, String message,
       TestCaseMessage testCaseMessage, HttpServletRequest request, PrintWriter out) {
     out.println("    <form action=\"SubmitServlet\" method=\"POST\">");
@@ -508,11 +456,6 @@ public class SubmitServlet extends ClientServlet {
     out.println("        <tr>");
     out.println("          <td>Debug</td>");
     out.println("          <td><input type=\"checkbox\" name=\"debug\" value=\"true\" /></td>");
-    out.println("        </tr>");
-    out.println("        <tr>");
-    out.println("          <td>Validate with NIST</td>");
-    out.println("          <td><input type=\"checkbox\" name=\"validateNIST\" value=\"true\""
-        + (request.getParameter("validateNIST") == null ? "" : " checked=\"true\"") + "/></td>");
     out.println("        </tr>");
     out.println("        <tr>");
     out.println("          <td>Show WSDL</td>");

@@ -17,8 +17,8 @@ Working plan for workstream 2 in [modernization-plan.md](modernization-plan.md).
 
 ### Dependency problems
 
-- **CXF versions are mixed.** `cxf-rt-frontend-jaxws` is 4.1.1 (Jakarta namespace), but `cxf-core` is pinned to 3.5.5 (javax), and the code still uses `javax.jws.WebService`. CXF is used only by the NIST validator client (`gov.nist.healthcare.hl7ws.client`, `tester.manager.nist.NISTValidator`). That client is probably broken at runtime on `master`. Dependabot raised CXF to 4.1.1 after `v3.1.0`.
-- **Apparently unused dependencies.** No main source file imports Axis2, Axiom, Neethi, Geronimo ws-metadata, or httpclient5. They may be leftovers, but each needs runtime verification before removal.
+- ~~**CXF versions are mixed.**~~ Resolved: CXF was used only by the NIST validator, and both have been removed (see "NIST validator" below).
+- **Apparently unused dependencies.** No main source file imports Axis2, Axiom, Neethi, or httpclient5. They may be leftovers, but each needs runtime verification before removal. One catch: `KSSoapConnector` imports `javax.activation.DataHandler`, which currently arrives only through Axiom (`jakarta.activation-api` 1.2.2, which still uses the `javax` package). Removing Axiom means adding that dependency directly or moving the connector to `jakarta.activation`.
 - **Obsolete build pieces:**
   - Jetty 8 (`jetty-all-server` provided dependency and `jetty-maven-plugin`)
   - `maven-eclipse-plugin`
@@ -34,7 +34,7 @@ Working plan for workstream 2 in [modernization-plan.md](modernization-plan.md).
 
 ### The code divides cleanly
 
-There are 417 main classes: 32 are servlets (`jakarta.servlet` imports) and 385 are not. Only 13 non-servlet classes reference a servlet class, through five edges:
+Before the removals there were 417 main classes: 32 servlets (`jakarta.servlet` imports) and 385 others. Only 13 non-servlet classes referenced a servlet class. With `CertifyClient` gone, four edges remain:
 
 | Non-servlet class | Depends on | Why | Fix |
 | --- | --- | --- | --- |
@@ -42,7 +42,6 @@ There are 417 main classes: 32 are servlets (`jakarta.servlet` imports) and 385 
 | `mover.install.ConnectionConfiguration` | `ConfigureServlet` | Only the string `"ConfigureServlet"` in generated HTML | No compile dependency. Move the HTML rendering to web, or leave it as is. |
 | `tester.Authenticate` | `HomeServlet`, `LoginServlet` | Legacy login state | Goes to **web** now, and is replaced by the new auth boundary (workstream 3). |
 | `mover.ConnectionManager` | `tester.Authenticate` | `Authenticate.setupAdminUser(...)` when reading config | Remove the call from core. Admin setup moves to the web layer and later to the new auth. |
-| `tester.CertifyClient` | `ConnectServlet.readNewConnection` (static) | Shared helper that lives in a servlet | Move `readNewConnection` into a core class (for example in `tester.certify`) and call it from both places. |
 | `tester.query.QueryRunner` | `CreateTestCaseServlet.IIS_TEST_REPORT_FILENAME_PREFIX` | A constant | Move the constant to core. |
 
 ## Proposed module layout
@@ -51,9 +50,9 @@ There are 417 main classes: 32 are servlets (`jakarta.servlet` imports) and 385 
 smm-tester/                  (parent pom, packaging=pom)
 ├── smm-core/                (jar)  org.immregistries:smm-core
 │     transform/**, tester/connectors/**, tester/manager/**, tester/transform,
-│     tester/run, tester/certify, tester/query, mover (engine, not servlets),
+│     tester/run, tester/query, mover (engine, not servlets),
 │     mover/install/templates + ConnectionConfiguration, org.immregistries.smm root,
-│     generated SOAP stubs (gov.nist, com.microsoft, faultcontracts, servicecontracts)
+│     generated SOAP stubs (com.microsoft, faultcontracts, servicecontracts)
 └── smm-web/                 (war)  org.immregistries:smm-web
       all 32 servlets, cdc/**, tester/Authenticate (until replaced),
       src/main/webapp, web.xml
@@ -73,10 +72,10 @@ Each step is its own commit, and `mvn test` must pass after each one (step 0 mak
    - Move CI workflows to JDK 17 and add `modernize` to the `pull-request` branch triggers.
    - Remove Jetty 8, `maven-eclipse-plugin`, and `lib.zip`.
 2. **Dependency cleanup:**
-   - Remove the NIST validator (see "NIST validator" below), then remove CXF.
-   - Remove the unused Axis2/Axiom/Neethi/Geronimo/httpclient5 dependencies, once runtime checks confirm they aren't needed.
+   - ~~Remove the NIST validator and CXF.~~ Done.
+   - Remove the unused Axis2/Axiom/Neethi/httpclient5 dependencies, once runtime checks confirm they aren't needed.
    - Convert source encoding to UTF-8.
-3. **Break the five back-edges** listed above, still inside the single module.
+3. **Break the four remaining back-edges** listed above, still inside the single module.
 4. **Restructure into parent + `smm-core` + `smm-web`.** `smm-core` replaces the `client` classifier JAR as the published library, and it should be the JAR AART can eventually move to.
 5. **Smoke-test the WAR** on a current servlet-6 container (Tomcat 10.1+ or 11): start up, the mover manager, the CDC WSDL endpoint, and sending a test message to IIS Sandbox.
 6. **Publishing:** move `maven-publish.yml` to the Sonatype Central Portal and publish only `smm-core` (the WAR is deployed, not consumed). Keep tag-triggered publishing off `modernize` until this is done.
@@ -94,26 +93,32 @@ Workstream 3 (removing `Authenticate`/`LoginServlet`, adding InteropHub sign-on)
 
 **The endpoint is gone.** On 2026-10-07, `hl7v2.ws.nist.gov` had no DNS address, so the feature can't work today, regardless of the CXF version problem.
 
-**Removal scope:**
+**Removed 2026-10-07** ("the software has moved"; add it back deliberately if it's ever needed):
 - `gov.nist.healthcare.hl7ws.**`
 - `tester.manager.nist.**`
 - `SoftwareVersion.EVS_URL`
 - `TestRunner`'s `validateResponse` flag, `validateResponseWithNIST`, and `ascertainValidationResource`
 - the validation fields on `TestCaseMessage`
 - the checkbox and result rendering in `SubmitServlet` and `TestCaseMessageViewerServlet`
-- the CXF, `javax.jws`, and related dependencies
+- the CXF and `javax.jws` (Geronimo ws-metadata) dependencies
 
-Remaining check before removing it: confirm that nobody still uses the checkbox on deployed instances (for example, app.immregistries.org/tester).
+## CertifyClient
+
+**Removed 2026-10-07.** `CertifyClient` was a standalone command-line client (the `jar-with-dependencies` main class). It pulled certification test areas from AART URLs, ran them through SMM connections, and reported results back. Removed with it:
+- `tester.CertifyClient`
+- the `tester.certify` package (`CertifyRunner`, `CertifyArea`, `AartUrl`)
+- `ConnectServlet.readNewConnection`
+- the `maven-assembly-plugin` configuration
 
 ## Decisions
 
 - 2026-10-07: Modules are named `smm-core` (JAR) and `smm-web` (WAR).
-- 2026-10-07: Remove the NIST validator, once nobody turns out to rely on it.
+- 2026-10-07: Remove the NIST validator and its Submit-page checkbox (done).
+- 2026-10-07: Remove `CertifyClient` and the runnable `jar-with-dependencies` (done).
 - 2026-10-07: Keep a published library JAR (`smm-core`) as AART's future migration target.
 - 2026-10-07: The legacy `Authenticate`/`LoginServlet` moves to `smm-web` temporarily and is removed when InteropHub sign-on replaces it (workstream 3).
 
 ## Open questions
 
-- Should 4.x still produce the standalone runnable `CertifyClient` JAR (`jar-with-dependencies`)?
 - Should EHR-Sandbox be told about 4.x and `smm-core`, or left on 2.31.0?
 - What happens to the `hart` branch? It is AART's real dependency source. Keep it as is, or move it to its own repo?

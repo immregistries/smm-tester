@@ -15,8 +15,6 @@ import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.immregistries.smm.tester.manager.forecast.EvaluationActual;
 import org.immregistries.smm.tester.manager.forecast.ForecastActual;
-import org.immregistries.smm.tester.manager.nist.ValidationReport;
-import org.immregistries.smm.tester.manager.nist.ValidationResource;
 import org.immregistries.smm.transform.forecast.ForecastTestCase;
 import org.immregistries.smm.transform.forecast.ForecastTestPanel;
 
@@ -157,10 +155,6 @@ public class TestCaseMessage {
   private String messageAcceptStatusDebug = "";
   private int testPosition = 0;
   private String testType = "";
-  private ValidationReport validationReport = null;
-  private String validationProblem = "";
-  private ValidationResource validationResource = null;
-  private boolean validationReportPass = false;
   private boolean originalAccepted = false;
   private String resultForecastStatus = "";
   private TestCaseMessage updateTestCaseMessage = null;
@@ -195,14 +189,6 @@ public class TestCaseMessage {
 
   public String getLog() {
     return log.toString();
-  }
-
-  public String getValidationProblem() {
-    return validationProblem;
-  }
-
-  public void setValidationProblem(String validationProblem) {
-    this.validationProblem = validationProblem;
   }
 
   public long getTotalRunTime() {
@@ -390,30 +376,6 @@ public class TestCaseMessage {
 
   public void setOriginalMessageResponse(String originalMessageAck) {
     this.originalMessageResponse = originalMessageAck;
-  }
-
-  public boolean isValidationReportPass() {
-    return validationReportPass;
-  }
-
-  public void setValidationReportPass(boolean validationReportPass) {
-    this.validationReportPass = validationReportPass;
-  }
-
-  public ValidationResource getValidationResource() {
-    return validationResource;
-  }
-
-  public void setValidationResource(ValidationResource validationResource) {
-    this.validationResource = validationResource;
-  }
-
-  public ValidationReport getValidationReport() {
-    return validationReport;
-  }
-
-  public void setValidationReport(ValidationReport validationReport) {
-    this.validationReport = validationReport;
   }
 
   public String getTestType() {

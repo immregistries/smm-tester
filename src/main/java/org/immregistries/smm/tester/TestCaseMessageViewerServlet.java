@@ -2,8 +2,6 @@ package org.immregistries.smm.tester;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import org.immregistries.smm.tester.manager.nist.Assertion;
-import org.immregistries.smm.tester.manager.nist.ValidationReport;
 import org.immregistries.smm.transform.TestCaseMessage;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -121,38 +119,5 @@ public class TestCaseMessageViewerServlet extends ClientServlet {
     testCaseMessage.getErrorList();
     testCaseMessage.getTestCaseNumber();
 
-    if (testCaseMessage.getValidationReport() != null) {
-      ValidationReport vr = testCaseMessage.getValidationReport();
-      out.println("<h3>ONC 2015 Analysis of Message</h3>");
-      out.println("      <table border=\"1\" cellspacing=\"0\">");
-      out.println("        <tr>");
-      out.println("          <th>Error</th>");
-      out.println("          <td>" + vr.getHeaderReport().getErrorCount() + "</td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println("          <th>Warning</th>");
-      out.println("          <td>" + vr.getHeaderReport().getWarningCount() + "</td>");
-      out.println("        </tr>");
-      out.println("      </table>");
-      out.println("      <br/>");
-      out.println("      <table border=\"1\" cellspacing=\"0\">");
-      out.println("        <tr>");
-      out.println("          <th>Result</th>");
-      out.println("          <th>Type</th>");
-      out.println("          <th>Location</th>");
-      out.println("          <th>Description</th>");
-      out.println("        </tr>");
-      for (Assertion assertion : testCaseMessage.getValidationReport().getAssertionList()) {
-        String passClass =
-            assertion.getResult().equalsIgnoreCase("ERROR") ? " class=\"fail\"" : " class=\"pass\"";
-        out.println("        <tr>");
-        out.println("          <td" + passClass + ">" + assertion.getResult() + "</td>");
-        out.println("          <td" + passClass + ">" + assertion.getType() + "</td>");
-        out.println("          <td" + passClass + ">" + assertion.getPath() + "</td>");
-        out.println("          <td" + passClass + ">" + assertion.getDescription() + "</td>");
-        out.println("        </tr>");
-      }
-      out.println("      </table>");
-    }
   }
 }
