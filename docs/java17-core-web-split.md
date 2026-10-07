@@ -40,22 +40,31 @@ Before the removals there were 417 main classes: 32 servlets (`jakarta.servlet` 
 | `mover.ConnectionManager` | `tester.Authenticate` | `Authenticate.setupAdminUser(...)` when reading config | Remove the call from core. Admin setup moves to the web layer and later to the new auth. |
 | `tester.query.QueryRunner` | `CreateTestCaseServlet.IIS_TEST_REPORT_FILENAME_PREFIX` | A constant | Move the constant to core. |
 
-## Proposed module layout
+## Module layout (done in step 4)
 
 ```
-smm-tester/                  (parent pom, packaging=pom)
-├── smm-core/                (jar)  org.immregistries:smm-core
-│     transform/**, tester/connectors/**, tester/manager/**, tester/transform,
-│     tester/run, tester/query, mover (engine, not servlets),
-│     mover/install/templates + ConnectionConfiguration, org.immregistries.smm root
-└── smm-web/                 (war)  org.immregistries:smm-web
-      all 32 servlets, cdc/**, tester/Authenticate (until replaced),
-      src/main/webapp, web.xml
+smm-tester/                  pom.xml: org.immregistries:smm-parent (packaging=pom)
+├── smm-core/                org.immregistries:smm-core (jar, published library)
+│     src/main/java: 168 classes (transform, tester/connectors, tester/manager,
+│       tester/transform, tester/run, tester/query, mover engine,
+│       mover/install/templates + ConnectionConfiguration, org.immregistries.smm root)
+│     src/main/resources: transform/transform.txt, nicknames.csv
+│     src/test: all 64 test classes
+│     src/data: reference spreadsheets and sample files (not packaged)
+└── smm-web/                 org.immregistries:smm-web (war, builds target/smm.war, not published)
+      src/main/java: 49 classes (32 servlets, cdc/**, tester/Authenticate until replaced)
+      src/main/resources: tester/defaultConnections.txt
+      src/main/webapp: pages, web.xml
 ```
 
-- Use `git mv` so file history survives the move.
-- Tests move with the code they cover. Nearly all current tests cover core code.
-- Later, the school roster layer adds its processing logic to core and its upload/results UI to web.
+- **Files:** moved with `git mv`, so history follows them (`git log --follow`). Resources moved out of `src/main/java` into the standard `src/main/resources`, so the old resource-copying configuration is gone.
+- **Dependencies:**
+  - `smm-core` depends on commons-codec, commons-lang3, and commons-text.
+  - `smm-web` depends on `smm-core`, commons-codec, and the servlet API (provided).
+  - The parent's `dependencyManagement` holds the versions, and `mvn dependency:analyze` reports no unused or undeclared dependencies.
+- **Removed:** the `client` classifier JAR, `org.json` (no longer used after CertifyClient was removed), the Apache snapshot repository, and the unused `log4j.properties`.
+- **WAR name:** `smm.war`, which deploys at `/smm` to match the README's `http://localhost:8080/smm/`.
+- **Later:** the school roster layer adds its processing logic to core and its upload/results UI to web.
 
 ## Steps
 
@@ -97,7 +106,7 @@ Each step is its own commit, and `mvn test` must pass after each one (step 0 mak
    - **`QueryRunner`:** now owns `IIS_TEST_REPORT_FILENAME_PREFIX`, and `CreateTestCaseServlet` refers to it. An unused duplicate in `ModifyMessageServlet` was removed.
    - **`ConnectionConfiguration`:** no change. `"ConfigureServlet"` appears only as text in generated HTML, not as a compile dependency.
    - **Tests:** none depend on web classes. `CatchServletTest` and `UsiisLogReader` only mention servlet names in strings, so every test moves to `smm-core`.
-4. **Restructure into parent + `smm-core` + `smm-web`.** `smm-core` replaces the `client` classifier JAR as the published library, and it should be the JAR AART can eventually move to.
+4. ~~**Restructure into parent + `smm-core` + `smm-web`.**~~ Done (see "Module layout"). `smm-core` replaces the `client` classifier JAR as the published library and is the JAR AART can eventually move to. `mvn clean install` from the root builds and tests everything.
 5. **Smoke-test the WAR** on a current servlet-6 container (Tomcat 10.1+ or 11): start up, the mover manager, the CDC WSDL endpoint, and sending a test message to IIS Sandbox. Include a live `SoapConnector` connectivity test and submission. From this development machine `florence.immregistries.org` resolves to a private address and couldn't be reached, so run it from inside the network or against a local IIS Sandbox.
 6. **Publishing:** move `maven-publish.yml` to the Sonatype Central Portal and publish only `smm-core` (the WAR is deployed, not consumed). Keep tag-triggered publishing off `modernize` until this is done.
 

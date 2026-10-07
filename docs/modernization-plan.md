@@ -13,7 +13,7 @@ SMM is where the implementation is built. It already handles IIS endpoint config
 ## Starting point
 
 - Latest release: `v3.1.0` (Feb 2025). `master` has 8 unreleased Dependabot bumps after it, including CXF 3.5.5 → 4.1.1.
-- Single Maven module, `org.immregistries:smm-tester`, packaged as a WAR. It compiles for Java 1.8. `modernize` is now `4.0.0-SNAPSHOT`.
+- Single Maven module, `org.immregistries:smm-tester`, packaged as a WAR. It compiles for Java 1.8. On `modernize` (`4.0.0-SNAPSHOT`) this is now Java 17 and split into `smm-core` (JAR) and `smm-web` (WAR) under the `smm-parent` POM.
 - The build also produces a `client` classified JAR. AART used to consume it but moved to `hart` in 2025.
 - Pushing any tag runs `.github/workflows/maven-publish.yml`, which deploys to Maven Central. **Do not push tags from `modernize`** until publishing for the new modules is set up on purpose.
 - Main code is in `org.immregistries.smm` (`mover`, `tester`, `transform`, `install`, `cdc`), plus generated SOAP/web-service client code under `com.microsoft`, `faultcontracts`, `gov.nist`, and `servicecontracts`.
