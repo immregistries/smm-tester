@@ -157,8 +157,18 @@ public class Transformer {
   private static Map<String, List<String[]>> testDataMap = null;
   private static Random random = new Random();
 
+  private String today = null;
+
   public Transformer() {
     // default
+  }
+
+  /**
+   * Fixes the date (yyyyMMdd) used as today for age checks and [TODAY], instead of the current
+   * date. Intended for tests whose expected results depend on a patient's age.
+   */
+  public void setToday(String today) {
+    this.today = today;
   }
 
   public Transformer(File testDataFile) throws IOException {
@@ -1107,6 +1117,9 @@ public class Transformer {
   }
 
   public void transform(TransformRequest transformRequest) {
+    if (today != null) {
+      transformRequest.setToday(today);
+    }
     String resultTextOriginal = transformRequest.getResultText();
     try {
       Patient patient = setupPatient(transformRequest.getPatientType());

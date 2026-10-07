@@ -65,7 +65,7 @@ smm-tester/                  (parent pom, packaging=pom)
 
 Each step is its own commit, and `mvn test` must pass after each one (step 0 makes that possible).
 
-0. **Fix the date-dependent test.** Make the `18+` rule testable against a fixed "today", or adjust the fixture DOBs. Prefer the first option so the test can't break again.
+0. ~~**Fix the date-dependent test.**~~ Done: `Transformer.setToday("yyyyMMdd")` fixes the date used by age checks and `[TODAY]`, and `testNMSIIS` now runs as of 2020-01-01. It is the only test that uses an age-based transform. Result: 229 tests, all passing.
 1. **Java 17 build:**
    - Set `<release>17</release>`.
    - Move CI workflows to JDK 17 and add `modernize` to the `pull-request` branch triggers.

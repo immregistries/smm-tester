@@ -551,6 +551,9 @@ public class TestTransformer {
   @Test
   public void testNMSIIS() throws Exception {
     Transformer transformer = new Transformer();
+    // The expected results remove observation 64994-7 only for patients 18+, so the patients'
+    // ages must not change with the current date
+    transformer.setToday("20200101");
     Connector connector = ConnectorFactory.getConnector(ConnectorFactory.TYPE_POST, "Test", "");
     String messageText = "";
 
