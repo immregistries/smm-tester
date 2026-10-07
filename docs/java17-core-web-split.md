@@ -19,11 +19,7 @@ Working plan for workstream 2 in [modernization-plan.md](modernization-plan.md).
 
 - ~~**CXF versions are mixed.**~~ Resolved: CXF was used only by the NIST validator, and both have been removed (see "NIST validator" below).
 - ~~**Axis2 and related libraries.**~~ Resolved: they were used only by the Axis2-generated connector stubs. Those connectors were removed and `SoapConnector` was rewritten (see "Connectors" below). Axis2, Axiom, Neethi, jakarta.activation, jakarta.xml.bind-api, commons-logging, and httpclient5 are gone. The WAR now bundles only commons-codec, commons-lang3, commons-text, and json.
-- **Obsolete build pieces:**
-  - Jetty 8 (`jetty-all-server` provided dependency and `jetty-maven-plugin`)
-  - `maven-eclipse-plugin`
-  - `lib.zip` in the repo root (17 MB of 2015-era JARs that Maven never uses)
-  - source encoding `iso-8859-1`
+- **Obsolete build pieces:** Jetty 8, `maven-eclipse-plugin`, and `lib.zip` were removed in step 1. The source encoding is still `iso-8859-1` (step 2).
 - **Publishing.** `maven-publish.yml` deploys to `s01.oss.sonatype.org` (OSSRH) through `nexus-staging-maven-plugin`. Sonatype retired OSSRH in favor of the Central Portal, so this path probably no longer works. Verify before the first 4.x release.
 
 ### Who consumes SMM as a library
@@ -66,10 +62,15 @@ smm-tester/                  (parent pom, packaging=pom)
 Each step is its own commit, and `mvn test` must pass after each one (step 0 makes that possible).
 
 0. ~~**Fix the date-dependent test.**~~ Done: `Transformer.setToday("yyyyMMdd")` fixes the date used by age checks and `[TODAY]`, and `testNMSIIS` now runs as of 2020-01-01. It is the only test that uses an age-based transform. Result: 229 tests, all passing.
-1. **Java 17 build:**
-   - Set `<release>17</release>`.
-   - Move CI workflows to JDK 17 and add `modernize` to the `pull-request` branch triggers.
-   - Remove Jetty 8, `maven-eclipse-plugin`, and `lib.zip`.
+1. ~~**Java 17 build:**~~ Done.
+   - The compiler uses `<release>17</release>` (class file version 61).
+   - CI uses JDK 17 (Temurin) and `actions/*@v4`. `pull-request.yml` runs on pull requests to `master` or `modernize` and on pushes to `modernize`.
+   - Removed:
+     - Jetty 8 (dependency, plugin, and the `StartTester` launcher, which couldn't run the `jakarta` servlets anyway) and its test keystore
+     - `maven-eclipse-plugin`
+     - `lib.zip`
+     - the unused `PartnerHIEHTTPSService.wsdl`
+   - Still unreferenced: `src/test/resources/florence_immregistries_org.jks`.
 2. **Dependency cleanup:**
    - ~~Remove the NIST validator and CXF.~~ Done.
    - ~~Remove the jurisdiction connectors, rewrite `SoapConnector`, and remove Axis2 and the unused dependencies.~~ Done.
