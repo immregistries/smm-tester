@@ -13,6 +13,19 @@
   margin-top: 0;
 }
 
+/*
+ * AIRA stacks, forms, and grids are CSS grids whose items default to min-width: auto, so a long
+ * HL7 line would widen the whole column. Let items shrink so wide content scrolls in place.
+ */
+.smm-content :is(.aira-stack, .aira-form, .aira-grid, .aira-field) > * {
+  min-width: 0;
+}
+
+/* Space between the page alert and the page title below it */
+.smm-content > .aira-alert + .aira-page-header {
+  margin-top: var(--aira-space-4);
+}
+
 /* HL7 and other technical text */
 .smm-content pre,
 .smm-hl7 {
