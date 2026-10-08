@@ -1,7 +1,7 @@
 /*
  * Simple Message Mover styles, loaded after the shared AIRA Web stylesheet (aira.css).
- * Use aira- classes for new content; the rules here cover SMM-specific content and the
- * classes older pages still use until they are converted.
+ * Pages use aira- classes; the rules here cover only SMM-specific content, built from the
+ * AIRA custom properties.
  */
 
 /* Page content beside the right rail */
@@ -22,112 +22,109 @@
   border: 1px solid var(--aira-border-subtle);
   border-radius: var(--aira-radius-control);
   padding: var(--aira-space-2) var(--aira-space-3);
-  margin: var(--aira-space-2) 0;
+  margin: 0;
+  max-width: 100%;
   overflow: auto;
   white-space: pre;
 }
 
-.smm-content textarea {
+/* Bounded scrolling for long generated output */
+.smm-scroll-short {
+  max-height: 12rem;
+}
+
+.smm-scroll-tall {
+  max-height: 32rem;
+}
+
+/* Text areas holding HL7 messages, scripts, and transforms */
+.aira-textarea.smm-code {
   font-family: var(--aira-font-mono);
-  max-width: 100%;
-}
-
-/* Tables on pages not yet converted to aira-table */
-.smm-content table[border="1"],
-.smm-content table.boxed,
-.smm-content table.dashTable {
-  border-collapse: collapse;
-  margin: var(--aira-space-2) 0;
-}
-
-.smm-content table[border="1"] th,
-.smm-content table[border="1"] td,
-.smm-content table.boxed th,
-.smm-content table.boxed td,
-.smm-content table.dashTable th,
-.smm-content table.dashTable td {
-  border: 1px solid var(--aira-border);
-  padding: var(--aira-space-1) var(--aira-space-2);
-  vertical-align: top;
-  text-align: left;
-}
-
-.smm-content table[border="1"] th,
-.smm-content table.boxed th,
-.smm-content table.dashTable th {
-  background: var(--aira-surface-muted);
-  font-weight: 600;
-}
-
-/* Test and comparison results */
-.pass {
-  background: var(--aira-success-surface);
-  padding-left: var(--aira-space-1);
-}
-
-.fail,
-.different {
-  background: var(--aira-error-surface);
-  padding-left: var(--aira-space-1);
-}
-
-.running {
-  background: var(--aira-warning-surface);
-  padding-left: var(--aira-space-1);
-}
-
-.nottested {
-  padding-left: var(--aira-space-1);
-}
-
-.blank {
-  background: var(--aira-surface-disabled);
-}
-
-/* Older layout helpers */
-.scrollbox {
-  max-width: 100%;
+  font-size: 0.875rem;
+  white-space: pre;
   overflow: auto;
 }
 
-.help {
+/* Controls that size to their content instead of filling the row */
+.aira-select.smm-select-auto,
+.aira-input.smm-select-auto {
+  width: auto;
+  max-width: 100%;
+}
+
+.aira-input.smm-input-short {
+  width: 8rem;
+}
+
+/* A check box placed in a field row, aligned with the inputs beside it */
+.smm-field-end {
+  align-content: end;
+}
+
+/* Radio and check box options laid out in columns */
+.smm-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: 0 var(--aira-space-3);
+}
+
+/* Prose pages kept to a readable line length */
+.smm-reading {
   max-width: var(--aira-reading-max);
-  padding: var(--aira-space-2) 0;
 }
 
-.smallTitle {
-  padding: 0 var(--aira-space-1);
+/* Collapsible sections, such as each test case result or a page's help */
+.smm-disclosure {
   border: 1px solid var(--aira-border);
+  border-radius: var(--aira-radius-panel);
+  background: var(--aira-surface);
+  padding: 0 var(--aira-panel-padding);
 }
 
-.boxed {
-  border: 1px solid var(--aira-border);
-  border-collapse: collapse;
-  padding: 0 var(--aira-space-1);
+.smm-disclosure > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: var(--aira-space-3) 0;
 }
 
-.viewMenu,
-.submenu {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--aira-space-2);
-  padding: var(--aira-space-2) var(--aira-space-3);
-  background: var(--aira-surface-muted);
-  border: 1px solid var(--aira-border-subtle);
-  border-radius: var(--aira-radius-control);
+.smm-disclosure[open] {
+  padding-bottom: var(--aira-panel-padding);
 }
 
-/* Links on individual HL7 fields in the message viewers */
-.smm-content a.hl7 {
-  color: inherit;
-  text-decoration: none;
-  border-radius: var(--aira-radius-xs);
+.smm-disclosure[open] > summary {
+  border-bottom: 1px solid var(--aira-border-subtle);
+  margin-bottom: var(--aira-space-3);
 }
 
-.smm-content a.hl7:hover,
-.smm-content a.hl7:focus {
-  background: var(--aira-info-surface);
-  text-decoration: none;
+.smm-disclosure > summary:focus-visible {
+  outline: 2px solid var(--aira-focus);
+  outline-offset: 2px;
+}
+
+.smm-disclosure > * + * {
+  margin-top: var(--aira-space-2);
+}
+
+/* Compact disclosure inside a table cell */
+.smm-disclosure--compact {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.smm-disclosure--compact > summary {
+  font-weight: 400;
+  padding: 0;
+  color: var(--aira-link);
+}
+
+.smm-disclosure--compact[open] {
+  padding-bottom: 0;
+}
+
+.smm-disclosure--compact[open] > summary {
+  border-bottom: 0;
+  margin-bottom: var(--aira-space-1);
 }
 
 /* Label/value details, for example the workspace panel on the home page */
@@ -145,6 +142,7 @@
 
 .smm-details dd {
   margin: 0;
+  min-width: 0;
   overflow-wrap: anywhere;
 }
 

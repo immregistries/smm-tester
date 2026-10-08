@@ -7,6 +7,7 @@
  */
 package org.immregistries.smm.mover;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -44,7 +45,11 @@ public class WSDLDemoServlet extends ClientServlet {
       PrintWriter out = resp.getWriter();
       try {
         printHtmlHead(out, MENU_HEADER_HOME, req);
-        out.println("<h1>CDC WSDL Demonstration</h1>");
+        printPageHeader(out, "CDC WSDL Demonstration", null);
+        String wsdlPath = req.getContextPath() + "/wsdl-demo?wsdl=true";
+        String wsdlUrl = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort()
+            + wsdlPath;
+        out.println("<div class=\"aira-prose smm-reading\">");
         out.println("<p>");
         out.println("This servlet demostrates the use of the ");
         out.println(
@@ -53,17 +58,15 @@ public class WSDLDemoServlet extends ClientServlet {
         out.println(" which has been defined to support the transport of HL7 messages ");
         out.println("sent to Immunization Information Systems (IIS).  ");
         out.println("</p>");
-        out.println(
-            "<p>Please note that this service is NOT an IIS and does not process or act on data sent. ");
-        out.println(
-            "The purpose of this end-point is to demonstrate the CDS WSDL transport layer and as such ");
-        out.println("does not actually process or understand the HL7 submitted. </p>");
-        out.println("<h2>Usage Instructions</h2>");
-        out.println("<h3>WSDL</h3>");
-        out.println("<p>Download or view WSDL here: ");
-        out.println(
-            "  <a href=\"wsdl-demo?wsdl=true\">http://ois-pt.org/tester/wsdl-demo?wsdl=true</a></p>");
-        out.println("<h3>Authentication</h3>");
+        out.println("<div class=\"aira-alert aira-alert--info\"><p>Please note that this service is"
+            + " NOT an IIS and does not process or act on data sent. The purpose of this end-point"
+            + " is to demonstrate the CDC WSDL transport layer and as such does not actually"
+            + " process or understand the HL7 submitted.</p></div>");
+        out.println("<h2 class=\"aira-section-title\">Usage Instructions</h2>");
+        out.println("<h3 class=\"aira-subsection-title\">WSDL</h3>");
+        out.println("<p>Download or view WSDL here: <a href=\"" + escapeHtml(wsdlPath) + "\">"
+            + escapeHtml(wsdlUrl) + "</a></p>");
+        out.println("<h3 class=\"aira-subsection-title\">Authentication</h3>");
         out.println("<p>By default all requests are considered authenticated. ");
         out.println(
             "Any username/password combination is accepted, except for username/passwords: </p>");
@@ -76,7 +79,7 @@ public class WSDLDemoServlet extends ClientServlet {
             "  Causes an internal exception (Null Pointer Exception) which returns an Unknown Fault. ");
         out.println("  Use this to see what happens when there are unexpected problems.  </li>");
         out.println("</ul>");
-        out.println("<h3>Content</h3>");
+        out.println("<h3 class=\"aira-subsection-title\">Content</h3>");
         out.println("<p>The HL7 content is expected to be an HL7 v2 VXU message. ");
         out.println("Other immunization messages, such as a QBP may be submitted but this ");
         out.println("demo system will respond as if it receive a VXU ");
@@ -84,17 +87,18 @@ public class WSDLDemoServlet extends ClientServlet {
         out.println(
             "The only requirement is that the HL7 v2 message contains at least one MSH segment. ");
         out.println("</p>");
-        out.println("<h3>Multiple Messages</h3>");
+        out.println("<h3 class=\"aira-subsection-title\">Multiple Messages</h3>");
         out.println(
             "<p>If the message contains more than one MSH segment a Message Too Large Fault ");
         out.println("will be returned.  ");
         out.println(
             "Use this feature to test situations where the IIS can not process more than one message. </p>");
-        out.println("<h2>Alternative Behavior</h2>");
+        out.println("<h2 class=\"aira-section-title\">Alternative Behavior</h2>");
         out.println("<p>Additional end points are available, which provide different behaviors ");
         out.println("(some good and some bad). ");
         out.println("These can be used to demonstrate different or bad interactions. </p>");
-        ProcessorFactory.printExplanations(out);
+        ProcessorFactory.printExplanations(out, req.getContextPath() + "/wsdl-demo");
+        out.println("</div>");
         printHtmlFoot(out);
       } finally {
         out.close();

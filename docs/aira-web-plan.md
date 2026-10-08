@@ -1,6 +1,6 @@
 # AIRA Web Layout — Plan
 
-**Status (2026-10-07):** decisions recorded below; pass 1 (shell, navigation with right rails, compatibility CSS, home dashboard, landing page) is done and verified on the local Tomcat 10. Pass 2 (page-by-page conversion) is next.
+**Status (2026-10-08):** pass 1 (shell, navigation with right rails, home dashboard, landing page) and pass 2 (page-by-page conversion) are done. Every page now uses AIRA Web components, and `smm.css` holds only SMM-specific classes. Pass 2 is deployed to the local Tomcat 10, but the signed-in pages still need checking in a browser (see Pass 2 notes).
 
 Workstream 4 of [modernization-plan.md](modernization-plan.md): "Adopt the shared AIRA Web theme and Java servlet components" for the SMM web application, which is also the demonstration website. Sign-on (workstream 3) is done, so this is the next step.
 
@@ -109,6 +109,21 @@ The stand-alone HTML reports (`printHtmlHeadForFile`) keep inline styles. They'r
 - **Landing page:** `HomeServlet` is the welcome file. The old `index.html`, `index.css`, `style.css`, `logo.png`, and the unreferenced `reportExplanation.html` were removed.
 - **Footer version:** `SoftwareVersion.VERSION` (shown in the footer) now comes from the Maven project version, through a filtered `smm-version.properties`, instead of the stale "2.24".
 - **Sign-in error page:** now uses the AIRA shell.
+
+## Pass 2 notes
+
+- **Shared helpers in `ClientServlet`:** `printPageHeader`, `printTextField`, `printNoConnection`, `printException`, `printLog`, `statusBadge`, and `stackTrace`. The `message` alert is now escaped.
+- **Escaping:** every value echoed back into a page is escaped with `SmmPage.escapeHtml`, including text boxes, HL7 messages, connection labels, and exception text. Send Message's Show WSDL output is always escaped; it used to write remote HTML raw.
+- **Collapsible sections:** native `<details>` styled as `smm-disclosure` replace the old `toggleLayer` script, which is removed. They hold each test case result, the queries built from a VXU, the Edit Test Case help, and the Interface Profile message views.
+- **Run Test Cases:** the tests now run before the page is written, so a summary table with pass/fail badges sits above the details.
+- **`smm.css`:** the compatibility rules for old tables and classes (`boxed`, `pass`, `fail`, `scrollbox`, `help`, and so on) are gone. What's left: `smm-hl7`, `smm-code`, `smm-disclosure`, `smm-details`, `smm-choice-grid`, `smm-select-auto`, `smm-scroll-*`, `smm-reading`, `smm-field-end`, `smm-input-short`, `smm-link-list`.
+- **Bugs fixed while converting:**
+  - Bulk Query marked every Query Type radio as checked, and refilled the Transforms box with the user name.
+  - Install Certificate labeled every certificate button "Install 1".
+  - Query IIS kept rendering the page after redirecting to Send Message.
+  - Stress Test wrapped table rows in forms, which isn't valid HTML.
+  - The WSDL demo links didn't work under `/wsdl-demo/`.
+- **Unchanged:** the stand-alone report files (`printHtmlHeadForFile`) keep their inline styles. `TestCaseMessageViewerServlet.printTestCaseMessage` writes into those files too, so it writes plain headings and `pre` blocks.
 
 ## Open questions
 

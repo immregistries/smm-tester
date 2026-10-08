@@ -1,5 +1,6 @@
 package org.immregistries.smm.mover;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -82,37 +83,52 @@ public class ManagerServlet extends ClientServlet {
     PrintWriter out = response.getWriter();
     try {
       printHtmlHead(out, "Simple Message Mover", request);
-      out.println("<h1>Simple Message Mover</h1>");
+      printPageHeader(out, "Message Mover Status",
+          "Data folders the Simple Message Mover is watching and sending from.");
+      out.println("<div class=\"aira-stack\">");
       if (ConnectionManager.getFolderScanner() != null) {
-        out.println("<h3>Automatic Data Folder Scanning</h3>");
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Automatic Data Folder Scanning</h2></div>");
+        out.println("  <div class=\"aira-panel__body\">");
         if (ConnectionManager.getFolderScanner().isScanning()) {
-          out.println(
-              "<p><font color=\"red\">Scanner is currently looking for data folders.</font></p>");
+          out.println("    <p><span class=\"aira-badge aira-badge--warning\">Scanning</span>"
+              + " Scanner is currently looking for data folders.</p>");
         }
-        out.println(
-            "<p>Scan status: " + ConnectionManager.getFolderScanner().getScanningStatus() + "</p>");
+        out.println("    <p>Scan status: "
+            + escapeHtml(ConnectionManager.getFolderScanner().getScanningStatus()) + "</p>");
+        out.println("  </div>");
+        out.println("</section>");
       }
-      out.println("");
-      out.println("<h3>Send Data Folders</h3>");
-      out.println("<table>");
-      out.println("  <tr>");
-      out.println("    <th>Label</th>");
-      out.println("    <th>Status</th>");
-      out.println("    <th>Folder</th>");
-      out.println("  </tr>");
+      out.println("<section class=\"aira-table-panel\">");
+      out.println("  <div class=\"aira-table-panel__header\"><div>"
+          + "<h2 class=\"aira-table-panel__title\">Send Data Folders</h2></div></div>");
+      out.println("  <div class=\"aira-table-wrap\">");
+      out.println("    <table class=\"aira-table\">");
+      out.println("      <caption class=\"aira-visually-hidden\">Send data folders</caption>");
+      out.println("      <thead><tr><th scope=\"col\">Label</th><th scope=\"col\">Status</th>"
+          + "<th scope=\"col\">Folder</th></tr></thead>");
+      out.println("      <tbody>");
+      if (ConnectionManager.getSendDataSet().isEmpty()) {
+        out.println("        <tr><td colspan=\"3\" class=\"aira-table__empty\">No data folders."
+            + "</td></tr>");
+      }
       for (SendData sendData : ConnectionManager.getSendDataSet()) {
-        out.println("  <tr>");
+        out.println("        <tr>");
         Connector connector = sendData.getConnector();
-        if (connector != null) {
-          out.println("    <td>" + connector.getLabelDisplay() + "</td>");
-        } else {
-          out.println("    <td>-</td>");
-        }
-        out.println("    <td>" + sendData.getScanStatus() + "</td>");
-        out.println("    <td>" + sendData.getRootDir() + "</td>");
-        out.println("  </tr>");
+        out.println("          <th scope=\"row\" class=\"aira-table__cell--primary\">"
+            + (connector == null ? "-" : escapeHtml(connector.getLabelDisplay())) + "</th>");
+        out.println("          <td>" + escapeHtml(String.valueOf(sendData.getScanStatus()))
+            + "</td>");
+        out.println("          <td class=\"aira-table__cell--code\">"
+            + escapeHtml(String.valueOf(sendData.getRootDir())) + "</td>");
+        out.println("        </tr>");
       }
-      out.println("</table>");
+      out.println("      </tbody>");
+      out.println("    </table>");
+      out.println("  </div>");
+      out.println("</section>");
+      out.println("</div>");
       printHtmlFoot(out);
     } finally {
       out.close();

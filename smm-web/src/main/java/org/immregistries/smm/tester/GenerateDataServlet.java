@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import static org.immregistries.smm.transform.ScenarioManager.SCENARIO_MCIR_MPI;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -72,10 +73,15 @@ public class GenerateDataServlet extends ClientServlet {
     PrintWriter out = response.getWriter();
     try {
       printHtmlHead(out, MENU_HEADER_HOME, request);
+      printPageHeader(out, "Generate Data",
+          "Sample patient messages, the same patients with random changes, and matching queries."
+              + " Each visit generates new data.");
 
       if (problem != null) {
-        out.println("<p>" + problem + "</p>");
+        out.println("<div class=\"aira-alert aira-alert--warning\" role=\"status\"><p>"
+            + escapeHtml(problem) + "</p></div>");
       }
+      out.println("<div class=\"aira-stack\">");
 
       Transformer transformer = new Transformer();
 
@@ -100,16 +106,24 @@ public class GenerateDataServlet extends ClientServlet {
         transformer.transform(testCaseMessage);
         testCaseMessageList.add(testCaseMessage);
       }
-      out.println("<h2>Sample Data</h2>");
-      out.println("<pre>");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__header\">"
+          + "<h2 class=\"aira-panel__title\">Sample Data</h2></div>");
+      out.println("  <div class=\"aira-panel__body\">");
+      out.print("    <pre class=\"smm-hl7 smm-scroll-tall\">");
 
       for (TestCaseMessage testCaseMessage : testCaseMessageList) {
-        out.print(testCaseMessage.getMessageText());
+        out.print(escapeHtml(testCaseMessage.getMessageText()));
       }
       out.println("</pre>");
+      out.println("  </div>");
+      out.println("</section>");
 
-      out.println("<h2>Same Data Changed</h2>");
-      out.println("<pre>");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__header\">"
+          + "<h2 class=\"aira-panel__title\">Same Data Changed</h2></div>");
+      out.println("  <div class=\"aira-panel__body\">");
+      out.print("    <pre class=\"smm-hl7 smm-scroll-tall\">");
 
       Random random = new Random();
 
@@ -193,21 +207,28 @@ public class GenerateDataServlet extends ClientServlet {
         }
         testCaseMessageChange.appendCustomTransformation("MSH-6=" + changeMade);
         transformer.transform(testCaseMessageChange);
-        out.print(testCaseMessageChange.getMessageText());
+        out.print(escapeHtml(testCaseMessageChange.getMessageText()));
       }
       out.println("</pre>");
+      out.println("  </div>");
+      out.println("</section>");
 
-      out.println("<h2>QBP's for Sample Data</h2>");
-      out.println("<pre>");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__header\">"
+          + "<h2 class=\"aira-panel__title\">QBPs for Sample Data</h2></div>");
+      out.println("  <div class=\"aira-panel__body\">");
+      out.print("    <pre class=\"smm-hl7 smm-scroll-tall\">");
 
       for (TestCaseMessage testCaseMessage : testCaseMessageList) {
         QueryConverter queryConverter = QueryConverter.getQueryConverter(QueryType.QBP_Z34);
         String qbpMessage = queryConverter.convert(testCaseMessage.getMessageText());
-        out.print(qbpMessage);
+        out.print(escapeHtml(qbpMessage));
       }
       out.println("</pre>");
+      out.println("  </div>");
+      out.println("</section>");
 
-
+      out.println("</div>");
       printHtmlFoot(out);
     } finally {
       out.close();

@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -229,7 +230,21 @@ public class SubmitServlet extends ClientServlet {
       PrintWriter out = new PrintWriter(response.getWriter());
       response.setContentType("text/html;charset=UTF-8");
       printHtmlHead(out, MENU_HEADER_SEND, request);
-      printForm(id, connectors, message, testCaseMessage, request, out);
+      printPageHeader(out, "Send Message",
+          "Send an HL7 message to an IIS and see its response, or refresh to check the connection.");
+      out.println("<div class=\"aira-stack\">");
+      if (connectors.isEmpty()) {
+        printNoConnection(out);
+        out.println("</div>");
+        printHtmlFoot(out);
+        out.close();
+        return;
+      }
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__body\">");
+      printForm("send", id, connectors, message, testCaseMessage, request, out);
+      out.println("  </div>");
+      out.println("</section>");
       String responseText = null;
       if (id != 0) {
         try {
@@ -238,6 +253,7 @@ public class SubmitServlet extends ClientServlet {
           AckAnalyzer ackAnalyzer = null;
           if (responseText != null) {
             String title = "Response Received";
+            String badge = "";
             HL7Reader ackMessageReader = new HL7Reader(responseText);
             if (ackMessageReader.advanceToSegment("MSH")) {
               String messageType = ackMessageReader.getValue(9);
@@ -247,26 +263,32 @@ public class SubmitServlet extends ClientServlet {
               } else {
                 ackAnalyzer = new AckAnalyzer(responseText, connector.getAckType());
                 if (ackAnalyzer.isPositive()) {
-                  title = "Message Accepted";
+                  badge = " <span class=\"aira-badge aira-badge--success\">Accepted</span>";
                 } else {
-                  title = "Message Rejected";
+                  badge = " <span class=\"aira-badge aira-badge--danger\">Rejected</span>";
                 }
               }
             }
-            out.println("<h3>" + title + "</h3>");
-            out.print("<pre>");
-            out.print(responseText.replace("<", "&lt;").replace(">", "&gt;"));
-            out.println("</pre>");
+            out.println("<section class=\"aira-panel\">");
+            out.println("  <div class=\"aira-panel__header\"><h2 class=\"aira-panel__title\">"
+                + title + badge + "</h2></div>");
+            out.println("  <div class=\"aira-panel__body\">");
+            out.println("    <pre class=\"smm-hl7\">" + escapeHtml(responseText) + "</pre>");
+            out.println("  </div>");
+            out.println("</section>");
           }
           String requestText = (String) request.getAttribute("requestText");
           if (requestText != null) {
-            out.println("<h3>Request Submitted</h3>");
-            out.println("<p>What was actually sent to " + connector.getLabelDisplay() + ": ");
-            out.print("<pre>");
-            out.print(requestText);
-            out.println("</pre>");
+            out.println("<section class=\"aira-panel\">");
+            out.println("  <div class=\"aira-panel__header\">"
+                + "<h2 class=\"aira-panel__title\">Request Submitted</h2></div>");
+            out.println("  <div class=\"aira-panel__body\">");
+            out.println("    <p>What was actually sent to "
+                + escapeHtml(connector.getLabelDisplay()) + ":</p>");
+            out.println("    <pre class=\"smm-hl7\">" + escapeHtml(requestText) + "</pre>");
+            out.println("  </div>");
+            out.println("</section>");
           }
-
 
           String host = "";
           try {
@@ -276,53 +298,56 @@ public class SubmitServlet extends ClientServlet {
             host = "[unknown]";
           }
           try {
-            out.println("<p>Status for " + connector.getLabelDisplay()
-                + ": <br><font color=\"blue\">"
-                + connector.connectivityTest("Sent from client '" + host + "'") + "</font></p>");
+            String status = connector.connectivityTest("Sent from client '" + host + "'");
+            out.println("<div class=\"aira-alert aira-alert--info\" role=\"status\">");
+            out.println("  <p class=\"aira-alert__title\">Status for "
+                + escapeHtml(connector.getLabelDisplay()) + "</p>");
+            out.println("  <p>" + escapeHtml(status) + "</p>");
+            out.println("</div>");
           } catch (Exception t) {
-            out.println("<p>Unable to test against remote server: " + t.getMessage() + "</p>");
-            out.println("<pre>");
-            t.printStackTrace(out);
-            out.println("</pre>");
+            out.println("<div class=\"aira-alert aira-alert--error\" role=\"alert\">");
+            out.println("  <p class=\"aira-alert__title\">Unable to test against remote server</p>");
+            out.println("  <p>" + escapeHtml(t.getMessage()) + "</p>");
+            out.println("  <pre class=\"smm-hl7\">" + escapeHtml(stackTrace(t)) + "</pre>");
+            out.println("</div>");
           }
         } catch (Throwable re) {
-          re.printStackTrace(out);
+          out.println("<pre class=\"smm-hl7\">" + escapeHtml(stackTrace(re)) + "</pre>");
         }
       }
 
-      if (message != null) {
-        if (message.indexOf("|VXU^") > 0) {
-          {
-            QueryConverter queryConverter = QueryConverter.getQueryConverter(QueryType.QBP_Z34);
-            String qbpMessage = queryConverter.convert(message);
-            out.println("<p>Submit QBP Z34 query message based from VXU displayed above</p>");
-            printForm(id, connectors, qbpMessage, testCaseMessage, request, out);
-          }
-          {
-            QueryConverter queryConverter = QueryConverter.getQueryConverter(QueryType.QBP_Z34_Z44);
-            String qbpZ44Message = queryConverter.convert(message);
-            out.println("<p>Submit QBP Z34 with Z44 request based from VXU displayed above</p>");
-            printForm(id, connectors, qbpZ44Message, testCaseMessage, request, out);
-          }
-          {
-            QueryConverter queryConverter = QueryConverter.getQueryConverter(QueryType.QBP_Z44);
-            String qbpZ44Message = queryConverter.convert(message);
-            out.println("<p>Submit QBP Z44 query message based from VXU displayed above</p>");
-            printForm(id, connectors, qbpZ44Message, testCaseMessage, request, out);
-          }
-          {
-            QueryConverter queryConverter = QueryConverter.getQueryConverter(QueryType.VXQ);
-            String vxqMessage = queryConverter.convert(message);
-            out.println("<p>Submit VXQ query message based from VXU displayed above</p>");
-            printForm(id, connectors, vxqMessage, testCaseMessage, request, out);
-          }
+      if (message != null && message.indexOf("|VXU^") > 0) {
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Query for This Patient</h2></div>");
+        out.println("  <div class=\"aira-panel__body aira-stack aira-stack--compact\">");
+        out.println("    <p class=\"aira-muted\">Each query below is built from the VXU message"
+            + " above.</p>");
+        Object[][] queries = {{QueryType.QBP_Z34, "QBP Z34 query"},
+            {QueryType.QBP_Z34_Z44, "QBP Z34 query with Z44 request"},
+            {QueryType.QBP_Z44, "QBP Z44 query"}, {QueryType.VXQ, "VXQ query"}};
+        int queryCount = 0;
+        for (Object[] query : queries) {
+          queryCount++;
+          QueryConverter queryConverter = QueryConverter.getQueryConverter((QueryType) query[0]);
+          String queryMessage = queryConverter.convert(message);
+          out.println("    <details class=\"smm-disclosure\">");
+          out.println("      <summary>" + query[1] + "</summary>");
+          printForm("query" + queryCount, id, connectors, queryMessage, testCaseMessage, request,
+              out);
+          out.println("    </details>");
         }
+        out.println("  </div>");
+        out.println("</section>");
       }
 
       boolean showWSDL = request.getParameter("showWSDL") != null;
       if (showWSDL && id != 0) {
-        out.println("<h3>WSDL</h3>");
-        out.println("<pre>");
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">WSDL</h2></div>");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.print("    <pre class=\"smm-hl7\">");
         Connector connector = getConnector(id, session);
         try {
           HttpURLConnection urlConn;
@@ -336,80 +361,74 @@ public class SubmitServlet extends ClientServlet {
 
           input = new InputStreamReader(urlConn.getInputStream(), StandardCharsets.UTF_8);
           BufferedReader in = new BufferedReader(input);
-          boolean escape = !urlConn.getContentType().startsWith("text/html");
           String line;
           while ((line = in.readLine()) != null) {
-            if (escape) {
-              out.println(escapeHTML(line));
-            } else {
-              out.println(line);
-            }
+            out.println(escapeHtml(line));
           }
           input.close();
         } catch (IOException e) {
-          e.printStackTrace(out);
+          out.print(escapeHtml(stackTrace(e)));
         }
         out.println("</pre>");
+        out.println("  </div>");
+        out.println("</section>");
       }
 
-      out.println("  <div class=\"help\">");
-      out.println("  <h2>How To Use This Page</h2>");
-      out.println("  <p>This page supports a simple test of the connectivity to another system. "
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__header\">"
+          + "<h2 class=\"aira-panel__title\">How to Use This Page</h2></div>");
+      out.println("  <div class=\"aira-panel__body aira-prose\">");
+      out.println("    <p>This page supports a simple test of the connectivity to another system. "
           + "The login parameters (username, password, and facility id) must be obtained "
           + "from the system you wish to test against. Once you have the login parameters "
-          + "you should select the appropriate service and then paste a test message. "
-          + "After clicking Submit you will see the results of your query. </p>");
-      out.println(
-          "<p>If you wish to only ping the server, then you only need to select the service "
-              + "and then click Refresh. This will give the results of the ping below. </p>");
+          + "you should select the appropriate connection and then paste a test message. "
+          + "After clicking Submit you will see the results of your query.</p>");
+      out.println("    <p>If you wish to only ping the server, then you only need to select the "
+          + "connection and then click Refresh. This will give the results of the ping above.</p>");
       out.println("  </div>");
-      // testTestCaseMessage(out);
+      out.println("</section>");
+      out.println("</div>");
       printHtmlFoot(out);
       out.close();
     }
   }
 
-  private void printForm(int id, List<Connector> connectors, String message,
+  private void printForm(String formId, int id, List<Connector> connectors, String message,
       TestCaseMessage testCaseMessage, HttpServletRequest request, PrintWriter out) {
-    out.println("    <form action=\"SubmitServlet\" method=\"POST\">");
-    out.println("      <table border=\"0\">");
-    out.println("        <tr>");
-    out.println("          <td>Connection</td>");
-    out.println("          <td>");
+    out.println("    <form class=\"aira-form\" action=\"SubmitServlet\" method=\"POST\">");
+    out.println("      <div class=\"aira-field\">");
     if (connectors.size() == 1) {
-      out.println("            " + connectors.get(0).getLabelDisplay());
-      out.println("            <input type=\"hidden\" name=\"id\" value=\"1\"/>");
+      out.println("        <span class=\"aira-label\">Connection</span>");
+      out.println("        <span>" + escapeHtml(connectors.get(0).getLabelDisplay()) + "</span>");
+      out.println("        <input type=\"hidden\" name=\"id\" value=\"1\"/>");
     } else {
-      out.println("            <select name=\"id\">");
-      out.println("              <option value=\"\">select</option>");
+      out.println("        <label for=\"" + formId + "-id\">Connection</label>");
+      out.println("        <select class=\"aira-select smm-select-auto\" id=\"" + formId
+          + "-id\" name=\"id\">");
+      out.println("          <option value=\"\">select</option>");
       int i = 0;
       for (Connector connector : connectors) {
         i++;
-        if (id == i) {
-          out.println("              <option value=\"" + i + "\" selected=\"true\">"
-              + connector.getLabelDisplay() + "</option>");
-        } else {
-          out.println("              <option value=\"" + i + "\">" + connector.getLabelDisplay()
-              + "</option>");
-        }
+        out.println("          <option value=\"" + i + "\"" + (id == i ? " selected" : "") + ">"
+            + escapeHtml(connector.getLabelDisplay()) + "</option>");
       }
-      out.println("            </select>");
+      out.println("        </select>");
     }
-    out.println("          </td>");
-    out.println("        </tr>");
-    out.println("        <tr>");
-    out.println("          <td valign=\"top\">Message</td>");
-    out.println("          <td><textarea name=\"message\" cols=\"70\" rows=\"10\" wrap=\"off\">"
-        + message + "</textarea></td>");
-    out.println("        </tr>");
+    out.println("      </div>");
+    out.println("      <div class=\"aira-field\">");
+    out.println("        <label for=\"" + formId + "-message\">Message</label>");
+    out.println("        <textarea class=\"aira-textarea smm-code\" id=\"" + formId
+        + "-message\" name=\"message\" rows=\"10\" wrap=\"off\">" + escapeHtml(message)
+        + "</textarea>");
+    out.println("      </div>");
 
+    out.println("      <fieldset class=\"aira-fieldset\">");
+    out.println("        <legend class=\"aira-legend\">Options</legend>");
     if (connectors.size() == 1) {
       if (!connectors.get(0).getCustomTransformations().equals("")) {
-        out.println("        <tr>");
-        out.println("          <td valign=\"top\">Transform</td>");
-        out.println("          <td>");
+        out.println("        <p class=\"aira-label\">Transforms to apply before sending</p>");
         out.println(
-            "            <input type=\"hidden\" name=\"transformSelection\" value=\"yes\"/>");
+            "        <input type=\"hidden\" name=\"transformSelection\" value=\"yes\"/>");
         boolean shouldSelectAll = request.getParameter("transformSelection") == null;
         try {
           BufferedReader customTransformsIn =
@@ -437,38 +456,30 @@ public class SubmitServlet extends ClientServlet {
             }
             boolean selected =
                 (shouldSelectAll && confirmed) || request.getParameter("transform" + i) != null;
-            out.println(
-                "            <input type=\"checkbox\" name=\"transform" + i + "\" value=\"true\""
-                    + (selected ? " checked=\"true\"" : "") + "/>" + line + "<br/>");
+            out.println("        <label class=\"aira-check\"><input type=\"checkbox\" name=\"transform"
+                + i + "\" value=\"true\"" + (selected ? " checked" : "") + "/> <code>"
+                + escapeHtml(line) + "</code></label>");
           }
         } catch (IOException ioe) {
           // ignore
         }
-        out.println("          </td>");
-        out.println("        </tr>");
       }
     } else {
-      out.println("        <tr>");
-      out.println("          <td>Transform</td>");
-      out.println(
-          "          <td><input type=\"checkbox\" name=\"transform\" value=\"true\" checked=\"true\"/> <em>Apply connection specific transforms to message before sending.</em></td>");
-      out.println("        </tr>");
+      out.println("        <label class=\"aira-check\"><input type=\"checkbox\" name=\"transform\""
+          + " value=\"true\" checked/> Apply connection specific transforms to message before"
+          + " sending</label>");
     }
-    out.println("        <tr>");
-    out.println("          <td>Debug</td>");
-    out.println("          <td><input type=\"checkbox\" name=\"debug\" value=\"true\" /></td>");
-    out.println("        </tr>");
-    out.println("        <tr>");
-    out.println("          <td>Show WSDL</td>");
-    out.println("          <td><input type=\"checkbox\" name=\"showWSDL\" value=\"true\" /></td>");
-    out.println("        </tr>");
-    out.println("        <tr>");
-    out.println("          <td colspan=\"2\" align=\"right\">");
-    out.println("            <input type=\"submit\" name=\"method\" value=\"Refresh\"/>");
-    out.println("            <input type=\"submit\" name=\"method\" value=\"Submit\"/>");
-    out.println("          </td>");
-    out.println("        </tr>");
-    out.println("      </table>");
+    out.println("        <label class=\"aira-check\"><input type=\"checkbox\" name=\"debug\""
+        + " value=\"true\"/> Debug</label>");
+    out.println("        <label class=\"aira-check\"><input type=\"checkbox\" name=\"showWSDL\""
+        + " value=\"true\"/> Show WSDL</label>");
+    out.println("      </fieldset>");
+    out.println("      <div class=\"aira-form-actions\">");
+    out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+        + " name=\"method\" value=\"Submit\">Submit</button>");
+    out.println("        <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+        + " name=\"method\" value=\"Refresh\">Refresh</button>");
+    out.println("      </div>");
     out.println("    </form>");
   }
 
@@ -547,7 +558,4 @@ public class SubmitServlet extends ClientServlet {
 
   }
 
-  private static String escapeHTML(String line) {
-    return line.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;");
-  }
 }

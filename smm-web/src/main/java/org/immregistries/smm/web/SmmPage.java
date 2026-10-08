@@ -70,7 +70,6 @@ public final class SmmPage {
       out.println("    <div class=\"aira-right-rail-layout\">");
       out.println("    <div class=\"smm-content\">");
     }
-    writeScript(out);
     OPEN_PAGE.set(new OpenPage(airaPage, area, page, request.getContextPath(), railPages));
   }
 
@@ -148,20 +147,5 @@ public final class SmmPage {
     out.println("        </nav>");
     out.println("      </section>");
     out.println("    </aside>");
-  }
-
-  /** Script used by older pages to show and hide sections. */
-  private static void writeScript(PrintWriter out) {
-    out.println("    <script>");
-    out.println("      function toggleLayer(whichLayer) {");
-    out.println("        var elem = document.getElementById(whichLayer);");
-    out.println("        if (!elem) { return; }");
-    out.println("        var vis = elem.style;");
-    out.println("        if (vis.display == '' && elem.offsetWidth != undefined && elem.offsetHeight != undefined) {");
-    out.println("          vis.display = (elem.offsetWidth != 0 && elem.offsetHeight != 0) ? 'block' : 'none';");
-    out.println("        }");
-    out.println("        vis.display = (vis.display == '' || vis.display == 'block') ? 'none' : 'block';");
-    out.println("      }");
-    out.println("    </script>");
   }
 }

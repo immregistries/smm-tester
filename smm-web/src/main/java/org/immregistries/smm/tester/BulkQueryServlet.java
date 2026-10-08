@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -81,80 +82,91 @@ public class BulkQueryServlet extends ClientServlet {
     PrintWriter out = response.getWriter();
     try {
       printHtmlHead(out, MENU_HEADER_HOME, request);
-      out.println("<h2>Query IIS</h2>");
-      out.println("<form id=\"queryForm\" action=\"BulkQueryServlet\" method=\"POST\">");
-      out.println("  <table border=\"0\">");
+      printPageHeader(out, "Bulk Query",
+          "Send the queries in the mover connection's query files to an IIS.");
+      out.println("<div class=\"aira-stack\">");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__body\">");
+      out.println("<form class=\"aira-form\" id=\"queryForm\" action=\"BulkQueryServlet\""
+          + " method=\"POST\">");
       printServiceSelector(request, session, out);
-      out.println("        <tr>");
-      out.println("          <td>Query Type</td>");
-      out.println("          <td>");
+      out.println("      <fieldset class=\"aira-fieldset\">");
+      out.println("        <legend class=\"aira-legend\">Query Type</legend>");
+      out.println("        <div class=\"aira-cluster\">");
       for (QueryType qt : QueryType.values()) {
-        out.println("            <input type=\"radio\" name=\"queryType\" value=\"" + qt + "\""
-            + (queryType.equals(queryType) ? " checked=\"true\"" : "") + "> " + qt + "");
+        out.println("          <label class=\"aira-radio\"><input type=\"radio\" name=\"queryType\""
+            + " value=\"" + qt + "\"" + (qt.equals(queryType) ? " checked" : "") + "> " + qt
+            + "</label>");
       }
-      out.println("          </td>");
-      out.println("        </tr>");
-      out.println("    <tr>");
-      out.println("      <td>Files</td>");
-      out.println("      <td>");
+      out.println("        </div>");
+      out.println("      </fieldset>");
+      out.println("      <fieldset class=\"aira-fieldset\">");
+      out.println("        <legend class=\"aira-legend\">Files</legend>");
       {
         SendData sendData = user.getSendData();
         sendData.setupQueryDir();
-        if (sendData.getQueryDir().exists()) {
-          String[] filenames = QueryRunner.getListOfFiles(sendData);
-          for (String filename : filenames) {
-            out.println("      <input type=\"checkbox\" name=\"" + QueryRunner.FILE_NAME
-                + "\" value=\"" + filename + "\""
-                + (filenamesSelectedSet.size() == 0 || filenamesSelectedSet.contains(filename)
-                    ? " checked=\"true\"" : "")
-                + "/>" + filename);
-          }
+        String[] filenames =
+            sendData.getQueryDir().exists() ? QueryRunner.getListOfFiles(sendData) : new String[0];
+        if (filenames.length == 0) {
+          out.println("        <p class=\"aira-muted\">No query files found.</p>");
         }
-        out.println("      </td>");
-        out.println("    </tr>");
+        for (String filename : filenames) {
+          out.println("        <label class=\"aira-check\"><input type=\"checkbox\" name=\""
+              + QueryRunner.FILE_NAME + "\" value=\"" + escapeHtml(filename) + "\""
+              + (filenamesSelectedSet.size() == 0 || filenamesSelectedSet.contains(filename)
+                  ? " checked" : "")
+              + "/> " + escapeHtml(filename) + "</label>");
+        }
       }
-      out.println("    <tr>");
-      out.println("      <td>Save</td>");
-      out.println("      <td><input type=\"checkbox\" name=\"save\" value=\"T\"/></td>");
-      out.println("    </tr>");
-      out.println("    <tr>");
-      out.println("      <td>Transforms</td>");
-      out.println(
-          "      <td><textarea name=\"" + QueryRunner.TRANSFORMS + "\" cols=\"50\" rows=\"5\">"
-              + (transforms == null ? "" : userName) + "</textarea></td>");
-      out.println("    </tr>");
-      out.println("    <tr>");
-      out.println("      <td>TCH User Name</td>");
-      out.println("      <td><input type=\"text\" name=\"" + QueryRunner.USER_NAME + "\" value=\""
-          + (userName == null ? "" : userName) + "\"/></td>");
-      out.println("    </tr>");
+      out.println("      </fieldset>");
+      out.println("      <label class=\"aira-check\"><input type=\"checkbox\" name=\"save\""
+          + " value=\"T\"/> Save</label>");
+      out.println("      <div class=\"aira-field\">");
+      out.println("        <label for=\"" + QueryRunner.TRANSFORMS + "\">Transforms</label>");
+      out.println("        <textarea class=\"aira-textarea smm-code\" id=\"" + QueryRunner.TRANSFORMS
+          + "\" name=\"" + QueryRunner.TRANSFORMS + "\" rows=\"5\">"
+          + escapeHtml(transforms) + "</textarea>");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-field-row\">");
+      printTextField(out, QueryRunner.USER_NAME, "TCH User Name", userName);
+      out.println("        <div class=\"aira-field\">");
+      out.println("          <label for=\"" + QueryRunner.PASSWORD + "\">TCH Password</label>");
+      out.println("          <input class=\"aira-input\" type=\"password\" id=\""
+          + QueryRunner.PASSWORD + "\" name=\"" + QueryRunner.PASSWORD + "\" value=\""
+          + escapeHtml(password) + "\" autocomplete=\"off\"/>");
+      out.println("        </div>");
+      out.println("      </div>");
 
-      out.println("    <tr>");
-      out.println("      <td>TCH Password</td>");
-      out.println("      <td><input type=\"password\" name=\"" + QueryRunner.PASSWORD
-          + "\" value=\"" + (password == null ? "" : password) + "\"/></td>");
-      out.println("    </tr>");
-
-      out.println("    <tr>");
-      out.println("      <td align=\"right\">");
+      out.println("      <div class=\"aira-form-actions\">");
       if (isReadyToStart(queryRunner)) {
-        out.println("        <input type=\"submit\" name=\"action\" value=\"Start\"/>");
+        out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+            + " name=\"action\" value=\"Start\">Start</button>");
       } else {
-        out.println(queryRunner.getStatus());
-        out.println("        <input type=\"submit\" name=\"action\" value=\"Stop\"/>");
+        out.println("        <span class=\"aira-badge aira-badge--info\">"
+            + escapeHtml(queryRunner.getStatus()) + "</span>");
+        out.println("        <button class=\"aira-button aira-button--danger\" type=\"submit\""
+            + " name=\"action\" value=\"Stop\">Stop</button>");
       }
-      out.println("        <input type=\"submit\" name=\"action\" value=\"Refresh\"/>");
-      out.println("      </td>");
-      out.println("    </tr>");
-      out.println("  </table>");
+      out.println("        <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+          + " name=\"action\" value=\"Refresh\">Refresh</button>");
+      out.println("      </div>");
       out.println("</form>");
+      out.println("  </div>");
+      out.println("</section>");
       if (queryRunner != null) {
-        out.println("<pre>");
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Status</h2></div>");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.print("    <pre class=\"smm-hl7\">");
         for (String statusMessage : queryRunner.getStatusMessageList()) {
-          out.println(statusMessage);
+          out.println(escapeHtml(statusMessage));
         }
         out.println("</pre>");
+        out.println("  </div>");
+        out.println("</section>");
       }
+      out.println("</div>");
       printHtmlFoot(out);
     } finally {
       out.close();

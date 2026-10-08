@@ -1,8 +1,10 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.security.cert.X509Certificate;
 import java.util.List;
@@ -72,79 +74,75 @@ public class InstallCertServlet extends ClientServlet {
       PrintWriter out = response.getWriter();
       try {
         printHtmlHead(out, MENU_HEADER_SETUP, request);
-        out.println("    <form action=\"InstallCertServlet\" method=\"POST\">");
-        out.println("      <table border=\"0\">");
-        out.println("        <tr>");
-        out.println("          <td>Connection</td>");
-        out.println("          <td>");
+        String checkLog = null;
+        if (action != null && action.equals("Check")) {
+          StringWriter log = new StringWriter();
+          try {
+            installCert.findCert(new PrintWriter(log));
+          } catch (Exception e) {
+            log.append(stackTrace(e));
+          }
+          checkLog = log.toString();
+        }
+        String installLog = null;
+        if (action != null && action.startsWith("Install ")) {
+          StringWriter log = new StringWriter();
+          try {
+            installCert.setChainPos(Integer.parseInt(action.substring("Install ".length())) - 1);
+            installCert.saveCert(new PrintWriter(log));
+          } catch (Exception e) {
+            log.append(stackTrace(e));
+          }
+          installLog = log.toString();
+        }
+        printPageHeader(out, "Install Certificate",
+            "Check the certificate chain an IIS presents and install a certificate from it.");
+        out.println("<div class=\"aira-stack\">");
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.println("    <form class=\"aira-form\" action=\"InstallCertServlet\" method=\"POST\">");
+        out.println("      <div class=\"aira-field\">");
         if (connectors.size() == 1) {
-          out.println("            " + connectors.get(0).getLabelDisplay());
-          out.println("            <input type=\"hidden\" name=\"id\" value=\"1\"/>");
+          out.println("        <span class=\"aira-label\">Connection</span>");
+          out.println("        <span>" + escapeHtml(connectors.get(0).getLabelDisplay())
+              + "</span>");
+          out.println("        <input type=\"hidden\" name=\"id\" value=\"1\"/>");
         } else {
-          out.println("            <select name=\"id\">");
-          out.println("              <option value=\"\">select</option>");
+          out.println("        <label for=\"id\">Connection</label>");
+          out.println("        <select class=\"aira-select smm-select-auto\" id=\"id\" name=\"id\">");
+          out.println("          <option value=\"\">select</option>");
           int i = 0;
           for (Connector connector : connectors) {
             i++;
-            if (id == i) {
-              out.println("              <option value=\"" + i + "\" selected=\"true\">"
-                  + connector.getLabelDisplay() + "</option>");
-            } else {
-              out.println("              <option value=\"" + i + "\">" + connector.getLabelDisplay()
-                  + "</option>");
-            }
+            out.println("          <option value=\"" + i + "\"" + (id == i ? " selected" : "")
+                + ">" + escapeHtml(connector.getLabelDisplay()) + "</option>");
           }
-          out.println("            </select>");
+          out.println("        </select>");
         }
-        out.println("          </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td colspan=\"2\" align=\"right\">");
-        out.println("            <input type=\"submit\" name=\"action\" value=\"Check\"/>");
-        out.println("          </td>");
-        out.println("        </tr>");
-        if (action != null && action.equals("Check")) {
-          out.println("        <tr>");
-          out.println("          <td colspan=\"2\">");
-          out.println("            <pre>");
-          try {
-            installCert.findCert(out);
-          } catch (Exception e) {
-            e.printStackTrace(out);
-          }
-          out.println("            </pre>");
-          out.println("          </td>");
-          out.println("        </tr>");
-        }
-
+        out.println("      </div>");
+        out.println("      <div class=\"aira-form-actions\">");
+        out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+            + " name=\"action\" value=\"Check\">Check</button>");
         if (installCert.getChain() != null) {
           int pos = 0;
           for (@SuppressWarnings("unused") X509Certificate cert : installCert.getChain()) {
-            out.println("        <tr>");
-            out.println("          <td>");
-            out.println("            <input type=\"submit\" name=\"action\" value=\"Install "
-                + (pos + 1) + "\"/>");
-            out.println("          </td>");
-            out.println("        </tr>");
+            pos++;
+            out.println("        <button class=\"aira-button aira-button--secondary\""
+                + " type=\"submit\" name=\"action\" value=\"Install " + pos + "\">Install " + pos
+                + "</button>");
           }
         }
-        if (action != null && action.startsWith("Install ")) {
-          out.println("        <tr>");
-          out.println("          <td colspan=\"2\">");
-          out.println("            <pre>");
-          try {
-            installCert.setChainPos(Integer.parseInt(action.substring("Install ".length())) - 1);
-            installCert.saveCert(out);
-          } catch (Exception e) {
-            e.printStackTrace(out);
-          }
-          out.println("            </pre>");
-          out.println("          </td>");
-          out.println("        </tr>");
-        }
-        out.println("      </table>");
+        out.println("      </div>");
         out.println("    </form>");
-
+        out.println("  </div>");
+        out.println("</section>");
+        if (checkLog != null) {
+          printLog(out, "Certificate Check", checkLog);
+        }
+        if (installLog != null) {
+          printLog(out, "Certificate Install", installLog);
+        }
+        out.println("</div>");
         printHtmlFoot(out);
 
       } finally {

@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -77,6 +78,7 @@ public class ManualQueryServlet extends ClientServlet {
     String problem = null;
     if (username == null) {
       response.sendRedirect(ClientServlet.APP_DEFAULT_HOME);
+      return;
     }
     QueryRequest queryRequest = new QueryRequest();
     problem = readQueryRequest(request, problem, queryRequest);
@@ -87,6 +89,7 @@ public class ManualQueryServlet extends ClientServlet {
         session.setAttribute("testCaseMessage", testCaseMessage);
         session.setAttribute("message", testCaseMessage.getMessageText());
         response.sendRedirect("SubmitServlet");
+        return;
       } else if (action.equals(ACTION_QUERY)) {
         TestCaseMessage testCaseMessage = createTestCaseMessage(queryRequest);
 
@@ -101,6 +104,7 @@ public class ManualQueryServlet extends ClientServlet {
             session.setAttribute("testCaseMessage", queryTestCaseMessage);
             session.setAttribute("message", queryTestCaseMessage.getMessageText());
             response.sendRedirect("SubmitServlet");
+            return;
           }
         }
 
@@ -193,68 +197,59 @@ public class ManualQueryServlet extends ClientServlet {
     PrintWriter out = response.getWriter();
     try {
       printHtmlHead(out, MENU_HEADER_HOME, request);
+      printPageHeader(out, "Query IIS",
+          "Describe a patient, then send an update (VXU) or a query for that patient.");
 
       if (problem != null) {
-        out.println("<p>" + problem + "</p>");
+        out.println("<div class=\"aira-alert aira-alert--warning\" role=\"status\"><p>"
+            + escapeHtml(problem) + "</p></div>");
       }
 
-      out.println("<h2>Patient</h2>");
-      out.println("<form action=\"ManualQueryServlet\" method=\"POST\">");
-      out.println("<table class=\"boxed\">");
-      out.println("  <tr>");
-      out.println("    <th class=\"boxed\">Id</th>");
-      out.println("    <td class=\"boxed\">");
-      out.println("      <input type=\"text\" name=\"" + PARAM_ID_NUMBER + "\" value=\""
-          + queryRequest.getIdNumber() + "\" size=\"7\" placeholder=\"Id\"/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_ID_AUTHORITY + "\" value=\""
-          + queryRequest.getIdAuthority() + "\" size=\"10\" placeholder=\"Authority\"/>");
-      out.println("      <select name=\"" + PARAM_ID_TYPE + "\">");
+      out.println("<form class=\"aira-stack\" action=\"ManualQueryServlet\" method=\"POST\">");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__header\">"
+          + "<h2 class=\"aira-panel__title\">Patient</h2></div>");
+      out.println("  <div class=\"aira-panel__body aira-form\">");
+      out.println("      <div class=\"aira-field-row\">");
+      printTextField(out, PARAM_ID_NUMBER, "Id", queryRequest.getIdNumber(), null);
+      printTextField(out, PARAM_ID_AUTHORITY, "Authority", queryRequest.getIdAuthority(), null);
+      out.println("        <div class=\"aira-field\">");
+      out.println("          <label for=\"" + PARAM_ID_TYPE + "\">Id Type</label>");
+      out.println("          <select class=\"aira-select\" id=\"" + PARAM_ID_TYPE + "\" name=\""
+          + PARAM_ID_TYPE + "\">");
       for (PatientIdType idType : PatientIdType.values()) {
-        if (idType == queryRequest.getIdType()) {
-          out.println("        <option value=\"" + idType + "\" selected=\"true\">" + idType + " - "
-              + idType.getLabel() + "</option>");
-        } else {
-          out.println("        <option value=\"" + idType + "\">" + idType + " - "
-              + idType.getLabel() + "</option>");
-        }
+        out.println("            <option value=\"" + idType + "\""
+            + (idType == queryRequest.getIdType() ? " selected" : "") + ">" + idType + " - "
+            + escapeHtml(idType.getLabel()) + "</option>");
       }
-      out.println("      </select>");
-      out.println("    </td>");
-      out.println("  </tr>");
-      out.println("  <tr>");
-      out.println("    <th class=\"boxed\">Patient</th>");
-      out.println("    <td class=\"boxed\">");
-      out.println("      <input type=\"text\" name=\"" + PARAM_NAME_FIRST + "\" value=\""
-          + queryRequest.getNameFirst() + "\" placeholder=\"First\" size=\"10\"/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_NAME_MIDDLE + "\" value=\""
-          + queryRequest.getNameMiddle() + "\" placeholder=\"Middle\" size=\"6\"/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_NAME_LAST + "\" value=\""
-          + queryRequest.getNameLast() + "\" placeholder=\"Last\" size=\"15\"/>");
-      out.println("      <select name=\"" + PARAM_SEX + "\">");
+      out.println("          </select>");
+      out.println("        </div>");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-field-row\">");
+      printTextField(out, PARAM_NAME_FIRST, "First Name", queryRequest.getNameFirst(), null);
+      printTextField(out, PARAM_NAME_MIDDLE, "Middle Name", queryRequest.getNameMiddle(), null);
+      printTextField(out, PARAM_NAME_LAST, "Last Name", queryRequest.getNameLast(), null);
+      out.println("        <div class=\"aira-field\">");
+      out.println("          <label for=\"" + PARAM_SEX + "\">Sex</label>");
+      out.println("          <select class=\"aira-select\" id=\"" + PARAM_SEX + "\" name=\""
+          + PARAM_SEX + "\">");
       for (String sex : new String[] {"M", "F", "U"}) {
-        if (sex.equals(queryRequest.getSex())) {
-          out.println(
-              "        <option value=\"" + sex + "\" selected=\"true\">" + sex + "</option>");
-        } else {
-          out.println("        <option value=\"" + sex + "\">" + sex + "</option>");
-        }
+        out.println("            <option value=\"" + sex + "\""
+            + (sex.equals(queryRequest.getSex()) ? " selected" : "") + ">" + sex + "</option>");
       }
-      out.println("      </select>");
-      out.println("    </td>");
-      out.println("  </tr>");
-      out.println("  <tr>");
-      out.println("    <th class=\"boxed\">Mother</th>");
-      out.println("    <td class=\"boxed\">");
-      out.println("      <input type=\"text\" name=\"" + PARAM_MOTHER_NAME_FIRST + "\" value=\""
-          + queryRequest.getMotherNameFirst() + "\" placeholder=\"First\" size=\"10\"/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_MOTHER_NAME_MIDDLE + "\" value=\""
-          + queryRequest.getMotherNameMiddle() + "\" placeholder=\"Middle\" size=\"6\"/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_MOTHER_NAME_LAST + "\" value=\""
-          + queryRequest.getMotherNameLast() + "\" placeholder=\"Last\" size=\"15\"/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_MOTHER_NAME_MAIDEN + "\" value=\""
-          + queryRequest.getMotherNameMaiden() + "\" placeholder=\"Maiden\" size=\"15\"/>");
-      out.println("    </td>");
-      out.println("  </tr>");
+      out.println("          </select>");
+      out.println("        </div>");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-field-row\">");
+      printTextField(out, PARAM_MOTHER_NAME_FIRST, "Mother First Name",
+          queryRequest.getMotherNameFirst(), null);
+      printTextField(out, PARAM_MOTHER_NAME_MIDDLE, "Mother Middle Name",
+          queryRequest.getMotherNameMiddle(), null);
+      printTextField(out, PARAM_MOTHER_NAME_LAST, "Mother Last Name",
+          queryRequest.getMotherNameLast(), null);
+      printTextField(out, PARAM_MOTHER_NAME_MAIDEN, "Mother Maiden Name",
+          queryRequest.getMotherNameMaiden(), null);
+      out.println("      </div>");
 
       {
         String birthDateString = "";
@@ -267,90 +262,85 @@ public class ManualQueryServlet extends ClientServlet {
         if (queryRequest.getMultipleBirthOrder() > 0) {
           birthOrder = "" + queryRequest.getMultipleBirthOrder();
         }
-        out.println("  <tr>");
-        out.println("    <th class=\"boxed\">Birth</th>");
-        out.println("    <td class=\"boxed\">");
-        out.println("      <input type=\"text\" name=\"" + PARAM_BIRTH_DATE + "\" value=\""
-            + birthDateString + "\" placeholder=\"12/31/2017\" size=\"15\"/>");
-        out.println("      <input type=\"checkbox\" name=\"" + PARAM_MULTIPLE_BIRTH_INDICATOR
-            + "\" value=\"true\"" + (birthMultiple ? " checked=\"true\"" : "") + "/> Multiple");
-        out.println("      <input type=\"text\" name=\"" + PARAM_MULTIPLE_BIRTH_ORDER
-            + "\" value=\"" + birthOrder + "\" placeholder=\"Order\" size=\"3\"/>");
-        out.println("    </td>");
-        out.println("  </tr>");
+        out.println("      <div class=\"aira-field-row\">");
+        printTextField(out, PARAM_BIRTH_DATE, "Birth Date", birthDateString, "MM/DD/YYYY");
+        out.println("        <div class=\"aira-field smm-field-end\">");
+        out.println("          <label class=\"aira-check\"><input type=\"checkbox\" name=\""
+            + PARAM_MULTIPLE_BIRTH_INDICATOR + "\" value=\"true\""
+            + (birthMultiple ? " checked" : "") + "/> Multiple Birth</label>");
+        out.println("        </div>");
+        printTextField(out, PARAM_MULTIPLE_BIRTH_ORDER, "Birth Order", birthOrder, null);
+        out.println("      </div>");
       }
-      out.println("  <tr>");
-      out.println("    <th class=\"boxed\">Address</th>");
-      out.println("    <td class=\"boxed\">");
-      out.println("      <input type=\"text\" name=\"" + PARAM_ADDRESS_STREET_1 + "\" value=\""
-          + queryRequest.getAddressStreet1()
-          + "\" placeholder=\"123 Main Street\" size=\"30\"/><br/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_ADDRESS_STREET_2 + "\" value=\""
-          + queryRequest.getAddressStreet2() + "\" placeholder=\"Apt 101\" size=\"30\"/><br/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_ADDRESS_CITY + "\" value=\""
-          + queryRequest.getAddressCity() + "\" placeholder=\"Anytown\" size=\"10\"/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_ADDRESS_STATE + "\" value=\""
-          + queryRequest.getAddressState() + "\" placeholder=\"MI\" size=\"2\"/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_ADDRESS_ZIP + "\" value=\""
-          + queryRequest.getAddressZip() + "\" placeholder=\"12345\" size=\"5\"/>");
-      out.println("      <input type=\"text\" name=\"" + PARAM_ADDRESS_COUNTRY + "\" value=\""
-          + queryRequest.getAddressCountry() + "\" size=\"3\"/>");
-      out.println("    </td>");
-      out.println("  </tr>");
+      out.println("      <div class=\"aira-field-row\">");
+      printTextField(out, PARAM_ADDRESS_STREET_1, "Street", queryRequest.getAddressStreet1(),
+          "123 Main Street");
+      printTextField(out, PARAM_ADDRESS_STREET_2, "Street Line 2",
+          queryRequest.getAddressStreet2(), "Apt 101");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-field-row\">");
+      printTextField(out, PARAM_ADDRESS_CITY, "City", queryRequest.getAddressCity(), "Anytown");
+      printTextField(out, PARAM_ADDRESS_STATE, "State", queryRequest.getAddressState(), "MI");
+      printTextField(out, PARAM_ADDRESS_ZIP, "Zip", queryRequest.getAddressZip(), "12345");
+      printTextField(out, PARAM_ADDRESS_COUNTRY, "Country", queryRequest.getAddressCountry(),
+          null);
+      out.println("      </div>");
+      out.println("      <div class=\"aira-field-row\">");
+      printTextField(out, PARAM_PHONE_AREA, "Phone Area Code", queryRequest.getPhoneArea(), "555");
+      printTextField(out, PARAM_PHONE_LOCAL, "Phone Number", queryRequest.getPhoneLocal(),
+          "123-4567");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-form-actions\">");
+      out.println("        <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+          + " name=\"" + PARAM_ACTION + "\" value=\"" + ACTION_REFRESH + "\">" + ACTION_REFRESH
+          + "</button>");
+      out.println("      </div>");
+      out.println("  </div>");
+      out.println("</section>");
 
-      out.println("  <tr>");
-      out.println("    <th class=\"boxed\">Phone</th>");
-      out.println("    <td class=\"boxed\">");
-      out.println("      (<input type=\"text\" name=\"" + PARAM_PHONE_AREA + "\" value=\""
-          + queryRequest.getPhoneArea() + "\" placeholder=\"555\" size=\"3\"/>)");
-      out.println("      <input type=\"text\" name=\"" + PARAM_PHONE_LOCAL + "\" value=\""
-          + queryRequest.getPhoneLocal() + "\" placeholder=\"123-4567\" size=\"7\"/>");
-      out.println("    </td>");
-      out.println("  </tr>");
-      out.println("  <tr>");
-      out.println("    <td class=\"boxed\" colspan=\"2\" align=\"right\">");
-      out.println("      <input type=\"submit\" name=\"" + PARAM_ACTION + "\" value=\""
-          + ACTION_REFRESH + "\"/>");
-      out.println("    </td>");
-      out.println("  </tr>");
-      out.println("</table>");
-
-      out.println("<h2>Update</h2>");
-      out.println("<pre>");
       TestCaseMessage testCaseMessage = createTestCaseMessage(queryRequest);
-      out.println(testCaseMessage.getMessageText());
-      out.println("</pre>");
-      out.println(
-          "<input type=\"submit\" name=\"" + PARAM_ACTION + "\" value=\"" + ACTION_UPDATE + "\"/>");
-      out.println("<h2>Query</h2>");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__header\">"
+          + "<h2 class=\"aira-panel__title\">Update</h2></div>");
+      out.println("  <div class=\"aira-panel__body aira-stack aira-stack--compact\">");
+      out.println("    <pre class=\"smm-hl7\">" + escapeHtml(testCaseMessage.getMessageText())
+          + "</pre>");
+      out.println("    <div class=\"aira-form-actions\">");
+      out.println("      <button class=\"aira-button aira-button--primary\" type=\"submit\" name=\""
+          + PARAM_ACTION + "\" value=\"" + ACTION_UPDATE + "\">" + ACTION_UPDATE + "</button>");
+      out.println("    </div>");
+      out.println("  </div>");
+      out.println("</section>");
 
-      out.println("<p>Query Type ");
-      out.println("<select name=\"" + PARAM_QUERY_TYPE + "\">");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__header\">"
+          + "<h2 class=\"aira-panel__title\">Query</h2></div>");
+      out.println("  <div class=\"aira-panel__body aira-stack aira-stack--compact\">");
+      out.println("    <div class=\"aira-inline-form\">");
+      out.println("      <label class=\"aira-label\" for=\"" + PARAM_QUERY_TYPE
+          + "\">Query Type</label>");
+      out.println("      <select class=\"aira-select smm-select-auto\" id=\"" + PARAM_QUERY_TYPE
+          + "\" name=\"" + PARAM_QUERY_TYPE + "\">");
       for (QueryType qt : QueryType.values()) {
-        if (qt == queryRequest.getQueryType()) {
-          out.println("  <option value=\"" + qt + "\" selected=\"true\">" + qt + "</option>");
-        } else {
-          out.println("  <option value=\"" + qt + "\">" + qt + "</option>");
-        }
+        out.println("        <option value=\"" + qt + "\""
+            + (qt == queryRequest.getQueryType() ? " selected" : "") + ">" + qt + "</option>");
       }
-      out.println("</select>");
-      out.println(
-          "<input type=\"submit\" name=\"" + PARAM_ACTION + "\" value=\"" + ACTION_QUERY + "\"/>");
+      out.println("      </select>");
+      out.println("      <button class=\"aira-button aira-button--primary\" type=\"submit\" name=\""
+          + PARAM_ACTION + "\" value=\"" + ACTION_QUERY + "\">" + ACTION_QUERY + "</button>");
+      out.println("    </div>");
 
       if (queryRequest.getQueryType() != null) {
         QueryConverter queryConverter =
             QueryConverter.getQueryConverter(queryRequest.getQueryType());
         if (queryConverter != null) {
-          out.println("<pre>");
-          out.println(queryConverter.convert(testCaseMessage.getMessageText()));
-          out.println("</pre>");
+          out.println("    <pre class=\"smm-hl7\">"
+              + escapeHtml(queryConverter.convert(testCaseMessage.getMessageText())) + "</pre>");
         }
       }
-
-
+      out.println("  </div>");
+      out.println("</section>");
       out.println("</form>");
-
-
       printHtmlFoot(out);
     } finally {
       out.close();

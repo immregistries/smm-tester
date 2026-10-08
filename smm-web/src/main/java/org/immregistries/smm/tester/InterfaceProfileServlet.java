@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -66,6 +67,8 @@ public class InterfaceProfileServlet extends ClientServlet {
       PrintWriter out = response.getWriter();
       try {
         printHtmlHead(out, MENU_HEADER_HOME, request);
+        printPageHeader(out, "Interface Profile Results", null);
+        out.println("<div class=\"aira-stack\">");
         int id = 0;
         List<Connector> connectors = ConnectServlet.getConnectors(session);
         if (connectors.size() == 1) {
@@ -81,7 +84,7 @@ public class InterfaceProfileServlet extends ClientServlet {
         if (id > 0) {
           connector = SubmitServlet.getConnector(id, session);
         } else {
-          out.println("<p>No connection specified, not running interface profile.</p>");
+          printAlert(out, "info", "No connection specified, not running interface profile.");
         }
 
         String testCase = request.getParameter("source");
@@ -111,10 +114,8 @@ public class InterfaceProfileServlet extends ClientServlet {
             goodToQuery = true;
           } catch (Exception e) {
             goodToQuery = false;
-            out.println("Unable to read DQA Report Template XML: ");
-            out.print("<pre>");
-            e.printStackTrace(out);
-            out.print("</pre>");
+            printAlert(out, "error", "Unable to read DQA Report Template XML.");
+            printException(out, e);
           }
 
         }
@@ -132,7 +133,7 @@ public class InterfaceProfileServlet extends ClientServlet {
         List<TestCaseMessage> testCaseMessageList = null;
         if (testCase == null || testCase.equals("")) {
           goodToQuery = false;
-          out.println("Test case message not set, unable to run test. ");
+          printAlert(out, "warning", "Test case message not set, unable to run test.");
         } else {
           testCaseMessageList = parseAndAddTestCases(testCase, session);
         }
@@ -146,27 +147,25 @@ public class InterfaceProfileServlet extends ClientServlet {
               try {
                 testRunner.runTest(connector, testCaseMessageBase);
               } catch (Throwable t) {
-                t.printStackTrace(out);
+                printException(out, t);
               }
 
             } catch (Exception e) {
-              out.println("Unable to run test: " + e.getMessage());
-              out.print("<pre>");
-              e.printStackTrace(out);
-              out.println("</pre>");
+              printException(out, e);
             }
             if (testRunner.getStatus().equals("A")) {
               goodToQuery = true;
             } else {
               goodToQuery = false;
-              out.println("Unable to interface profile, base message failed: ");
-              out.print("<pre>" + testRunner.getAckMessageText() + "</pre>");
+              printAlert(out, "error", "Unable to interface profile, base message failed.");
+              out.println("<pre class=\"smm-hl7\">" + escapeHtml(testRunner.getAckMessageText())
+                  + "</pre>");
             }
           }
 
         } else if (testCaseMessageList.size() == 0) {
           goodToQuery = false;
-          out.println("Unable to profile interface, Test Case Message size == 0 ");
+          printAlert(out, "warning", "Unable to profile interface, no test case message found.");
 
         }
 
@@ -208,18 +207,21 @@ public class InterfaceProfileServlet extends ClientServlet {
 
           }
 
-          out.println("<table border=\"1\" cellspacing=\"0\">");
-          out.println("  <tr>");
-          out.println("    <th>#</th>");
-          out.println("    <th>Issue</th>");
+          out.println("<div class=\"aira-table-wrap\">");
+          out.println("<table class=\"aira-table\">");
+          out.println("  <caption class=\"aira-visually-hidden\">Interface profile</caption>");
+          out.println("  <thead><tr>");
+          out.println("    <th scope=\"col\" class=\"aira-table__cell--numeric\">#</th>");
+          out.println("    <th scope=\"col\">Issue</th>");
           if (expectedStatusMap != null) {
-            out.println("    <th>Expect</th>");
+            out.println("    <th scope=\"col\">Expect</th>");
           }
-          out.println("    <th>Status Is</th>");
-          out.println("    <th>Text</th>");
-          out.println("    <th>Status Not</th>");
-          out.println("    <th>Text</th>");
-          out.println("  </tr>");
+          out.println("    <th scope=\"col\">Status Is</th>");
+          out.println("    <th scope=\"col\">Text</th>");
+          out.println("    <th scope=\"col\">Status Not</th>");
+          out.println("    <th scope=\"col\">Text</th>");
+          out.println("  </tr></thead>");
+          out.println("  <tbody>");
 
           int count = 0;
           for (Issue issue : Issue.values()) {
@@ -238,15 +240,16 @@ public class InterfaceProfileServlet extends ClientServlet {
             transformer.transform(testCaseMessage);
             transformer.transform(testCaseMessageNot);
             out.println("  <tr>");
-            out.println("    <td>" + count + "</td>");
-            out.println("    <td>" + issue.getName() + "</td>");
+            out.println("    <td class=\"aira-table__cell--numeric\">" + count + "</td>");
+            out.println("    <th scope=\"row\" class=\"aira-table__cell--primary\">"
+                + escapeHtml(issue.getName()) + "</th>");
             String expectedStatus = "-";
             if (expectedStatusMap != null) {
               expectedStatus = expectedStatusMap.get(issue.getName());
               if (expectedStatus == null) {
                 expectedStatus = "-";
               }
-              out.println("    <td>" + expectedStatus + "</td>");
+              out.println("    <td>" + escapeHtml(expectedStatus) + "</td>");
             }
             out.println("    <td>");
             String ack = null;
@@ -254,32 +257,31 @@ public class InterfaceProfileServlet extends ClientServlet {
               out.println("-");
             } else {
               if (connector == null) {
-                out.println("<div class=\"fail\">NOT RUN</div>");
+                out.println("<span class=\"aira-badge aira-badge--outline\">Not run</span>");
               } else {
                 try {
                   try {
                     testRunner.runTest(connector, testCaseMessage);
                     ack = testRunner.getAckMessageText();
                   } catch (Throwable t) {
-                    t.printStackTrace(out);
+                    out.println("<pre class=\"smm-hl7\">" + escapeHtml(stackTrace(t)) + "</pre>");
                   }
                   if (expectedStatusMap != null && !expectedStatus.equals("-")) {
                     if (expectedStatus.equals("S")) {
                       expectedStatus = "A";
                     }
                     if (expectedStatus.equals(testRunner.getStatus())) {
-                      out.println("<div class=\"pass\">" + testRunner.getStatus() + "</div>");
+                      out.println("<span class=\"aira-badge aira-badge--success\">"
+                          + escapeHtml(testRunner.getStatus()) + "</span>");
                     } else {
-                      out.println("<div class=\"fail\">" + testRunner.getStatus() + "</div>");
+                      out.println("<span class=\"aira-badge aira-badge--danger\">"
+                          + escapeHtml(testRunner.getStatus()) + "</span>");
                     }
                   } else {
-                    out.println(testRunner.getStatus());
+                    out.println(escapeHtml(testRunner.getStatus()));
                   }
                 } catch (Exception e) {
-                  out.println("Unable to run test: " + e.getMessage());
-                  out.print("<pre>");
-                  e.printStackTrace(out);
-                  out.println("</pre>");
+                  printException(out, e);
                 }
               }
               if (user.hasSendData()) {
@@ -315,14 +317,7 @@ public class InterfaceProfileServlet extends ClientServlet {
             }
             out.println("    </td>");
             out.println("    <td>");
-            out.println("      <a href=\"javascript:toggleLayer('text" + count
-                + "');\" title=\"Show/Hide\">+/-</a></h2>");
-            out.println("      <div id=\"text" + count + "\" style=\"display:none\">");
-            out.println("        <div class=\"scrollbox\"><pre>" + testCaseMessage.getMessageText()
-                + "</pre></div>");
-            out.println("        <div class=\"scrollbox\"><pre>" + (ack == null ? "Not Run" : ack)
-                + "</pre></div>");
-            out.println("      </div>");
+            printMessageAndAck(out, testCaseMessage.getMessageText(), ack);
             out.println("    </td>");
             out.println("    <td>");
             ack = null;
@@ -330,50 +325,45 @@ public class InterfaceProfileServlet extends ClientServlet {
               out.println("-");
             } else {
               if (connector == null) {
-                out.println("<div class=\"fail\">NOT RUN</div>");
+                out.println("<span class=\"aira-badge aira-badge--outline\">Not run</span>");
               } else {
                 try {
                   try {
                     testRunner.runTest(connector, testCaseMessageNot);
                     ack = testRunner.getAckMessageText();
                   } catch (Throwable t) {
-                    t.printStackTrace(out);
+                    out.println("<pre class=\"smm-hl7\">" + escapeHtml(stackTrace(t)) + "</pre>");
                   }
                   if (expectedStatusMap != null && !expectedStatus.equals("-")) {
                     if ("A".equals(testRunner.getStatus())) {
-                      out.println("<div class=\"pass\">" + testRunner.getStatus() + "</div>");
+                      out.println("<span class=\"aira-badge aira-badge--success\">"
+                          + escapeHtml(testRunner.getStatus()) + "</span>");
                     } else {
-                      out.println("<div class=\"fail\">" + testRunner.getStatus() + "</div>");
+                      out.println("<span class=\"aira-badge aira-badge--danger\">"
+                          + escapeHtml(testRunner.getStatus()) + "</span>");
                     }
                   } else {
-                    out.println(testRunner.getStatus());
+                    out.println(escapeHtml(testRunner.getStatus()));
                   }
                 } catch (Exception e) {
-                  out.println("Unable to run test: " + e.getMessage());
-                  out.print("<pre>");
-                  e.printStackTrace(out);
-                  out.println("</pre>");
+                  printException(out, e);
                 }
               }
             }
             out.println("    </td>");
             out.println("    <td>");
-            out.println("      <a href=\"javascript:toggleLayer('text" + count
-                + "n');\" title=\"Show/Hide\">+/-</a></h2>");
-            out.println("      <div id=\"text" + count + "n\" style=\"display:none\">");
-            out.println("        <div class=\"scrollbox\"><pre>"
-                + testCaseMessageNot.getMessageText() + "</pre></div>");
-            out.println("        <div class=\"scrollbox\"><pre>" + (ack == null ? "Not Run" : ack)
-                + "</pre></div>");
-            out.println("      </div>");
+            printMessageAndAck(out, testCaseMessageNot.getMessageText(), ack);
             out.println("    </td>");
             out.println("  </tr>");
           }
+          out.println("  </tbody>");
+          out.println("</table>");
+          out.println("</div>");
           if (sampleFileOut != null) {
             sampleFileOut.close();
           }
         }
-        out.println("</table>");
+        out.println("</div>");
         printHtmlFoot(out);
       } finally {
         out.close();
@@ -411,26 +401,19 @@ public class InterfaceProfileServlet extends ClientServlet {
     return testCaseMessageList;
   }
 
-  protected static void makeHideScript(PrintWriter out) {
-    out.println("    <script>");
-    out.println("      function toggleLayer(whichLayer) ");
-    out.println("      {");
-    out.println("        var elem, vis;");
-    out.println("        if (document.getElementById) ");
-    out.println("          elem = document.getElementById(whichLayer);");
-    out.println("        else if (document.all) ");
-    out.println("          elem = document.all[whichLayer] ");
-    out.println("        else if (document.layers) ");
-    out.println("          elem = document.layers[whichLayer]");
-    out.println("        vis = elem.style;");
-    out.println(
-        "        if (vis.display == '' && elem.offsetWidth != undefined && elem.offsetHeight != undefined) ");
-    out.println(
-        "          vis.display = (elem.offsetWidth != 0 && elem.offsetHeight != 0) ? 'block' : 'none';");
-    out.println(
-        "        vis.display = (vis.display == '' || vis.display == 'block') ? 'none' : 'block';");
-    out.println("      }");
-    out.println("    </script>");
+  private static void printAlert(PrintWriter out, String variant, String text) {
+    out.println("<div class=\"aira-alert aira-alert--" + variant + "\" role=\"status\"><p>"
+        + escapeHtml(text) + "</p></div>");
+  }
+
+  /** Writes a collapsed view of a test message and the acknowledgement it received. */
+  private static void printMessageAndAck(PrintWriter out, String messageText, String ack) {
+    out.println("      <details class=\"smm-disclosure smm-disclosure--compact\">");
+    out.println("        <summary>Show</summary>");
+    out.println("        <pre class=\"smm-hl7\">" + escapeHtml(messageText) + "</pre>");
+    out.println("        <pre class=\"smm-hl7\">" + (ack == null ? "Not Run" : escapeHtml(ack))
+        + "</pre>");
+    out.println("      </details>");
   }
 
   private static String readSubParts(Map<String, String> expectedStatusMap, NodeList nodes) {
@@ -497,8 +480,9 @@ public class InterfaceProfileServlet extends ClientServlet {
       PrintWriter out = response.getWriter();
       try {
         printHtmlHead(out, MENU_HEADER_HOME, request);
-        out.println("    <form action=\"interfaceProfile\" method=\"POST\">");
-        out.println("      <table border=\"0\">");
+        printPageHeader(out, "Interface Profile",
+            "Send a base message with each known data quality issue, and with each issue removed,"
+                + " to see how an IIS responds.");
         int id = 0;
         if (request.getParameter("id") != null) {
           id = Integer.parseInt(request.getParameter("id"));
@@ -506,61 +490,56 @@ public class InterfaceProfileServlet extends ClientServlet {
         if (session.getAttribute("id") != null) {
           id = (Integer) session.getAttribute("id");
         }
-        TestCaseMessage testCaseMessage = (TestCaseMessage) session.getAttribute("testCaseMessage");
-        if (testCaseMessage == null) {
-          testCaseMessage = new TestCaseMessage();
-        }
-        out.println("        <tr>");
-        out.println("          <td>Service</td>");
-        out.println("          <td>");
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.println("    <form class=\"aira-form\" action=\"interfaceProfile\" method=\"POST\">");
+        out.println("      <div class=\"aira-field\">");
         List<Connector> connectors = ConnectServlet.getConnectors(session);
         if (connectors.size() == 1) {
-          out.println("            " + connectors.get(0).getLabelDisplay());
-          out.println("            <input type=\"hidden\" name=\"id\" value=\"1\"/>");
+          out.println("        <span class=\"aira-label\">Connection</span>");
+          out.println("        <span>" + escapeHtml(connectors.get(0).getLabelDisplay())
+              + "</span>");
+          out.println("        <input type=\"hidden\" name=\"id\" value=\"1\"/>");
         } else {
-          out.println("            <select name=\"id\">");
-          out.println("              <option value=\"\">select</option>");
+          out.println("        <label for=\"id\">Connection</label>");
+          out.println("        <select class=\"aira-select smm-select-auto\" id=\"id\" name=\"id\">");
+          out.println("          <option value=\"\">select</option>");
           int i = 0;
           for (Connector connector : connectors) {
             i++;
-            if (id == i) {
-              out.println("              <option value=\"" + i + "\" selected=\"true\">"
-                  + connector.getLabelDisplay() + "</option>");
-            } else {
-              out.println("              <option value=\"" + i + "\">" + connector.getLabelDisplay()
-                  + "</option>");
-            }
+            out.println("          <option value=\"" + i + "\"" + (id == i ? " selected" : "")
+                + ">" + escapeHtml(connector.getLabelDisplay()) + "</option>");
           }
-          out.println("            </select>");
+          out.println("        </select>");
         }
-        out.println("          </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td>Test</td>");
-        out.println(
-            "          <td><textarea name=\"source\" cols=\"70\" rows=\"10\" wrap=\"off\"></textarea></td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td>DQA Report Template XML</td>");
-        out.println(
-            "          <td><textarea name=\"expected\" cols=\"70\" rows=\"10\" wrap=\"off\"></textarea></td>");
-        out.println("        </tr>");
+        out.println("      </div>");
+        out.println("      <div class=\"aira-field\">");
+        out.println("        <label for=\"source\">Test</label>");
+        out.println("        <textarea class=\"aira-textarea smm-code\" id=\"source\" name=\"source\""
+            + " rows=\"10\" wrap=\"off\"></textarea>");
+        out.println("      </div>");
+        out.println("      <div class=\"aira-field\">");
+        out.println("        <label for=\"expected\">DQA Report Template XML</label>");
+        out.println("        <textarea class=\"aira-textarea smm-code\" id=\"expected\""
+            + " name=\"expected\" rows=\"10\" wrap=\"off\"></textarea>");
+        out.println("      </div>");
         SmmUser user = (SmmUser) session.getAttribute("user");
         if (user.hasSendData()) {
-          out.println("        <tr>");
-          out.println("          <td>Save Sample Count</td>");
-          out.println(
-              "          <td><input name=\"batchSize\" type=\"text\" size=\"2\" value=\"0\"/> (Samples saved to "
-                  + user.getSendData().getGeneratedDir() + ")</td>");
-          out.println("        </tr>");
+          out.println("      <div class=\"aira-field\">");
+          out.println("        <label for=\"batchSize\">Save Sample Count</label>");
+          out.println("        <input class=\"aira-input smm-input-short\" id=\"batchSize\""
+              + " name=\"batchSize\" type=\"text\" value=\"0\"/>");
+          out.println("        <p class=\"aira-field-help\">Samples are saved to "
+              + escapeHtml(String.valueOf(user.getSendData().getGeneratedDir())) + "</p>");
+          out.println("      </div>");
         }
-        out.println("        <tr>");
-        out.println("          <td colspan=\"2\" align=\"right\">");
-        out.println("            <input type=\"submit\" name=\"method\" value=\"Submit\"/>");
-        out.println("          </td>");
-        out.println("        </tr>");
-        out.println("      </table>");
+        out.println("      <div class=\"aira-form-actions\">");
+        out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+            + " name=\"method\" value=\"Submit\">Submit</button>");
+        out.println("      </div>");
         out.println("    </form>");
+        out.println("  </div>");
+        out.println("</section>");
         printHtmlFoot(out);
       } finally {
         out.close();

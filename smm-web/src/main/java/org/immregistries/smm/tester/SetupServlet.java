@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -79,6 +80,10 @@ public class SetupServlet extends ClientServlet {
       PrintWriter out = response.getWriter();
       try {
         printHtmlHead(out, MENU_HEADER_SETUP, request);
+        printPageHeader(out, "Manage Test Cases",
+            "Choose saved test cases to edit, run, or download, load a test case script, or create"
+                + " a new test case.");
+        out.println("<div class=\"aira-stack\">");
 
         Map<String, TestCaseMessage> testCaseMessageMap =
             CreateTestCaseServlet.getTestCaseMessageMap(testSetSelected,
@@ -87,108 +92,115 @@ public class SetupServlet extends ClientServlet {
         List<String> testCaseSetList =
             new ArrayList<String>(CreateTestCaseServlet.getTestCaseMessageMapMap(session).keySet());
         if (testCaseNumberList.size() > 0 || testCaseSetList.size() > 1) {
-          out.println("<h2>Test Cases Saved</h2>");
-          out.println("<form action=\"SetupServlet\" method=\"POST\">");
-          out.println("<table border=\"0\">");
-          {
-            out.println("  <tr>");
-            out.println("    <td>Test Set</td>");
-            out.println("    <td>");
-            out.println("      <select name=\"testSet\" onChange=\"this.form.submit()\">");
-            Collections.sort(testCaseSetList);
-            out.println("              <option value=\"\""
-                + (testSetSelected == null ? " selected=\"true\"" : "")
-                + ">-- Not Specified --</option>");
-            for (String testCaseSet : testCaseSetList) {
-              if (testCaseSet.equals("")) {
-                continue;
-              }
-              boolean selected = testSetSelected != null && testSetSelected.equals(testCaseSet);
-              out.println("              <option value=\"" + testCaseSet + "\""
-                  + (selected ? " selected=\"true\"" : "") + ">" + testCaseSet + "</option>");
+          out.println("<section class=\"aira-panel\">");
+          out.println("  <div class=\"aira-panel__header\">"
+              + "<h2 class=\"aira-panel__title\">Test Cases Saved</h2></div>");
+          out.println("  <div class=\"aira-panel__body\">");
+          out.println("    <form class=\"aira-form\" action=\"SetupServlet\" method=\"POST\">");
+          out.println("      <div class=\"aira-field\">");
+          out.println("        <label for=\"testSet\">Test Set</label>");
+          out.println("        <select class=\"aira-select smm-select-auto\" id=\"testSet\""
+              + " name=\"testSet\" onChange=\"this.form.submit()\">");
+          Collections.sort(testCaseSetList);
+          out.println("          <option value=\"\"" + (testSetSelected == null ? " selected" : "")
+              + ">-- Not Specified --</option>");
+          for (String testCaseSet : testCaseSetList) {
+            if (testCaseSet.equals("")) {
+              continue;
             }
-            out.println("      </select>");
-            out.println("    </td>");
-            out.println("  </tr>");
+            boolean selected = testSetSelected != null && testSetSelected.equals(testCaseSet);
+            out.println("          <option value=\"" + escapeHtml(testCaseSet) + "\""
+                + (selected ? " selected" : "") + ">" + escapeHtml(testCaseSet) + "</option>");
           }
-          {
-            out.println("  <tr>");
-            out.println("    <td>Test Cases</td>");
-            out.println("    <td>");
-            if (testCaseNumberList.size() > 0) {
-              out.println("      <select name=\"testCaseNumber\" multiple=\"true\" size=\"7\">");
-              Collections.sort(testCaseNumberList);
-              @SuppressWarnings("unchecked")
-              Set<String> testCaseNumberSelectedSet =
-                  (Set<String>) session.getAttribute("testCaseNumberSelectedList");
-              if (testCaseNumberSelectedSet == null) {
-                testCaseNumberSelectedSet = new HashSet<String>();
-              }
-              for (String testCaseNumber : testCaseNumberList) {
-                TestCaseMessage tcm = testCaseMessageMap.get(testCaseNumber);
-                String text = tcm.getTestCaseNumber() + ": " + (tcm.getDescription().length() > 80
-                    ? tcm.getDescription().substring(0, 80) + "..." : tcm.getDescription());
-                boolean selected = testCaseNumberSelectedSet.contains(testCaseNumber);
-                out.println("              <option value=\"" + tcm.getTestCaseNumber() + "\""
-                    + (selected ? " selected=\"true\"" : "") + ">" + text + "</option>");
-              }
-              out.println("      </select>");
-            } else {
-              out.println("No Test Cases Saved");
-            }
-            out.println("    </td>");
-            out.println("  </tr>");
-          }
+          out.println("        </select>");
+          out.println("      </div>");
+          out.println("      <div class=\"aira-field\">");
+          out.println("        <label for=\"testCaseNumber\">Test Cases</label>");
           if (testCaseNumberList.size() > 0) {
-            out.println("  <tr>");
-            out.println("    <td colspan=\"2\" align=\"right\">");
-            out.println("      <input type=\"submit\" name=\"action\" value=\"Edit\">");
-            out.println("      <input type=\"submit\" name=\"action\" value=\"Test\">");
-            out.println("      <input type=\"submit\" name=\"action\" value=\"Download Script\">");
-            out.println(
-                "      <input type=\"submit\" name=\"action\" value=\"Download HL7 Only\">");
-            out.println("    </td>");
-            out.println("  </tr>");
+            out.println("        <select class=\"aira-select\" id=\"testCaseNumber\""
+                + " name=\"testCaseNumber\" multiple size=\"8\">");
+            Collections.sort(testCaseNumberList);
+            @SuppressWarnings("unchecked")
+            Set<String> testCaseNumberSelectedSet =
+                (Set<String>) session.getAttribute("testCaseNumberSelectedList");
+            if (testCaseNumberSelectedSet == null) {
+              testCaseNumberSelectedSet = new HashSet<String>();
+            }
+            for (String testCaseNumber : testCaseNumberList) {
+              TestCaseMessage tcm = testCaseMessageMap.get(testCaseNumber);
+              String text = tcm.getTestCaseNumber() + ": " + (tcm.getDescription().length() > 80
+                  ? tcm.getDescription().substring(0, 80) + "..." : tcm.getDescription());
+              boolean selected = testCaseNumberSelectedSet.contains(testCaseNumber);
+              out.println("          <option value=\"" + escapeHtml(tcm.getTestCaseNumber()) + "\""
+                  + (selected ? " selected" : "") + ">" + escapeHtml(text) + "</option>");
+            }
+            out.println("        </select>");
+            out.println("        <p class=\"aira-field-help\">Hold Ctrl or Shift to select more"
+                + " than one.</p>");
+          } else {
+            out.println("        <p class=\"aira-muted\">No test cases saved in this test set.</p>");
           }
-          out.println("</table>");
-          out.println("</form>");
+          out.println("      </div>");
+          if (testCaseNumberList.size() > 0) {
+            out.println("      <div class=\"aira-form-actions\">");
+            out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+                + " name=\"action\" value=\"Test\">Test</button>");
+            out.println("        <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+                + " name=\"action\" value=\"Edit\">Edit</button>");
+            out.println("        <button class=\"aira-button aira-button--tertiary\" type=\"submit\""
+                + " name=\"action\" value=\"Download Script\">Download Script</button>");
+            out.println("        <button class=\"aira-button aira-button--tertiary\" type=\"submit\""
+                + " name=\"action\" value=\"Download HL7 Only\">Download HL7 Only</button>");
+            out.println("      </div>");
+          }
+          out.println("    </form>");
+          out.println("  </div>");
+          out.println("</section>");
         }
-        out.println("<h2>Load Test Cases</h2>");
-        out.println("<form action=\"SetupServlet\" method=\"POST\">");
-        out.println("<table border=\"0\">");
-        out.println("  <tr>");
-        out.println("    <td valign=\"top\">Script</td>");
-        out.println(
-            "    <td><textarea name=\"testScript\" cols=\"60\" rows=\"7\" wrap=\"off\"></textarea></td>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td colspan=\"2\" align=\"right\">");
-        out.println("      <input type=\"submit\" name=\"action\" value=\"Load Test Cases\">");
-        out.println("      <input type=\"submit\" name=\"action\" value=\"Download Script\">");
-        out.println("      <input type=\"submit\" name=\"action\" value=\"Download HL7 Only\">");
-        out.println("    </td>");
-        out.println("  </tr>");
-        out.println("</form>");
-        out.println("</table>");
 
-        out.println("<h2>Create new Test Case</h2>");
-        out.println(
-            "<p>Create a sample test case based on a specific NIST certification test story. </p>");
-        out.println("<form action=\"CreateTestCaseServlet\">");
-        out.println("<table>");
-        out.println("  <tr>");
-        out.println("    <td>Scenario</td>");
-        out.println("    <td>");
-        out.println("      <select name=\"scenario\">");
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Load Test Cases</h2></div>");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.println("    <form class=\"aira-form\" action=\"SetupServlet\" method=\"POST\">");
+        out.println("      <div class=\"aira-field\">");
+        out.println("        <label for=\"testScript\">Script</label>");
+        out.println("        <textarea class=\"aira-textarea smm-code\" id=\"testScript\""
+            + " name=\"testScript\" rows=\"8\" wrap=\"off\"></textarea>");
+        out.println("      </div>");
+        out.println("      <div class=\"aira-form-actions\">");
+        out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+            + " name=\"action\" value=\"Load Test Cases\">Load Test Cases</button>");
+        out.println("        <button class=\"aira-button aira-button--tertiary\" type=\"submit\""
+            + " name=\"action\" value=\"Download Script\">Download Script</button>");
+        out.println("        <button class=\"aira-button aira-button--tertiary\" type=\"submit\""
+            + " name=\"action\" value=\"Download HL7 Only\">Download HL7 Only</button>");
+        out.println("      </div>");
+        out.println("    </form>");
+        out.println("  </div>");
+        out.println("</section>");
+
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Create a New Test Case</h2></div>");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.println("    <p>Create a sample test case based on a specific NIST certification test"
+            + " story.</p>");
+        out.println("    <form class=\"aira-inline-form\" action=\"CreateTestCaseServlet\">");
+        out.println("      <label class=\"aira-label\" for=\"scenario\">Scenario</label>");
+        out.println("      <select class=\"aira-select smm-select-auto\" id=\"scenario\""
+            + " name=\"scenario\">");
         for (String scenario : ScenarioManager.SCENARIOS) {
-          out.println("        <option value=\"" + scenario + "\">" + scenario + "</option>");
+          out.println("        <option value=\"" + escapeHtml(scenario) + "\">"
+              + escapeHtml(scenario) + "</option>");
         }
         out.println("      </select>");
-        out.println("      <input type=\"submit\" name=\"Start\" value=\"Create\"/>");
-        out.println("    </td>");
-        out.println("  </tr>");
-        out.println("</table>");
-        out.println("</form>");
+        out.println("      <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+            + " name=\"Start\" value=\"Create\">Create</button>");
+        out.println("    </form>");
+        out.println("  </div>");
+        out.println("</section>");
+        out.println("</div>");
         printHtmlFoot(out);
 
       } finally {

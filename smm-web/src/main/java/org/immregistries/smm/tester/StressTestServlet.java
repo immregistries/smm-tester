@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -155,28 +156,6 @@ public class StressTestServlet extends ClientServlet {
     return testCaseMessageList;
   }
 
-  protected static void makeHideScript(PrintWriter out) {
-    out.println("    <script>");
-    out.println("      function toggleLayer(whichLayer) ");
-    out.println("      {");
-    out.println("        var elem, vis;");
-    out.println("        if (document.getElementById) ");
-    out.println("          elem = document.getElementById(whichLayer);");
-    out.println("        else if (document.all) ");
-    out.println("          elem = document.all[whichLayer] ");
-    out.println("        else if (document.layers) ");
-    out.println("          elem = document.layers[whichLayer]");
-    out.println("        vis = elem.style;");
-    out.println(
-        "        if (vis.display == '' && elem.offsetWidth != undefined && elem.offsetHeight != undefined) ");
-    out.println(
-        "          vis.display = (elem.offsetWidth != 0 && elem.offsetHeight != 0) ? 'block' : 'none';");
-    out.println(
-        "        vis.display = (vis.display == '' || vis.display == 'block') ? 'none' : 'block';");
-    out.println("      }");
-    out.println("    </script>");
-  }
-
   protected static void sortTestCaseMessageList(List<TestCaseMessage> testCaseMessageList) {
     Collections.sort(testCaseMessageList, new Comparator<TestCaseMessage>() {
       public int compare(TestCaseMessage o1, TestCaseMessage o2) {
@@ -214,51 +193,71 @@ public class StressTestServlet extends ClientServlet {
     PrintWriter out = response.getWriter();
     try {
       printHtmlHead(out, MENU_HEADER_HOME, request);
+      printPageHeader(out, "Stress Test",
+          "Send a test message to an IIS repeatedly and watch the throughput and results.");
 
       if (problem != null) {
-        out.println("<p>" + problem + "</p>");
+        out.println("<div class=\"aira-alert aira-alert--warning\" role=\"status\"><p>"
+            + escapeHtml(problem) + "</p></div>");
       }
+      out.println("<div class=\"aira-stack\">");
 
       List<StressRunner> stressRunnerList = getStressRunnerList(session);
       if (stressRunnerList.size() > 0) {
-        out.println("<h2>Stress Test Status</h2>");
+        out.println("<section class=\"aira-table-panel\">");
+        out.println("  <div class=\"aira-table-panel__header\"><div>"
+            + "<h2 class=\"aira-table-panel__title\">Stress Test Status</h2></div></div>");
+        out.println("  <div class=\"aira-table-wrap\">");
+        out.println("    <table class=\"aira-table\">");
+        out.println("      <caption class=\"aira-visually-hidden\">Stress test status</caption>");
+        out.println("      <thead><tr><th scope=\"col\" class=\"aira-table__cell--numeric\">Pos</th>"
+            + "<th scope=\"col\">Status</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Sent</th>"
+            + "<th scope=\"col\">Expected Result</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Passed</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Failed</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Exception</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Rate (ms)</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--actions\">"
+            + "<span class=\"aira-visually-hidden\">Actions</span></th></tr></thead>");
+        out.println("      <tbody>");
         int pos = 0;
-        out.println("<table class=\"boxed\">");
-        out.println("  <tr>");
-        out.println("    <th class=\"boxed\">Pos</th>");
-        out.println("    <th class=\"boxed\">Status</th>");
-        out.println("    <th class=\"boxed\">Sent</th>");
-        out.println("    <th class=\"boxed\">Expected Result</th>");
-        out.println("    <th class=\"boxed\">Passed</th>");
-        out.println("    <th class=\"boxed\">Failed</th>");
-        out.println("    <th class=\"boxed\">Exception</th>");
-        out.println("    <th class=\"boxed\">Rate (ms)</th>");
-        out.println("    <th class=\"boxed\">Action</th>");
-        out.println("  </tr>");
         for (StressRunner stressRunner : stressRunnerList) {
-          out.println("<form action=\"StressTestServlet\" method=\"POST\">");
-          out.println("  <tr>");
-          out.println("    <td class=\"boxed\">" + (pos + 1) + "</td>");
-          out.println("    <td class=\"boxed\">" + stressRunner.getStatus() + "</td>");
-          out.println("    <td class=\"boxed\">" + stressRunner.getCount() + "</td>");
-          out.println("    <td class=\"boxed\">" + stressRunner.getTestCaseMessage().getAssertResult() + "</td>");
-          out.println("    <td class=\"boxed\">" + stressRunner.getCountAccepted() + "</td>");
-          out.println("    <td class=\"boxed\">" + stressRunner.getCountErrored() + "</td>");
-          out.println("    <td class=\"boxed\">" + stressRunner.getCountException() + "</td>");
-          out.println("    <td class=\"boxed\">" + ((int) stressRunner.getRate()) + "</td>");
-          out.println(
-              "    <td class=\"boxed\"><input type=\"submit\" value=\"Stop\" name=\"action\"/><input type=\"hidden\" name=\"pos\" value=\""
-                  + pos + "\"><input type=\"submit\" value=\"Refresh\" name=\"action\"/></td>");
-          out.println("  </tr>");
-          out.println("</form>");
+          out.println("        <tr>");
+          out.println("          <td class=\"aira-table__cell--numeric\">" + (pos + 1) + "</td>");
+          out.println("          <td>" + escapeHtml(stressRunner.getStatus()) + "</td>");
+          out.println("          <td class=\"aira-table__cell--numeric\">" + stressRunner.getCount()
+              + "</td>");
+          out.println("          <td>"
+              + escapeHtml(stressRunner.getTestCaseMessage().getAssertResult()) + "</td>");
+          out.println("          <td class=\"aira-table__cell--numeric\">"
+              + stressRunner.getCountAccepted() + "</td>");
+          out.println("          <td class=\"aira-table__cell--numeric\">"
+              + stressRunner.getCountErrored() + "</td>");
+          out.println("          <td class=\"aira-table__cell--numeric\">"
+              + stressRunner.getCountException() + "</td>");
+          out.println("          <td class=\"aira-table__cell--numeric\">"
+              + ((int) stressRunner.getRate()) + "</td>");
+          out.println("          <td class=\"aira-table__cell--actions\">");
+          out.println("            <form class=\"aira-inline-form\" action=\"StressTestServlet\""
+              + " method=\"POST\">");
+          out.println("              <input type=\"hidden\" name=\"pos\" value=\"" + pos + "\">");
+          out.println("              <button class=\"aira-button aira-button--small"
+              + " aira-button--danger\" type=\"submit\" name=\"action\" value=\"Stop\">Stop</button>");
+          out.println("              <button class=\"aira-button aira-button--small"
+              + " aira-button--secondary\" type=\"submit\" name=\"action\" value=\"Refresh\">"
+              + "Refresh</button>");
+          out.println("            </form>");
+          out.println("          </td>");
+          out.println("        </tr>");
           pos++;
         }
-        out.println("</table>");
+        out.println("      </tbody>");
+        out.println("    </table>");
+        out.println("  </div>");
+        out.println("</section>");
       }
 
-      out.println("<h3>Start Stress Test</h3>");
-      out.println("    <form action=\"StressTestServlet\" method=\"POST\">");
-      out.println("      <table border=\"0\">");
       int id = 0;
       if (request.getParameter("id") != null) {
         id = Integer.parseInt(request.getParameter("id"));
@@ -270,36 +269,36 @@ public class StressTestServlet extends ClientServlet {
       if (testCaseMessage == null) {
         testCaseMessage = new TestCaseMessage();
       }
-      out.println("        <tr>");
-      out.println("          <td>Service</td>");
-      out.println("          <td>");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__header\">"
+          + "<h2 class=\"aira-panel__title\">Start Stress Test</h2></div>");
+      out.println("  <div class=\"aira-panel__body\">");
+      out.println("    <form class=\"aira-form\" action=\"StressTestServlet\" method=\"POST\">");
+      out.println("      <div class=\"aira-field\">");
       List<Connector> connectors = ConnectServlet.getConnectors(session);
       if (connectors.size() == 1) {
-        out.println("            " + connectors.get(0).getLabelDisplay());
-        out.println("            <input type=\"hidden\" name=\"id\" value=\"1\"/>");
+        out.println("        <span class=\"aira-label\">Connection</span>");
+        out.println("        <span>" + escapeHtml(connectors.get(0).getLabelDisplay()) + "</span>");
+        out.println("        <input type=\"hidden\" name=\"id\" value=\"1\"/>");
       } else {
-        out.println("            <select name=\"id\">");
-        out.println("              <option value=\"\">select</option>");
+        out.println("        <label for=\"id\">Connection</label>");
+        out.println("        <select class=\"aira-select smm-select-auto\" id=\"id\" name=\"id\">");
+        out.println("          <option value=\"\">select</option>");
         int i = 0;
         for (Connector connector : connectors) {
           i++;
-          if (id == i) {
-            out.println("              <option value=\"" + i + "\" selected=\"true\">"
-                + connector.getLabelDisplay() + "</option>");
-          } else {
-            out.println("              <option value=\"" + i + "\">" + connector.getLabelDisplay()
-                + "</option>");
-          }
+          out.println("          <option value=\"" + i + "\"" + (id == i ? " selected" : "") + ">"
+              + escapeHtml(connector.getLabelDisplay()) + "</option>");
         }
-        out.println("            </select>");
+        out.println("        </select>");
       }
-      out.println("          </td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println("          <td>Test</td>");
-      out.println("          <td><textarea name=\"source\" cols=\"70\" rows=\"10\" wrap=\"off\">"
-          + testCaseMessage.createText() + "</textarea></td>");
-      out.println("        </tr>");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-field\">");
+      out.println("        <label for=\"source\">Test</label>");
+      out.println("        <textarea class=\"aira-textarea smm-code\" id=\"source\" name=\"source\""
+          + " rows=\"10\" wrap=\"off\">" + escapeHtml(testCaseMessage.createText())
+          + "</textarea>");
+      out.println("      </div>");
       String saveDirName = "";
       boolean saveTestMessages = true;
       boolean saveLogs = true;
@@ -310,26 +309,23 @@ public class StressTestServlet extends ClientServlet {
         saveTestMessages = stressRunner.isSaveTestMessages();
         saveLogs = stressRunner.isSaveLogs();
       }
-      out.println("        <tr>");
-      out.println("          <td>Log</td>");
-      out.println("          <td>");
-      out.println("            Directory: <input type=\"text\" name=\"saveDirName\" value=\""
-          + saveDirName + "\"/>");
-      out.println("            <input type=\"checkbox\" name=\"saveTestMessages\" value=\"true\" "
-          + (saveTestMessages ? " checked" : "") + "/> Save Messages ");
-      out.println("            <input type=\"checkbox\" name=\"saveLogs\" value=\"true\" "
-          + (saveLogs ? " checked" : "") + "/> Save Logs ");
-      out.println("          </td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println("          <td colspan=\"2\" align=\"right\">");
-      out.println("            <input type=\"submit\" name=\"action\" value=\"Start\"/>");
-      out.println("          </td>");
-      out.println("        </tr>");
-      out.println("      </table>");
+      out.println("      <fieldset class=\"aira-fieldset\">");
+      out.println("        <legend class=\"aira-legend\">Log</legend>");
+      printTextField(out, "saveDirName", "Directory", saveDirName);
+      out.println("        <label class=\"aira-check\"><input type=\"checkbox\""
+          + " name=\"saveTestMessages\" value=\"true\"" + (saveTestMessages ? " checked" : "")
+          + "/> Save Messages</label>");
+      out.println("        <label class=\"aira-check\"><input type=\"checkbox\" name=\"saveLogs\""
+          + " value=\"true\"" + (saveLogs ? " checked" : "") + "/> Save Logs</label>");
+      out.println("      </fieldset>");
+      out.println("      <div class=\"aira-form-actions\">");
+      out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+          + " name=\"action\" value=\"Start\">Start</button>");
+      out.println("      </div>");
       out.println("    </form>");
+      out.println("  </div>");
+      out.println("</section>");
       if (stressRunnerList.size() > 0) {
-        out.println("<h2>Stress Test Details</h2>");
         Map<String, StressTestServlet.MinuteStat> msm;
         synchronized (minuteStatMap) {
           msm = new HashMap<>(minuteStatMap);
@@ -337,46 +333,59 @@ public class StressTestServlet extends ClientServlet {
         List<String> minuteList = new ArrayList<>();
         minuteList = new ArrayList<>(msm.keySet());
         Collections.sort(minuteList);
-        out.println("<table class=\"boxed\">");
-        out.println("  <tr>");
-        out.println("    <th class=\"boxed\">Minute</th>");
-        out.println("    <th class=\"boxed\">Sent</th>");
-        out.println("    <th class=\"boxed\">Passed</th>");
-        out.println("    <th class=\"boxed\">Failed</th>");
-        out.println("    <th class=\"boxed\">Exception</th>");
-        out.println("    <th class=\"boxed\">Running Average (ms)</th>");
-        out.println("  </tr>");
+        out.println("<section class=\"aira-table-panel\">");
+        out.println("  <div class=\"aira-table-panel__header\"><div>"
+            + "<h2 class=\"aira-table-panel__title\">Stress Test Details</h2></div></div>");
+        out.println("  <div class=\"aira-table-wrap\">");
+        out.println("    <table class=\"aira-table\">");
+        out.println("      <caption class=\"aira-visually-hidden\">Messages by minute</caption>");
+        out.println("      <thead><tr><th scope=\"col\">Minute</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Sent</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Passed</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Failed</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Exception</th>"
+            + "<th scope=\"col\" class=\"aira-table__cell--numeric\">Running Average (ms)</th>"
+            + "</tr></thead>");
+        out.println("      <tbody>");
         for (String key : minuteList) {
           MinuteStat minuteStat = msm.get(key);
-          out.println("  <tr>");
-          out.println("    <td class=\"boxed\">" + key + "</td>");
-          out.println("    <td class=\"boxed\">" + minuteStat.messageCount + "</td>");
-          out.println("    <td class=\"boxed\">" + minuteStat.messagePassed + "</td>");
-          out.println("    <td class=\"boxed\">" + minuteStat.messageNotPassed + "</td>");
-          out.println("    <td class=\"boxed\">" + minuteStat.messageException + "</td>");
+          out.println("        <tr>");
+          out.println("          <td class=\"aira-table__cell--date\">" + escapeHtml(key) + "</td>");
+          out.println("          <td class=\"aira-table__cell--numeric\">" + minuteStat.messageCount
+              + "</td>");
+          out.println("          <td class=\"aira-table__cell--numeric\">"
+              + minuteStat.messagePassed + "</td>");
+          out.println("          <td class=\"aira-table__cell--numeric\">"
+              + minuteStat.messageNotPassed + "</td>");
+          out.println("          <td class=\"aira-table__cell--numeric\">"
+              + minuteStat.messageException + "</td>");
           if ((minuteStat.messagePassed + minuteStat.messageNotPassed) == 0) {
-            out.println("    <td class=\"boxed\">-</td>");
+            out.println("          <td class=\"aira-table__cell--numeric\">-</td>");
           } else {
-            out.println("    <td class=\"boxed\">" + (minuteStat.elapsedTime
+            out.println("          <td class=\"aira-table__cell--numeric\">" + (minuteStat.elapsedTime
                 / (minuteStat.messagePassed + minuteStat.messageNotPassed)) + "</td>");
           }
-          out.println("  </tr>");
+          out.println("        </tr>");
         }
-        out.println("</table>");
+        out.println("      </tbody>");
+        out.println("    </table>");
+        out.println("  </div>");
+        out.println("</section>");
         int pos = 0;
         for (StressRunner stressRunner : stressRunnerList) {
-          out.println("<h3>Tester " + (pos + 1) + "</h3>");
-          out.println("<p>Last returned acknowledgement:</p>");
-          out.println("<pre>");
-          out.println(stressRunner.getLastResult());
-          out.println("</pre>");
-          out.println("<p>Log:</p>");
-          out.println("<pre>");
-          out.println(stressRunner.getLog());
-          out.println("</pre>");
+          out.println("<details class=\"smm-disclosure\">");
+          out.println("  <summary>Tester " + (pos + 1) + "</summary>");
+          out.println("  <span class=\"aira-label\">Last returned acknowledgement</span>");
+          out.println("  <pre class=\"smm-hl7\">" + escapeHtml(stressRunner.getLastResult())
+              + "</pre>");
+          out.println("  <span class=\"aira-label\">Log</span>");
+          out.println("  <pre class=\"smm-hl7 smm-scroll-tall\">"
+              + escapeHtml(String.valueOf(stressRunner.getLog())) + "</pre>");
+          out.println("</details>");
           pos++;
         }
       }
+      out.println("</div>");
       printHtmlFoot(out);
     } finally {
       out.close();

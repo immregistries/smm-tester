@@ -52,9 +52,14 @@ public class CatchServlet extends ClientServlet {
     PrintWriter out = resp.getWriter();
     try {
       printHtmlHead(out, MENU_HEADER_HOME, req);
-      out.println("<form action=\"CatchServlet\" method=\"POST\">");
-      out.println("  <input type=\"text\" name=\"name\" value=\"\"/>");
-      out.println("  <input type=\"submit\" name=\"submit\" value=\"Submit\"/>");
+      printPageHeader(out, "Catch Requests",
+          "Logs each request it receives to the server log, for checking what a client sends.");
+      out.println("<form class=\"aira-inline-form\" action=\"CatchServlet\" method=\"POST\">");
+      out.println("  <label class=\"aira-label\" for=\"name\">Name</label>");
+      out.println("  <input class=\"aira-input smm-select-auto\" type=\"text\" id=\"name\""
+          + " name=\"name\" value=\"\"/>");
+      out.println("  <button class=\"aira-button aira-button--primary\" type=\"submit\""
+          + " name=\"submit\" value=\"Submit\">Submit</button>");
       out.println("</form>");
       printHtmlFoot(out);
     } finally {

@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -36,7 +37,25 @@ import jakarta.servlet.http.HttpSession;
  */
 public class CreateTestCaseServlet extends ClientServlet {
   private static final long serialVersionUID = 1L;
-  
+
+  private static final Object[][] PATIENT_TYPE_OPTIONS = {{PatientType.ANY_CHILD, "Any Child"},
+      {PatientType.ADULT, "Adult"}, {PatientType.BABY, "Baby"}, {PatientType.TODDLER, "Toddler"},
+      {PatientType.TWEEN, "Tween"}, {PatientType.TWO_MONTHS_OLD, "2 Months"},
+      {PatientType.TWO_YEARS_OLD, "2 Years"}, {PatientType.FOUR_YEARS_OLD, "4 Years"},
+      {PatientType.TWELVE_YEARS_OLD, "12 Years"}};
+
+  /** Quick transform check boxes, one row each: a row label (or null), then value/label pairs. */
+  private static final String[][][] QUICK_TRANSFORM_ROWS = {
+      {{null}, {"2.5.1", "2.5.1"}, {"2.3.1", "2.3.1"}},
+      {{null}, {"BOY", "Boy"}, {"GIRL", "Girl"}, {"BOY_OR_GIRL", "Either"}},
+      {{null}, {"DOB", "Date of Birth"}, {"TWIN_POSSIBLE", "Twin Possible"}},
+      {{null}, {"ADDRESS", "Address"}, {"PHONE", "Phone"}},
+      {{null}, {"MOTHER", "Mother"}, {"FATHER", "Father"}},
+      {{null}, {"RACE", "Race"}, {"ETHNICITY", "Ethnicity"}},
+      {{"Vacc #1"}, {"VAC1_ADMIN", "Admin"}, {"VAC1_HIST", "Hist"}},
+      {{"Vacc #2"}, {"VAC2_ADMIN", "Admin"}, {"VAC2_HIST", "Hist"}},
+      {{"Vacc #3"}, {"VAC3_ADMIN", "Admin"}, {"VAC3_HIST", "Hist"}}};
+
   public static final String IIS_TEST_REPORT_FILENAME_PREFIX =
       QueryRunner.IIS_TEST_REPORT_FILENAME_PREFIX;
 
@@ -271,194 +290,127 @@ public class CreateTestCaseServlet extends ClientServlet {
 
       try {
         printHtmlHead(out, MENU_HEADER_EDIT, request);
-        out.println("    <form action=\"CreateTestCaseServlet\" method=\"POST\">");
-        out.println("      <table>");
-        out.println("        <tr>");
-        out.println("          <td valign=\"top\">Test Case Num</td>");
-        out.println("          <td><input type=\"text\" name=\"testCaseNumber\" value=\""
-            + testCaseMessage.getTestCaseNumber()
-            + "\" size=\"15\"> Test Set <input type=\"text\" name=\"testCaseSet\" value=\""
-            + testCaseMessage.getTestCaseSet() + "\" size=\"20\">");
-        out.println("                  <input type=\"checkbox\" name=\"global\" value=\"true\""
-            + (testCaseMessage.isGlobal() ? " checked" : "") + "> Global</td>");
-        out.println(
-            "          <input type=\"hidden\" name=\"runTimes\" value=\"" + runTimes + "\"></td>");
-        out.println("          <input type=\"hidden\" name=\"testCasePos\" value=\"" + testCasePos
-            + "\"></td>");
-        out.println("          <td align=\"right\">");
-        makeButtons(selectedTestCaseMessageList, out, testCasePos);
-        out.println("          </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td valign=\"top\">Description</td>");
-        out.println("          <td colspan=\"2\"><input type=\"text\" name=\"description\" value=\""
-            + testCaseMessage.getDescription() + "\" size=\"70\"></td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td valign=\"top\">Assert Result</td>");
-        out.println("          <td colspan=\"2\">");
-        out.println("            <select name=\"assertResult\">");
-        out.println("              <option value=\"\">select</option>");
-        out.println("              <option value=\"Accept\""
-            + (testCaseMessage.getAssertResult().equals("Accept") ? " selected=\"true\"" : "")
-            + ">Accept</option>");
-        out.println("              <option value=\"Accept and Warn\""
-            + (testCaseMessage.getAssertResult().equals("Accept and Warn") ? " selected=\"true\""
-                : "")
-            + ">Accept and Warn</option>");
-        out.println("              <option value=\"Reject\""
-            + (testCaseMessage.getAssertResult().equals("Reject") ? " selected=\"true\"" : "")
-            + ">Reject</option>");
-
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MATCH);
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MATCH_Z32);
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MATCH_Z42);
-        printQueryOption(out, testCaseMessage, RecordServletInterface.VALUE_RESULT_QUERY_TYPE_LIST);
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_NOT_FOUND);
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_NOT_FOUND_Z33);
-        printQueryOption(out, testCaseMessage,
-                RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR_Z33);
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR_Z33_QUERY_REJECTED);
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_TOO_MANY);
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR);
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MULTIPLE_Z31_Z33);
-        printQueryOption(out, testCaseMessage,
-            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_NOT_FOUND_OR_TOO_MANY);
-
-        out.println("            </select>");
-        out.println("          </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td valign=\"top\">Message Type</td>");
-        out.println("          <td colspan=\"2\">");
-        out.println("            <select name=\"messageType\">");
-        out.println("              <option value=\"\">select</option>");
-        out.println("              <option value=\"VXU\""
-            + (testCaseMessage.getTestType().equals("VXU") ? " selected=\"true\"" : "")
-            + ">VXU</option>");
-        out.println("              <option value=\"QBP\""
-            + (testCaseMessage.getTestType().equals("QBP") ? " selected=\"true\"" : "")
-            + ">QBP</option>");
-        out.println("            </select>");
-        out.println("          </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td valign=\"top\">Derived From</td>");
-        out.println(
-            "          <td colspan=\"2\"><input type=\"text\" name=\"derivedFromTestCaseNumber\" value=\""
-                + testCaseMessage.getDerivedFromTestCaseNumber() + "\" size=\"15\"></td>");
-        out.println("        </tr>");
-        if (!testCaseMessage.getActualResultAckType().equals("")) {
-          out.println("        <tr>");
-          out.println("          <td>Actual Result</td>");
-          out.println(
-              "          <td colspan=\"2\">" + testCaseMessage.getActualResultAckType() + "</td>");
-          out.println("        </tr>");
+        String position = "";
+        if (selectedTestCaseMessageList != null && selectedTestCaseMessageList.size() > 1) {
+          position = " <span class=\"aira-badge aira-badge--subtle\">" + (testCasePos + 1) + " of "
+              + selectedTestCaseMessageList.size() + "</span>";
         }
-        out.println("        <tr>");
-        out.println("          <td valign=\"top\">Start Message</td>");
+        printPageHeader(out, "Edit Test Case" + position,
+            "Build a test message from a start message and transforms. Click Update to apply"
+                + " changes and see the resulting test case.");
+        out.println("<form class=\"aira-stack\" action=\"CreateTestCaseServlet\" method=\"POST\">");
+        out.println("  <input type=\"hidden\" name=\"runTimes\" value=\"" + runTimes + "\">");
+        out.println("  <input type=\"hidden\" name=\"testCasePos\" value=\"" + testCasePos + "\">");
+        makeButtons(selectedTestCaseMessageList, out, testCasePos);
+
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Test Case</h2></div>");
+        out.println("  <div class=\"aira-panel__body aira-form\">");
+        out.println("      <div class=\"aira-field-row\">");
+        printTextField(out, "testCaseNumber", "Test Case Number",
+            testCaseMessage.getTestCaseNumber());
+        printTextField(out, "testCaseSet", "Test Set", testCaseMessage.getTestCaseSet());
+        out.println("        <div class=\"aira-field smm-field-end\">");
+        out.println("          <label class=\"aira-check\"><input type=\"checkbox\" name=\"global\""
+            + " value=\"true\"" + (testCaseMessage.isGlobal() ? " checked" : "")
+            + "> Global</label>");
+        out.println("        </div>");
+        out.println("      </div>");
+        printTextField(out, "description", "Description", testCaseMessage.getDescription());
+        out.println("      <div class=\"aira-field-row\">");
+        out.println("        <div class=\"aira-field\">");
+        out.println("          <label for=\"assertResult\">Assert Result</label>");
+        out.println("          <select class=\"aira-select\" id=\"assertResult\" name=\"assertResult\">");
+        out.println("            <option value=\"\">select</option>");
+        for (String assertResult : new String[] {"Accept", "Accept and Warn", "Reject"}) {
+          out.println("            <option value=\"" + assertResult + "\""
+              + (testCaseMessage.getAssertResult().equals(assertResult) ? " selected" : "") + ">"
+              + assertResult + "</option>");
+        }
+        for (String queryField : new String[] {RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MATCH,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MATCH_Z32,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MATCH_Z42,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_LIST,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_NOT_FOUND,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_NOT_FOUND_Z33,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR_Z33,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR_Z33_QUERY_REJECTED,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_TOO_MANY,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_ERROR,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_MULTIPLE_Z31_Z33,
+            RecordServletInterface.VALUE_RESULT_QUERY_TYPE_NOT_FOUND_OR_TOO_MANY}) {
+          printQueryOption(out, testCaseMessage, queryField);
+        }
+        out.println("          </select>");
+        out.println("        </div>");
+        out.println("        <div class=\"aira-field\">");
+        out.println("          <label for=\"messageType\">Message Type</label>");
+        out.println("          <select class=\"aira-select\" id=\"messageType\" name=\"messageType\">");
+        out.println("            <option value=\"\">select</option>");
+        for (String messageType : new String[] {"VXU", "QBP"}) {
+          out.println("            <option value=\"" + messageType + "\""
+              + (testCaseMessage.getTestType().equals(messageType) ? " selected" : "") + ">"
+              + messageType + "</option>");
+        }
+        out.println("          </select>");
+        out.println("        </div>");
+        printTextField(out, "derivedFromTestCaseNumber", "Derived From",
+            testCaseMessage.getDerivedFromTestCaseNumber());
+        out.println("      </div>");
+        if (!testCaseMessage.getActualResultAckType().equals("")) {
+          out.println("      <dl class=\"smm-details\"><dt>Actual Result</dt><dd>"
+              + escapeHtml(testCaseMessage.getActualResultAckType()) + "</dd></dl>");
+        }
+        out.println("      <div class=\"aira-field\">");
+        out.println("        <label for=\"base\">Start Message</label>");
+        out.println("        <textarea class=\"aira-textarea smm-code\" id=\"base\" name=\"base\""
+            + " rows=\"7\" wrap=\"off\">" + escapeHtml(testCaseMessage.getOriginalMessage())
+            + "</textarea>");
+        out.println("      </div>");
+        out.println("  </div>");
+        out.println("</section>");
+
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Transforms</h2></div>");
+        out.println("  <div class=\"aira-panel__body aira-grid\">");
+        out.println("    <div class=\"aira-stack aira-stack--compact\">");
+        out.println("      <fieldset class=\"aira-fieldset\">");
+        out.println("        <legend class=\"aira-legend\">Patient Type</legend>");
+        out.println("        <div class=\"smm-choice-grid\">");
+        for (Object[] patientType : PATIENT_TYPE_OPTIONS) {
+          out.println("          <label class=\"aira-radio\"><input type=\"radio\""
+              + " name=\"patientType\" value=\"" + patientType[0] + "\""
+              + isChecked((PatientType) patientType[0], testCaseMessage.getPatientType()) + "/> "
+              + patientType[1] + "</label>");
+        }
+        out.println("        </div>");
+        out.println("      </fieldset>");
+        out.println("      <fieldset class=\"aira-fieldset\">");
+        out.println("        <legend class=\"aira-legend\">Quick Transforms</legend>");
         out.println(
-            "          <td colspan=\"2\"><textarea name=\"base\" cols=\"70\" rows=\"7\" wrap=\"off\">"
-                + testCaseMessage.getOriginalMessage() + "</textarea></td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td valign=\"top\">Transform</td>");
-        out.println("          <td colspan=\"2\" align=\"left\" valign=\"top\">");
-        out.println("            <table>");
-        out.println("              <tr>");
-        out.println("                <td>");
-        out.println("                  <div class=\"smallTitle\">Patient Type</div>");
-        out.println("                  <input type=\"radio\" name=\"patientType\" value=\""
-            + PatientType.ANY_CHILD + "\""
-            + isChecked(PatientType.ANY_CHILD, testCaseMessage.getPatientType()) + "/> Any Child ");
-        out.println("                  <input type=\"radio\" name=\"patientType\" value=\""
-            + PatientType.ADULT + "\""
-            + isChecked(PatientType.ADULT, testCaseMessage.getPatientType()) + "/> Adult <br/>");
-        out.println("                  <input type=\"radio\" name=\"patientType\" value=\""
-            + PatientType.BABY + "\""
-            + isChecked(PatientType.BABY, testCaseMessage.getPatientType()) + "/> Baby ");
-        out.println("                  <input type=\"radio\" name=\"patientType\" value=\""
-            + PatientType.TODDLER + "\""
-            + isChecked(PatientType.TODDLER, testCaseMessage.getPatientType()) + "/> Toddler");
-        out.println("                  <input type=\"radio\" name=\"patientType\" value=\""
-            + PatientType.TWEEN + "\""
-            + isChecked(PatientType.TWEEN, testCaseMessage.getPatientType()) + "/> Tween <br/>");
-        out.println("                  <input type=\"radio\" name=\"patientType\" value=\""
-            + PatientType.TWO_MONTHS_OLD + "\""
-            + isChecked(PatientType.TWO_MONTHS_OLD, testCaseMessage.getPatientType())
-            + "/> 2 Months ");
-        out.println("                  <input type=\"radio\" name=\"patientType\" value=\""
-            + PatientType.TWO_YEARS_OLD + "\""
-            + isChecked(PatientType.TWO_YEARS_OLD, testCaseMessage.getPatientType())
-            + "/> 2 Years <br/>");
-        out.println("                  <input type=\"radio\" name=\"patientType\" value=\""
-            + PatientType.FOUR_YEARS_OLD + "\""
-            + isChecked(PatientType.FOUR_YEARS_OLD, testCaseMessage.getPatientType())
-            + "/> 4 Years ");
-        out.println("                  <input type=\"radio\" name=\"patientType\" value=\""
-            + PatientType.TWELVE_YEARS_OLD + "\""
-            + isChecked(PatientType.TWELVE_YEARS_OLD, testCaseMessage.getPatientType())
-            + "/> 12 Years <br/>");
-        out.println("                  <div class=\"smallTitle\">Quick Transforms</div>");
-        out.println(
-            "                  <input type=\"hidden\" name=\"settingQuickTransformations\" value=\"true\">");
-        out.println("                  <input type=\"checkbox\" name=\"extra\" value=\"2.5.1\""
-            + isChecked("2.5.1", testCaseMessage.getQuickTransformations())
-            + "> 2.5.1 <input type=\"checkbox\" name=\"extra\" value=\"2.3.1\""
-            + isChecked("2.3.1", testCaseMessage.getQuickTransformations()) + "> 2.3.1<br>");
-        out.println("                  <input type=\"checkbox\" name=\"extra\" value=\"BOY\""
-            + isChecked("BOY", testCaseMessage.getQuickTransformations())
-            + "> Boy <input type=\"checkbox\" name=\"extra\" value=\"GIRL\""
-            + isChecked("GIRL", testCaseMessage.getQuickTransformations())
-            + "> Girl <input type=\"checkbox\" name=\"extra\" value=\"BOY_OR_GIRL\""
-            + isChecked("BOY_OR_GIRL", testCaseMessage.getQuickTransformations()) + "> Either<br>");
-        out.println("                  <input type=\"checkbox\" name=\"extra\" value=\"DOB\""
-            + isChecked("DOB", testCaseMessage.getQuickTransformations())
-            + "> Date of Birth <input type=\"checkbox\" name=\"extra\" value=\"TWIN_POSSIBLE\""
-            + isChecked("TWIN_POSSIBLE", testCaseMessage.getQuickTransformations())
-            + "> Twin Possible<br>");
-        out.println("                  <input type=\"checkbox\" name=\"extra\" value=\"ADDRESS\""
-            + isChecked("ADDRESS", testCaseMessage.getQuickTransformations())
-            + "> Address <input type=\"checkbox\" name=\"extra\" value=\"PHONE\""
-            + isChecked("PHONE", testCaseMessage.getQuickTransformations()) + "> Phone<br>");
-        out.println("                  <input type=\"checkbox\" name=\"extra\" value=\"MOTHER\""
-            + isChecked("MOTHER", testCaseMessage.getQuickTransformations())
-            + "> Mother <input type=\"checkbox\" name=\"extra\" value=\"FATHER\""
-            + isChecked("FATHER", testCaseMessage.getQuickTransformations()) + "> Father<br>");
-        out.println("                  <input type=\"checkbox\" name=\"extra\" value=\"RACE\""
-            + isChecked("RACE", testCaseMessage.getQuickTransformations())
-            + "> Race <input type=\"checkbox\" name=\"extra\" value=\"ETHNICITY\""
-            + isChecked("ETHNICITY", testCaseMessage.getQuickTransformations())
-            + "> Ethnicity<br>");
-        out.println(
-            "                  Vacc #1 <input type=\"checkbox\" name=\"extra\" value=\"VAC1_ADMIN\""
-                + isChecked("VAC1_ADMIN", testCaseMessage.getQuickTransformations())
-                + "> Admin <input type=\"checkbox\" name=\"extra\" value=\"VAC1_HIST\""
-                + isChecked("VAC1_HIST", testCaseMessage.getQuickTransformations()) + "> Hist<br>");
-        out.println(
-            "                  Vacc #2 <input type=\"checkbox\" name=\"extra\" value=\"VAC2_ADMIN\""
-                + isChecked("VAC2_ADMIN", testCaseMessage.getQuickTransformations())
-                + "> Admin <input type=\"checkbox\" name=\"extra\" value=\"VAC2_HIST\""
-                + isChecked("VAC2_HIST", testCaseMessage.getQuickTransformations()) + "> Hist<br>");
-        out.println(
-            "                  Vacc #3 <input type=\"checkbox\" name=\"extra\" value=\"VAC3_ADMIN\""
-                + isChecked("VAC3_ADMIN", testCaseMessage.getQuickTransformations())
-                + "> Admin <input type=\"checkbox\" name=\"extra\" value=\"VAC3_HIST\""
-                + isChecked("VAC3_HIST", testCaseMessage.getQuickTransformations()) + "> Hist");
+            "        <input type=\"hidden\" name=\"settingQuickTransformations\" value=\"true\">");
+        for (String[][] row : QUICK_TRANSFORM_ROWS) {
+          out.println("        <div class=\"aira-cluster\">");
+          if (row[0][0] != null) {
+            out.println("          <span class=\"aira-label\">" + row[0][0] + "</span>");
+          }
+          for (int i = 1; i < row.length; i++) {
+            out.println("          <label class=\"aira-check\"><input type=\"checkbox\""
+                + " name=\"extra\" value=\"" + row[i][0] + "\""
+                + isChecked(row[i][0], testCaseMessage.getQuickTransformations()) + "> "
+                + row[i][1] + "</label>");
+          }
+          out.println("        </div>");
+        }
+        out.println("      </fieldset>");
         if (connectors.size() == 1) {
           if (!connectors.get(0).getCustomTransformations().equals("")) {
-            out.println("                  <div class=\"smallTitle\">Exclude Transforms</div>");
+            out.println("      <fieldset class=\"aira-fieldset\">");
+            out.println("        <legend class=\"aira-legend\">Exclude Transforms</legend>");
             out.println(
-                "            <input type=\"hidden\" name=\"excludeTransform\" value=\"true\"/>");
+                "        <input type=\"hidden\" name=\"excludeTransform\" value=\"true\"/>");
             try {
               BufferedReader ctIn = new BufferedReader(
                   new StringReader(connectors.get(0).getCustomTransformations()));
@@ -478,58 +430,49 @@ public class CreateTestCaseServlet extends ClientServlet {
                     }
                   }
                 }
-                out.println("            <input type=\"checkbox\" name=\"excludeTransform" + i
-                    + "\" value=\"true\"" + (selected ? " checked=\"true\"" : "") + "/>" + line
-                    + "<br/>");
+                out.println("        <label class=\"aira-check\"><input type=\"checkbox\""
+                    + " name=\"excludeTransform" + i + "\" value=\"true\""
+                    + (selected ? " checked" : "") + "/> <code>" + escapeHtml(line)
+                    + "</code></label>");
               }
             } catch (IOException ioe) {
               // ignore
             }
+            out.println("      </fieldset>");
           }
         }
-        out.println("                </td>");
-        out.println("                <td valign=\"top\">");
-        out.println("                  <div class=\"smallTitle\">Quick Transforms Applied</div> ");
-        out.println(
-            "                  <pre style=\"text-align: left; height: 170px; width: 250px;overflow:auto;\">"
-                + testCaseMessage.getQuickTransformationsConverted() + "</pre><br/>");
-        out.println("                  <div class=\"smallTitle\">Custom Transforms</div>");
-        out.println(
-            "                  <textarea name=\"customTransforms\" cols=\"30\" rows=\"4\" wrap=\"off\">"
-                + testCaseMessage.getCustomTransformations() + "</textarea><br/>");
-        out.println("                  <div class=\"smallTitle\">Additional Transforms</div>");
-        out.println(
-            "                  <textarea name=\"additionalTransforms\" cols=\"30\" rows=\"4\" wrap=\"off\">"
-                + testCaseMessage.getAdditionalTransformations() + "</textarea>");
-        out.println("                </td>");
-        out.println("              </tr>");
-        out.println("            </table>");
-        out.println("          </td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td valign=\"top\">Test Case</td>");
-        out.println(
-            "          <td colspan=\"2\"><pre style=\"text-align: left; height: 250px; width: 520px;overflow:auto;\">"
-                + testCaseMessage.createText(true) + "</pre></td>");
-        out.println("        </tr>");
-        out.println("        <tr>");
-        out.println("          <td colspan=\"3\" align=\"right\">");
-        if (selectedTestCaseMessageList != null) {
-          out.println("            <input type=\"hidden\" name=\"testCasePos\" value=\""
-              + testCasePos + "\"/>");
-          if (testCasePos > 0) {
-            out.println("            <input type=\"submit\" name=\"action\" value=\"Prev\"/>");
-          }
-          out.println("            <input type=\"submit\" name=\"action\" value=\"Update\"/>");
-          if ((testCasePos + 1) < selectedTestCaseMessageList.size()) {
-            out.println("            <input type=\"submit\" name=\"action\" value=\"Next\"/>");
-          }
-        } else {
-          out.println("            <input type=\"submit\" name=\"action\" value=\"Update\"/>");
-        }
-        out.println("          </td>");
-        out.println("        </tr>");
-        out.println("      </table>");
+        out.println("    </div>");
+        out.println("    <div class=\"aira-stack aira-stack--compact\">");
+        out.println("      <div class=\"aira-field\">");
+        out.println("        <span class=\"aira-label\">Quick Transforms Applied</span>");
+        out.println("        <pre class=\"smm-hl7 smm-scroll-short\">"
+            + escapeHtml(testCaseMessage.getQuickTransformationsConverted()) + "</pre>");
+        out.println("      </div>");
+        out.println("      <div class=\"aira-field\">");
+        out.println("        <label for=\"customTransforms\">Custom Transforms</label>");
+        out.println("        <textarea class=\"aira-textarea smm-code\" id=\"customTransforms\""
+            + " name=\"customTransforms\" rows=\"4\" wrap=\"off\">"
+            + escapeHtml(testCaseMessage.getCustomTransformations()) + "</textarea>");
+        out.println("      </div>");
+        out.println("      <div class=\"aira-field\">");
+        out.println("        <label for=\"additionalTransforms\">Additional Transforms</label>");
+        out.println("        <textarea class=\"aira-textarea smm-code\" id=\"additionalTransforms\""
+            + " name=\"additionalTransforms\" rows=\"4\" wrap=\"off\">"
+            + escapeHtml(testCaseMessage.getAdditionalTransformations()) + "</textarea>");
+        out.println("      </div>");
+        out.println("    </div>");
+        out.println("  </div>");
+        out.println("</section>");
+
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Generated Test Case</h2></div>");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.println("    <pre class=\"smm-hl7 smm-scroll-tall\">"
+            + escapeHtml(testCaseMessage.createText(true)) + "</pre>");
+        out.println("  </div>");
+        out.println("</section>");
+        makeButtons(selectedTestCaseMessageList, out, testCasePos);
         session.setAttribute("testCaseMessage", testCaseMessage);
         if (!testCaseMessage.getTestCaseNumber().equals("")) {
           if (testCaseMessage.isGlobal()) {
@@ -540,9 +483,9 @@ public class CreateTestCaseServlet extends ClientServlet {
                 .put(testCaseMessage.getTestCaseNumber(), testCaseMessage);
           }
         }
-        out.println("    </form>");
-        out.println("  <div class=\"help\">");
-        out.println("  <h2>How To Use This Page</h2>");
+        out.println("</form>");
+        out.println("<details class=\"smm-disclosure aira-prose\">");
+        out.println("  <summary>How to use this page</summary>");
         out.println("  <p>This page is built to help you quickly create a valid test message. "
             + "The result of this process is an HL7 message that can be tested plus the headers "
             + "that the Data Quality Test tool uses to make a pretty test case report. Here are "
@@ -644,12 +587,10 @@ public class CreateTestCaseServlet extends ClientServlet {
         out.println(
             "     <li><b>Test Case</b> After hitting the submit button a test case will be generated. This can be copied and then pasted in the data quality tester to verify the test and the immunization registry. </li>");
         out.println("   </ol>");
-        out.println("  </div>");
+        out.println("</details>");
         ClientServlet.printHtmlFoot(out);
       } catch (Exception e) {
-        out.println("<p>Exception Occurred: " + e.getMessage() + "</p><pre>");
-        e.printStackTrace(out);
-        out.println("</pre>");
+        printException(out, e);
       } finally {
         out.close();
       }
@@ -658,26 +599,25 @@ public class CreateTestCaseServlet extends ClientServlet {
 
   private void printQueryOption(PrintWriter out, TestCaseMessage testCaseMessage,
       String queryField) {
-    out.println("              <option value=\"" + queryField + "\""
-        + (testCaseMessage.getAssertResult().equals(queryField) ? " selected=\"true\"" : "")
-        + ">Query " + queryField + "</option>");
+    out.println("            <option value=\"" + escapeHtml(queryField) + "\""
+        + (testCaseMessage.getAssertResult().equals(queryField) ? " selected" : "") + ">Query "
+        + escapeHtml(queryField) + "</option>");
   }
 
   protected void makeButtons(List<TestCaseMessage> selectedTestCaseMessageList, PrintWriter out,
       int testCasePos) {
-    if (selectedTestCaseMessageList != null) {
+    out.println("  <div class=\"aira-form-actions\">");
+    out.println("    <button class=\"aira-button aira-button--primary\" type=\"submit\""
+        + " name=\"action\" value=\"Update\">Update</button>");
+    if (selectedTestCaseMessageList != null && selectedTestCaseMessageList.size() > 1) {
       boolean showPrev = testCasePos > 0;
       boolean showNext = (testCasePos + 1) < selectedTestCaseMessageList.size();
-      out.println("            <input type=\"hidden\" name=\"testCasePos\" value=\"" + testCasePos
-          + "\"/>");
-      out.println("            <input type=\"submit\" name=\"action\" value=\"Prev\""
-          + (showPrev ? "" : "disabled=\"disabled\"") + "/>");
-      out.println("            <input type=\"submit\" name=\"action\" value=\"Update\"/>");
-      out.println("            <input type=\"submit\" name=\"action\" value=\"Next\""
-          + (showNext ? "" : "disabled=\"disabled\"") + "/>");
-    } else {
-      out.println("            <input type=\"submit\" name=\"action\" value=\"Update\"/>");
+      out.println("    <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+          + " name=\"action\" value=\"Prev\"" + (showPrev ? "" : " disabled") + ">Prev</button>");
+      out.println("    <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+          + " name=\"action\" value=\"Next\"" + (showNext ? "" : " disabled") + ">Next</button>");
     }
+    out.println("  </div>");
   }
 
   // <editor-fold defaultstate="collapsed"

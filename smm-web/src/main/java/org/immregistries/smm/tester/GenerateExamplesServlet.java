@@ -41,45 +41,38 @@ public class GenerateExamplesServlet extends ClientServlet {
 
     try {
       printHtmlHead(out, MENU_HEADER_HOME, request);
-      out.println("<h2>Message Modifier Demo</h2>");
-      out.println("    <form action=\"GenerateExamplesServlet\" method=\"POST\">");
-      out.println("      <table>");
-      out.println("        <tr>");
-      out.println("          <td>Starting Message</td>");
-      out.println("          <td><textarea name=\"" + PARAM_MESSAGE
-          + "\" cols=\"120\" rows=\"15\" wrap=\"off\"></textarea></td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println("          <td>Vary Date of Birth</td>");
-      out.println("          <td>");
-      out.println("            From ");
-      out.println("            <input type=\"text\" name=\"" + PARAM_DOB_START
-          + "\" value=\"\" size=\"8\"/> to ");
-      out.println("            <input type=\"text\" name=\"" + PARAM_DOB_END
-          + "\" value=\"\" size=\"8\"/>");
-      out.println("          </td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println("          <td>Script</td>");
-      out.println("          <td><textarea name=\"" + PARAM_SCRIPT
-          + "\" cols=\"120\" rows=\"15\" wrap=\"off\"></textarea></td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println("          <td>Repeat Count</td>");
-      out.println("          <td>");
-      out.println(
-          "            <input type=\"text\" name=\"" + PARAM_COUNT + "\" value=\"1\" size=\"3\"/>");
-      out.println("          </td>");
-      out.println("        </tr>");
-      out.println("      </table>");
-      out.println("      <input type=\"submit\" name=\"action\" value=\"Generate\"/>");
+      printPageHeader(out, "Generate Examples",
+          "Apply a modification script to a starting message, as many times as needed, and"
+              + " download the results as a text file.");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__body\">");
+      out.println("    <form class=\"aira-form\" action=\"GenerateExamplesServlet\" method=\"POST\">");
+      out.println("      <div class=\"aira-field\">");
+      out.println("        <label for=\"" + PARAM_MESSAGE + "\">Starting Message</label>");
+      out.println("        <textarea class=\"aira-textarea smm-code\" id=\"" + PARAM_MESSAGE
+          + "\" name=\"" + PARAM_MESSAGE + "\" rows=\"12\" wrap=\"off\"></textarea>");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-field-row\">");
+      printTextField(out, PARAM_DOB_START, "Vary Date of Birth From", "");
+      printTextField(out, PARAM_DOB_END, "Vary Date of Birth To", "");
+      printTextField(out, PARAM_COUNT, "Repeat Count", "1");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-field\">");
+      out.println("        <label for=\"" + PARAM_SCRIPT + "\">Script</label>");
+      out.println("        <textarea class=\"aira-textarea smm-code\" id=\"" + PARAM_SCRIPT
+          + "\" name=\"" + PARAM_SCRIPT + "\" rows=\"10\" wrap=\"off\"></textarea>");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-form-actions\">");
+      out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+          + " name=\"action\" value=\"Generate\">Generate</button>");
+      out.println("      </div>");
       out.println("    </form>");
+      out.println("  </div>");
+      out.println("</section>");
 
       ClientServlet.printHtmlFoot(out);
     } catch (Exception e) {
-      out.println("<p>Exception Occurred: " + e.getMessage() + "</p><pre>");
-      e.printStackTrace(out);
-      out.println("</pre>");
+      printException(out, e);
     } finally {
       out.close();
     }

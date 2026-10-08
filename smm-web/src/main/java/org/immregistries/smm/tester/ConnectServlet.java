@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -78,89 +79,98 @@ public class ConnectServlet extends ClientServlet {
       PrintWriter out = response.getWriter();
       try {
         printHtmlHead(out, MENU_HEADER_CONNECT, request);
+        printPageHeader(out, "Connect to an IIS",
+            "Set up the connections this session uses to send messages to an IIS.");
+        out.println("<div class=\"aira-stack\">");
         if (user.isAdmin()) {
-          out.println("<h2>Select Account</h2>");
-          out.println("<form action=\"ConnectServlet\" method=\"POST\">");
-          out.println("<table border=\"0\">");
-          out.println("  <tr>");
-          out.println("    <td valign=\"top\">Account</td>");
-          out.println("    <td>");
-          out.println("      <select name=\"sendDataInternalId\" >");
+          out.println("<section class=\"aira-panel\">");
+          out.println("  <div class=\"aira-panel__header\">"
+              + "<h2 class=\"aira-panel__title\">Mover Connection</h2></div>");
+          out.println("  <div class=\"aira-panel__body\">");
+          out.println("    <form class=\"aira-inline-form\" action=\"ConnectServlet\" method=\"POST\">");
+          out.println("      <label class=\"aira-label\" for=\"sendDataInternalId\">Account</label>");
+          out.println("      <select class=\"aira-select smm-select-auto\" id=\"sendDataInternalId\""
+              + " name=\"sendDataInternalId\">");
           boolean selected = !user.hasSendData();
-          out.println("              <option value=\"0\"" + (selected ? " selected=\"true\"" : "")
+          out.println("        <option value=\"0\"" + (selected ? " selected" : "")
               + ">-- none selected --</option>");
           for (SendData sendData : ConnectionManager.getSendDataList()) {
             if (sendData.getConnector() != null) {
               selected = user.hasSendData()
                   && user.getSendData().getInternalId() == sendData.getInternalId();
-              out.println("              <option value=\"" + sendData.getInternalId() + "\""
-                  + (selected ? " selected=\"true\"" : "") + ">"
-                  + sendData.getConnector().getLabel() + "</option>");
+              out.println("        <option value=\"" + sendData.getInternalId() + "\""
+                  + (selected ? " selected" : "") + ">"
+                  + escapeHtml(sendData.getConnector().getLabel()) + "</option>");
             }
           }
           out.println("      </select>");
-          out.println("    </td>");
-          out.println("    <td align=\"right\">");
-          out.println("      <input type=\"submit\" name=\"action\" value=\"Switch\">");
-          out.println("    </td>");
-          out.println("  </tr>");
-          out.println("</table>");
-          out.println("</form>");
+          out.println("      <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+              + " name=\"action\" value=\"Switch\">Switch</button>");
+          out.println("    </form>");
+          out.println("  </div>");
+          out.println("</section>");
         }
 
-        out.println("<h2>Connections</h2>");
         List<Connector> connectors = getConnectors(session);
+        out.println("<section class=\"aira-table-panel\">");
+        out.println("  <div class=\"aira-table-panel__header\"><div>"
+            + "<h2 class=\"aira-table-panel__title\">Connections</h2></div></div>");
+        out.println("  <div class=\"aira-table-wrap\">");
+        out.println("    <table class=\"aira-table\">");
+        out.println("      <caption class=\"aira-visually-hidden\">Connections</caption>");
+        out.println("      <thead><tr><th scope=\"col\">Label</th><th scope=\"col\">Type</th>"
+            + "<th scope=\"col\">URL</th><th scope=\"col\">User Id</th>"
+            + "<th scope=\"col\">Facility Id</th><th scope=\"col\" class=\"aira-table__cell--actions\">"
+            + "<span class=\"aira-visually-hidden\">Actions</span></th></tr></thead>");
+        out.println("      <tbody>");
+        if (connectors.isEmpty()) {
+          out.println("        <tr><td colspan=\"6\" class=\"aira-table__empty\">"
+              + "No connections yet. Add one below or load a connection script.</td></tr>");
+        }
         int id = 0;
         for (Connector connector : connectors) {
           id++;
-          out.println("<form action=\"ConnectServlet\" method=\"POST\">");
-          out.println("<table class=\"boxed\">");
-          out.println("  <tr class=\"boxed\">");
-          out.println("    <th class=\"boxed\">Label</th>");
-          out.println("    <td class=\"boxed\">" + connector.getLabel() + "</td>");
-          out.println("  </tr>");
-          out.println("  <tr class=\"boxed\">");
-          out.println("    <th class=\"boxed\">Type</th>");
-          out.println("    <td class=\"boxed\">" + connector.getType() + "</td>");
-          out.println("  </tr>");
-          out.println("  <tr class=\"boxed\">");
-          out.println("    <th class=\"boxed\">URL</th>");
-          out.println("    <td class=\"boxed\">" + connector.getUrl() + "</td>");
-          out.println("  </tr>");
-          out.println("  <tr class=\"boxed\">");
-          out.println("    <th class=\"boxed\">User Id</th>");
-          out.println("    <td class=\"boxed\">" + connector.getUserid() + "</td>");
-          out.println("  </tr>");
-          out.println("  <tr class=\"boxed\">");
-          out.println("    <th class=\"boxed\">Facility Id</th>");
-          out.println("    <td class=\"boxed\">" + connector.getFacilityid() + "</td>");
-          out.println("  </tr>");
-          if (user.getSendData() != null && user.getSendData().getConnector() == connector
-              && user.getSendData().getTestParticipant() != null) {
-            out.println("  <tr class=\"boxed\">");
-            out.println("    <th class=\"boxed\">AART Label </th>");
-            out.println("    <td class=\"boxed\">"
-                + user.getSendData().getTestParticipant().getFolderName() + "</td>");
-            out.println("  </tr>");
-            out.println("  <tr class=\"boxed\">");
-            out.println("    <th class=\"boxed\">AART Organization </th>");
-            out.println("    <td class=\"boxed\">"
-                + user.getSendData().getTestParticipant().getOrganizationName() + "</td>");
-            out.println("  </tr>");
-            out.println("  <tr class=\"boxed\">");
-            out.println("    <th class=\"boxed\">AART Public Id Code </th>");
-            out.println("    <td class=\"boxed\">"
-                + user.getSendData().getTestParticipant().getPublicIdCode() + "</td>");
-            out.println("  </tr>");
-          }
-          out.println("  <tr class=\"boxed\">");
-          out.println(
-              "    <td class=\"boxed\" colspan=\"2\"><input type=\"submit\" name=\"action\" value=\"Unload\"></td>");
-          out.println("  </tr>");
-          out.println("  <input type=\"hidden\" name=\"id\" value=\"" + id + "\">");
-          out.println("</table></br>");
-          out.println("</form>");
+          out.println("        <tr>");
+          out.println("          <th scope=\"row\" class=\"aira-table__cell--primary\">"
+              + escapeHtml(connector.getLabel()) + "</th>");
+          out.println("          <td>" + escapeHtml(connector.getType()) + "</td>");
+          out.println("          <td class=\"aira-table__cell--code\">"
+              + escapeHtml(connector.getUrl()) + "</td>");
+          out.println("          <td>" + escapeHtml(connector.getUserid()) + "</td>");
+          out.println("          <td>" + escapeHtml(connector.getFacilityid()) + "</td>");
+          out.println("          <td class=\"aira-table__cell--actions\">");
+          out.println("            <form action=\"ConnectServlet\" method=\"POST\">");
+          out.println("              <input type=\"hidden\" name=\"id\" value=\"" + id + "\">");
+          out.println("              <button class=\"aira-button aira-button--small aira-button--ghost\""
+              + " type=\"submit\" name=\"action\" value=\"Unload\">Unload</button>");
+          out.println("            </form>");
+          out.println("          </td>");
+          out.println("        </tr>");
         }
+        out.println("      </tbody>");
+        out.println("    </table>");
+        out.println("  </div>");
+        out.println("</section>");
+
+        if (user.getSendData() != null && user.getSendData().getTestParticipant() != null
+            && connectors.contains(user.getSendData().getConnector())) {
+          out.println("<section class=\"aira-panel\">");
+          out.println("  <div class=\"aira-panel__header\">"
+              + "<h2 class=\"aira-panel__title\">AART Participant</h2></div>");
+          out.println("  <div class=\"aira-panel__body\">");
+          out.println("    <dl class=\"smm-details\">");
+          out.println("      <dt>Label</dt><dd>"
+              + escapeHtml(user.getSendData().getTestParticipant().getFolderName()) + "</dd>");
+          out.println("      <dt>Organization</dt><dd>"
+              + escapeHtml(user.getSendData().getTestParticipant().getOrganizationName())
+              + "</dd>");
+          out.println("      <dt>Public Id Code</dt><dd>"
+              + escapeHtml(user.getSendData().getTestParticipant().getPublicIdCode()) + "</dd>");
+          out.println("    </dl>");
+          out.println("  </div>");
+          out.println("</section>");
+        }
+
         String label = request.getParameter("label");
         if (label == null) {
           label = "";
@@ -177,62 +187,47 @@ public class ConnectServlet extends ClientServlet {
         if (userid == null) {
           userid = "";
         }
-        String password = "";
         String facilityid = request.getParameter("facilityid");
         if (facilityid == null) {
           facilityid = "";
         }
-        out.println("<form action=\"ConnectServlet\" method=\"POST\">");
-        out.println("<table class=\"boxed\">");
-        out.println("  <tr class=\"boxed\">");
-        out.println("    <th class=\"boxed\">Label</th>");
-        out.println(
-            "    <td class=\"boxed\"><input type=\"text\" name=\"label\" size=\"12\" value=\""
-                + label + "\"></td>");
-        out.println("  </tr>");
-        out.println("  <tr class=\"boxed\">");
-        out.println("    <th class=\"boxed\">Type</th>");
-        out.println("    <td class=\"boxed\">");
-        out.println("      <select name=\"type\">");
-        out.println("        <option value=\"\">select</option>");
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Add a Connection</h2></div>");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.println("    <form class=\"aira-form\" action=\"ConnectServlet\" method=\"POST\">");
+        out.println("      <div class=\"aira-field-row\">");
+        printTextField(out, "label", "Label", label);
+        out.println("        <div class=\"aira-field\">");
+        out.println("          <label for=\"type\">Type</label>");
+        out.println("          <select class=\"aira-select\" id=\"type\" name=\"type\">");
+        out.println("            <option value=\"\">select</option>");
         for (String[] option : ConnectorFactory.TYPES) {
-          out.println("        <option value=\"" + option[0] + "\""
-              + (type.equals(option[0]) ? " selected=\"true\"" : "") + ">" + option[1]
+          out.println("            <option value=\"" + escapeHtml(option[0]) + "\""
+              + (type.equals(option[0]) ? " selected" : "") + ">" + escapeHtml(option[1])
               + "</option>");
         }
-        out.println("      </select>");
-        out.println("    </td>");
-        out.println("  </tr>");
-        out.println("  <tr class=\"boxed\">");
-        out.println("    <th class=\"boxed\">URL</th>");
-        out.println("    <td class=\"boxed\"><input type=\"text\" name=\"url\" size=\"20\" value=\""
-            + url + "\"></td>");
-        out.println("  </tr>");
-        out.println("  <tr class=\"boxed\">");
-        out.println("    <th class=\"boxed\">User Id</th>");
-        out.println(
-            "    <td class=\"boxed\"><input type=\"text\" name=\"userid\" size=\"7\" value=\""
-                + userid + "\"></td>");
-        out.println("  </tr>");
-        out.println("  <tr class=\"boxed\">");
-        out.println("    <th class=\"boxed\">Password</th>");
-        out.println(
-            "    <td class=\"boxed\"><input type=\"text\" name=\"password\" size=\"7\" value=\""
-                + password + "\"></td>");
-        out.println("  </tr>");
-        out.println("  <tr class=\"boxed\">");
-        out.println("    <th class=\"boxed\">Facility Id</th>");
-        out.println(
-            "    <td class=\"boxed\"><input type=\"text\" name=\"facilityid\" size=\"7\" value=\""
-                + facilityid + "\"></td>");
-        out.println("  </tr>");
-        out.println("  <tr class=\"boxed\">");
-        out.println("    <th class=\"boxed\">Type</th>");
-        out.println(
-            "    <td class=\"boxed\" colspan=\"2\"><input type=\"submit\" name=\"action\" value=\"Add\"></td>");
-        out.println("  </tr>");
-        out.println("  <input type=\"hidden\" name=\"id\" value=\"" + id + "\">");
-        out.println("</form>");
+        out.println("          </select>");
+        out.println("        </div>");
+        out.println("      </div>");
+        printTextField(out, "url", "URL", url);
+        out.println("      <div class=\"aira-field-row\">");
+        printTextField(out, "userid", "User Id", userid);
+        out.println("        <div class=\"aira-field\">");
+        out.println("          <label for=\"password\">Password</label>");
+        out.println("          <input class=\"aira-input\" type=\"password\" id=\"password\""
+            + " name=\"password\" autocomplete=\"off\">");
+        out.println("        </div>");
+        printTextField(out, "facilityid", "Facility Id", facilityid);
+        out.println("      </div>");
+        out.println("      <div class=\"aira-form-actions\">");
+        out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+            + " name=\"action\" value=\"Add\">Add Connection</button>");
+        out.println("      </div>");
+        out.println("    </form>");
+        out.println("  </div>");
+        out.println("</section>");
+
         String connectorScript = request.getParameter("connectorScript");
         if (connectorScript == null) {
           connectorScript = (String) request.getAttribute("connectorScript");
@@ -240,25 +235,27 @@ public class ConnectServlet extends ClientServlet {
             connectorScript = "";
           }
         }
-        out.println("</table><br/>");
-        out.println("<form action=\"ConnectServlet\" method=\"POST\">");
-        out.println("<table border=\"0\">");
-        out.println("  <tr>");
-        out.println("    <td valign=\"top\">Script</td>");
-        out.println("    <td>");
-        out.println(
-            "        <textarea name=\"connectorScript\" cols=\"60\" rows=\"7\" wrap=\"off\">"
-                + connectorScript + "</textarea>");
-        out.println("    </td>");
-        out.println("  </tr>");
-        out.println("  <tr>");
-        out.println("    <td colspan=\"2\" align=\"right\">");
-        out.println("        <input type=\"submit\" name=\"action\" value=\"Load Connections\">");
-        out.println("    </td>");
-        out.println("  </tr>");
-        out.println("</table>");
-        out.println("</form>");
-
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Connection Script</h2></div>");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.println("    <form class=\"aira-form\" action=\"ConnectServlet\" method=\"POST\">");
+        out.println("      <div class=\"aira-field\">");
+        out.println("        <label for=\"connectorScript\">Script</label>");
+        out.println("        <textarea class=\"aira-textarea smm-code\" id=\"connectorScript\""
+            + " name=\"connectorScript\" rows=\"8\" wrap=\"off\">" + escapeHtml(connectorScript)
+            + "</textarea>");
+        out.println("        <p class=\"aira-field-help\">Adding or unloading a connection shows its"
+            + " script here, so it can be saved and loaded again later.</p>");
+        out.println("      </div>");
+        out.println("      <div class=\"aira-form-actions\">");
+        out.println("        <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+            + " name=\"action\" value=\"Load Connections\">Load Connections</button>");
+        out.println("      </div>");
+        out.println("    </form>");
+        out.println("  </div>");
+        out.println("</section>");
+        out.println("</div>");
         printHtmlFoot(out);
 
       } finally {

@@ -7,6 +7,7 @@
  */
 package org.immregistries.smm.mover;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -43,18 +44,22 @@ public class CDCWSDLServlet extends ClientServlet {
       PrintWriter out = resp.getWriter();
       try {
         printHtmlHead(out, MENU_HEADER_HOME, req);
-        out.println("<h1>SMM Realtime</h1>");
+        printPageHeader(out, "SMM Realtime", null);
+        String wsdlPath = req.getContextPath() + "/wsdl?wsdl=true";
+        String wsdlUrl = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort()
+            + wsdlPath;
+        out.println("<div class=\"aira-prose smm-reading\">");
         out.println("<p>");
         out.println(
-            "This end point supports submission of real-time immunization messages in conforanmcne with the ");
+            "This end point supports submission of real-time immunization messages in conformance with the ");
         out.println(
             "<a href=\"http://www.cdc.gov/vaccines/programs/iis/technical-guidance/soap/wsdl.html\">CDC ");
         out.println("WSDL</a>.");
         out.println("</p>");
-        out.println("<h3>WSDL</h3>");
-        out.println("<p>Download or view WSDL here: ");
-        out.println(
-            "  <a href=\"wsdl-demo?wsdl=true\">http://ois-pt.org/tester/wsdl?wsdl=true</a></p>");
+        out.println("<h2 class=\"aira-section-title\">WSDL</h2>");
+        out.println("<p>Download or view WSDL here: <a href=\"" + escapeHtml(wsdlPath) + "\">"
+            + escapeHtml(wsdlUrl) + "</a></p>");
+        out.println("</div>");
         printHtmlFoot(out);
       } finally {
         out.close();

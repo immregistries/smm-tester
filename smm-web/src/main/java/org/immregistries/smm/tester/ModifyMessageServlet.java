@@ -1,5 +1,6 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.immregistries.smm.transform.ModifyMessageRequest;
@@ -53,58 +54,62 @@ public class ModifyMessageServlet extends ClientServlet {
 
     try {
       printHtmlHead(out, MENU_HEADER_HOME, request);
-      out.println("<h2>Message Modifier Demo</h2>");
-      out.println("    <form action=\"ModifyMessageServlet\" method=\"POST\">");
-      out.println("      <table>");
-      out.println("        <tr>");
-      out.println("          <td valign=\"top\">Original Message</td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println(
-          "          <td colspan=\"2\"><textarea name=\"originalMessage\" cols=\"120\" rows=\"15\" wrap=\"off\">"
-              + originalMessage + "</textarea></td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println("          <td valign=\"top\">Script</td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println(
-          "          <td colspan=\"2\"><textarea name=\"script\" cols=\"120\" rows=\"15\" wrap=\"off\">"
-              + script + "</textarea></td>");
-      out.println("        </tr>");
-      out.println("        <tr>");
-      out.println("          <td align=\"right\">");
-      out.println("            <input type=\"submit\" name=\"action\" value=\"Load Example\"/>");
-      out.println("            <input type=\"submit\" name=\"action\" value=\"Run\"/>");
-      out.println("          </td>");
-      out.println("        </tr>");
-      out.println("      </table>");
+      printPageHeader(out, "Modify Message",
+          "Apply a message modification script to an HL7 message and see the result.");
+      out.println("<div class=\"aira-stack\">");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__body\">");
+      out.println("    <form class=\"aira-form\" action=\"ModifyMessageServlet\" method=\"POST\">");
+      out.println("      <div class=\"aira-field\">");
+      out.println("        <label for=\"originalMessage\">Original Message</label>");
+      out.println("        <textarea class=\"aira-textarea smm-code\" id=\"originalMessage\""
+          + " name=\"originalMessage\" rows=\"12\" wrap=\"off\">" + escapeHtml(originalMessage)
+          + "</textarea>");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-field\">");
+      out.println("        <label for=\"script\">Script</label>");
+      out.println("        <textarea class=\"aira-textarea smm-code\" id=\"script\" name=\"script\""
+          + " rows=\"8\" wrap=\"off\">" + escapeHtml(script) + "</textarea>");
+      out.println("      </div>");
+      out.println("      <div class=\"aira-form-actions\">");
+      out.println("        <button class=\"aira-button aira-button--primary\" type=\"submit\""
+          + " name=\"action\" value=\"Run\">Run</button>");
+      out.println("        <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+          + " name=\"action\" value=\"Load Example\">Load Example</button>");
+      out.println("      </div>");
       out.println("    </form>");
+      out.println("  </div>");
+      out.println("</section>");
       if (mmr != null) {
-        out.println("<h2>Final Message</h2>");
-        out.println("<pre>");
-        out.print(mmr.getMessageFinal());
-        out.println("</pre>");
+        out.println("<section class=\"aira-panel\">");
+        out.println("  <div class=\"aira-panel__header\">"
+            + "<h2 class=\"aira-panel__title\">Final Message</h2></div>");
+        out.println("  <div class=\"aira-panel__body\">");
+        out.println("    <pre class=\"smm-hl7\">" + escapeHtml(mmr.getMessageFinal()) + "</pre>");
+        out.println("  </div>");
+        out.println("</section>");
       }
-      out.println("<h3>Explanation</h3>");
+      out.println("<section class=\"aira-panel\">");
+      out.println("  <div class=\"aira-panel__header\">"
+          + "<h2 class=\"aira-panel__title\">Explanation</h2></div>");
+      out.println("  <div class=\"aira-panel__body aira-prose\">");
       out.println(
-          "<p>This web page was created to show the original Message Modify software. It is an integrated ability "
+          "    <p>This web page was created to show the original Message Modify software. It is an integrated ability "
               + "of the Simple Message Mover and was partially extracted to be used by an NIST project. The proposal linked below "
               + "is the original proposal last year to extract the functionality for this project.</p>");
       out.println(
-          "<p>Link to original document: <a href=\"https://www.dropbox.com/s/4osx52uphsvh0lu/Modify%20Message%20Recommendation.docx?dl=0\">Message Modifier Recommendations</a></p>");
+          "    <p>Link to original document: <a href=\"https://www.dropbox.com/s/4osx52uphsvh0lu/Modify%20Message%20Recommendation.docx?dl=0\">Message Modifier Recommendations</a></p>");
       out.println(
-          "<p>Now in 2016, the next step is to create a more generalized solution that does what this solution does "
+          "    <p>Now in 2016, the next step is to create a more generalized solution that does what this solution does "
               + "but with improvements to the language and the ability to support other domain knowledge areas. The proposal "
               + "listed above is now out-dated and is only being listed for reference purposes. </p>");
-      
-      out.println("<p><a href=\"GenerateExamplesServlet\">Generate Examples</a></p>");
-
+      out.println("    <p><a href=\"GenerateExamplesServlet\">Generate Examples</a></p>");
+      out.println("  </div>");
+      out.println("</section>");
+      out.println("</div>");
       ClientServlet.printHtmlFoot(out);
     } catch (Exception e) {
-      out.println("<p>Exception Occurred: " + e.getMessage() + "</p><pre>");
-      e.printStackTrace(out);
-      out.println("</pre>");
+      printException(out, e);
     } finally {
       out.close();
     }

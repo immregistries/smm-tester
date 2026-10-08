@@ -1,6 +1,7 @@
 package org.immregistries.smm.tester;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.List;
 import org.immregistries.smm.SoftwareVersion;
 import org.immregistries.smm.tester.connectors.Connector;
@@ -32,9 +33,104 @@ public class ClientServlet extends HttpServlet {
     SmmPage.writeStart(out, request, title);
     String message = (String) request.getAttribute("message");
     if (message != null) {
-      out.println("<div class=\"aira-alert aira-alert--warning\" role=\"status\"><p>" + message
-          + "</p></div>");
+      out.println("<div class=\"aira-alert aira-alert--warning\" role=\"status\"><p>"
+          + SmmPage.escapeHtml(message) + "</p></div>");
     }
+  }
+
+  /**
+   * Writes the page title and an optional introduction. The title and introduction are HTML.
+   */
+  protected static void printPageHeader(PrintWriter out, String title, String intro) {
+    out.println("<div class=\"aira-page-header\"><div>");
+    out.println("  <h1 class=\"aira-page-title\">" + title + "</h1>");
+    if (intro != null) {
+      out.println("  <p class=\"aira-page-intro\">" + intro + "</p>");
+    }
+    out.println("</div></div>");
+  }
+
+  /**
+   * Writes a labeled text input. The value is escaped.
+   */
+  protected static void printTextField(PrintWriter out, String name, String label, String value) {
+    printTextField(out, name, label, value, null);
+  }
+
+  /**
+   * Writes a labeled text input with an optional placeholder. The value is escaped.
+   */
+  protected static void printTextField(PrintWriter out, String name, String label, String value,
+      String placeholder) {
+    out.println("        <div class=\"aira-field\">");
+    out.println("          <label for=\"" + name + "\">" + label + "</label>");
+    out.println("          <input class=\"aira-input\" type=\"text\" id=\"" + name + "\" name=\""
+        + name + "\" value=\"" + SmmPage.escapeHtml(value) + "\""
+        + (placeholder == null ? "" : " placeholder=\"" + SmmPage.escapeHtml(placeholder) + "\"")
+        + ">");
+    out.println("        </div>");
+  }
+
+  /**
+   * Writes a notice that the page needs an IIS connection, with a link to set one up.
+   */
+  protected static void printNoConnection(PrintWriter out) {
+    out.println("<div class=\"aira-empty-state\">");
+    out.println("  <p class=\"aira-empty-state__title\">No IIS connection</p>");
+    out.println("  <p>This page needs a connection to an IIS. Set one up first.</p>");
+    out.println("  <p><a class=\"aira-button aira-button--primary\" href=\"ConnectServlet\">"
+        + "Connect to an IIS</a></p>");
+    out.println("</div>");
+  }
+
+  /**
+   * Writes a panel with a title and plain text output, such as a log, in a pre block. The text is
+   * escaped.
+   */
+  protected static void printLog(PrintWriter out, String title, String text) {
+    out.println("<section class=\"aira-panel\">");
+    out.println("  <div class=\"aira-panel__header\"><h2 class=\"aira-panel__title\">" + title
+        + "</h2></div>");
+    out.println("  <div class=\"aira-panel__body\">");
+    out.println("    <pre class=\"smm-hl7\">" + SmmPage.escapeHtml(text) + "</pre>");
+    out.println("  </div>");
+    out.println("</section>");
+  }
+
+  /**
+   * Returns a badge for a test result status such as PASS or FAIL, or nothing when there is no
+   * status yet.
+   */
+  protected static String statusBadge(String status) {
+    if (status == null || status.equals("")) {
+      return "";
+    } else if (status.equals("PASS")) {
+      return "<span class=\"aira-badge aira-badge--success\">Pass</span>";
+    } else if (status.equals("FAIL")) {
+      return "<span class=\"aira-badge aira-badge--danger\">Fail</span>";
+    }
+    return "<span class=\"aira-badge aira-badge--outline\">" + SmmPage.escapeHtml(status)
+        + "</span>";
+  }
+
+  /**
+   * Writes an error alert with the exception's message and stack trace.
+   */
+  protected static void printException(PrintWriter out, Throwable throwable) {
+    out.println("<div class=\"aira-alert aira-alert--error\" role=\"alert\">");
+    out.println("  <p class=\"aira-alert__title\">Exception occurred: "
+        + SmmPage.escapeHtml(throwable.getMessage()) + "</p>");
+    out.println("  <pre class=\"smm-hl7\">" + SmmPage.escapeHtml(stackTrace(throwable)) + "</pre>");
+    out.println("</div>");
+  }
+
+  /**
+   * Returns the stack trace of a throwable as text, for showing in a pre block after escaping.
+   */
+  protected static String stackTrace(Throwable throwable) {
+    StringWriter stringWriter = new StringWriter();
+    throwable.printStackTrace(new PrintWriter(stringWriter));
+    return stringWriter.toString();
   }
 
   public static void printFooter(PrintWriter out) {
@@ -89,33 +185,30 @@ public class ClientServlet extends HttpServlet {
     if (session.getAttribute("id") != null) {
       id = (Integer) session.getAttribute("id");
     }
-    out.println("        <tr>");
-    out.println("          <td>Service</td>");
-    out.println("          <td>");
+    out.println("      <div class=\"aira-field\">");
     List<Connector> connectors = ConnectServlet.getConnectors(session);
     if (connectors.size() == 1) {
-      out.println("            " + connectors.get(0).getLabelDisplay());
-      out.println("            <input type=\"hidden\" name=\"id\" value=\"1\"/>");
+      out.println("        <span class=\"aira-label\">Connection</span>");
+      out.println("        <span>" + SmmPage.escapeHtml(connectors.get(0).getLabelDisplay())
+          + "</span>");
+      out.println("        <input type=\"hidden\" name=\"id\" value=\"1\"/>");
       connectorSelected = connectors.get(0);
     } else {
-      out.println("            <select name=\"id\">");
-      out.println("              <option value=\"\">select</option>");
+      out.println("        <label for=\"id\">Connection</label>");
+      out.println("        <select class=\"aira-select smm-select-auto\" id=\"id\" name=\"id\">");
+      out.println("          <option value=\"\">select</option>");
       int i = 0;
       for (Connector connector : connectors) {
         i++;
         if (id == i) {
-          out.println("              <option value=\"" + i + "\" selected=\"true\">"
-              + connector.getLabelDisplay() + "</option>");
           connectorSelected = connector;
-        } else {
-          out.println("              <option value=\"" + i + "\">" + connector.getLabelDisplay()
-              + "</option>");
         }
+        out.println("          <option value=\"" + i + "\"" + (id == i ? " selected" : "") + ">"
+            + SmmPage.escapeHtml(connector.getLabelDisplay()) + "</option>");
       }
-      out.println("            </select>");
+      out.println("        </select>");
     }
-    out.println("          </td>");
-    out.println("        </tr>");
+    out.println("      </div>");
     return connectorSelected;
   }
 

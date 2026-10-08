@@ -1,7 +1,10 @@
 package org.immregistries.smm.tester;
 
+import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import org.immregistries.smm.transform.TestCaseMessage;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,18 +60,27 @@ public class TestCaseMessageViewerServlet extends ClientServlet {
     PrintWriter out = response.getWriter();
     try {
       printHtmlHead(out, MENU_HEADER_HOME, request);
+      printPageHeader(out, "Test Case Message", null);
 
       if (problem != null) {
-        out.println("<p>" + problem + "</p>");
+        out.println("<div class=\"aira-alert aira-alert--warning\" role=\"status\"><p>"
+            + escapeHtml(problem) + "</p></div>");
       }
       TestCaseMessage testCaseMessage = (TestCaseMessage) session.getAttribute("testCaseMessage");
       String certifyServletBasicNum = request.getParameter("certifyServletBasicNum");
 
-      out.println("    <h3>TestCase Message</h3>");
       if (testCaseMessage != null) {
+        out.println("<div class=\"aira-stack\">");
         printTestCaseMessage(out, testCaseMessage);
-        out.println("<p><a href=\"testCase?certifyServletBasicNum=" + certifyServletBasicNum
+        out.println("<p><a class=\"aira-button aira-button--primary\" href=\"testCase?"
+            + "certifyServletBasicNum=" + URLEncoder.encode(String.valueOf(certifyServletBasicNum),
+                StandardCharsets.UTF_8)
             + "\">Run Test Case</a></p>");
+        out.println("</div>");
+      } else {
+        out.println("<div class=\"aira-empty-state\"><p class=\"aira-empty-state__title\">No test"
+            + " case message</p><p>Open a test case from <a href=\"SetupServlet\">Manage Test"
+            + " Cases</a> first.</p></div>");
       }
 
       printHtmlFoot(out);
@@ -77,47 +89,54 @@ public class TestCaseMessageViewerServlet extends ClientServlet {
     }
   }
 
+  /**
+   * Writes a test case message and its results. Also used for stand-alone report files, so it
+   * writes plain headings and pre blocks that read well without the AIRA stylesheet.
+   */
   public static void printTestCaseMessage(PrintWriter out, TestCaseMessage testCaseMessage) {
-    out.println("<h2>" + testCaseMessage.getDescription() + "</h2>");
+    out.println("<h2 class=\"aira-section-title\">" + escapeHtml(testCaseMessage.getDescription())
+        + "</h2>");
 
-    out.println("<h3>Message Sent</h3>");
-    out.println("<pre>" + testCaseMessage.getMessageTextSent() + "</pre>");
+    out.println("<h3 class=\"aira-subsection-title\">Message Sent</h3>");
+    out.println("<pre class=\"smm-hl7\">" + escapeHtml(testCaseMessage.getMessageTextSent())
+        + "</pre>");
 
     if (!testCaseMessage.getAdditionalTransformations().equals("")) {
       out.println("<h4>Additional Transformations Applied</h4>");
-      out.println("<pre>" + testCaseMessage.getAdditionalTransformations() + "</pre>");
+      out.println("<pre class=\"smm-hl7\">"
+          + escapeHtml(testCaseMessage.getAdditionalTransformations()) + "</pre>");
     }
     if (testCaseMessage.isHasRun()) {
       if (testCaseMessage.getActualMessageResponseType().equals("ACK")) {
         if (testCaseMessage.isAccepted()) {
-          out.println("<h3>Message Accepted</h3>");
+          out.println("<h3 class=\"aira-subsection-title\">Message Accepted</h3>");
         } else {
-          out.println("<h3>Message Rejected</h3>");
+          out.println("<h3 class=\"aira-subsection-title\">Message Rejected</h3>");
         }
       } else {
-        out.println("<h3>Response Received</h3>");
+        out.println("<h3 class=\"aira-subsection-title\">Response Received</h3>");
       }
-      out.println("<pre>" + testCaseMessage.getActualResponseMessage() + "</pre>");
+      out.println("<pre class=\"smm-hl7\">"
+          + escapeHtml(testCaseMessage.getActualResponseMessage()) + "</pre>");
       if (!testCaseMessage.getMessageAcceptStatusDebug().equals("")) {
         out.println("<h4>Logic For Expectation</h4>");
-        out.println("<pre>" + testCaseMessage.getMessageAcceptStatusDebug() + "</pre>");
+        out.println("<pre class=\"smm-hl7\">"
+            + escapeHtml(testCaseMessage.getMessageAcceptStatusDebug()) + "</pre>");
       }
     }
 
     if (testCaseMessage.getException() != null) {
-      out.println("<h3>Unexpected Problem Occurred</h3>");
-      out.println("<p>Exception occurred: " + testCaseMessage.getException().getMessage() + "</p>");
-      out.print("<pre>");
-      testCaseMessage.getException().printStackTrace(out);
-      out.print("</pre>");
+      out.println("<h3 class=\"aira-subsection-title\">Unexpected Problem Occurred</h3>");
+      out.println("<p>Exception occurred: "
+          + escapeHtml(testCaseMessage.getException().getMessage()) + "</p>");
+      out.println("<pre class=\"smm-hl7\">"
+          + escapeHtml(stackTrace(testCaseMessage.getException())) + "</pre>");
     }
     if (testCaseMessage.getDerivedFromVXUMessage() != null
         && !testCaseMessage.getDerivedFromVXUMessage().equals("")) {
-      out.println("<h3>Request Derived From This VXU Message</h3>");
-      out.println("<pre>" + testCaseMessage.getDerivedFromVXUMessage() + "</pre>");
+      out.println("<h3 class=\"aira-subsection-title\">Request Derived From This VXU Message</h3>");
+      out.println("<pre class=\"smm-hl7\">"
+          + escapeHtml(testCaseMessage.getDerivedFromVXUMessage()) + "</pre>");
     }
-    testCaseMessage.getErrorList();
-    testCaseMessage.getTestCaseNumber();
-
   }
 }
