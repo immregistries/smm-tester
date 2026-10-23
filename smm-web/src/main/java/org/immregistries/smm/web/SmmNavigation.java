@@ -18,6 +18,7 @@ public final class SmmNavigation {
     SEND("Send", "/SubmitServlet"),
     TEST_CASES("Test Cases", "/SetupServlet"),
     TOOLS("Tools", "/ModifyMessageServlet"),
+    SCHOOL_ROSTER("School Roster", "/SchoolRosterServlet"),
     /** Pages for administrators, reached from a header action instead of the navigation. */
     ADMIN("Admin", "/smm");
 
@@ -113,7 +114,9 @@ public final class SmmNavigation {
     add("/wsdl-demo", "CDC WSDL Demo", Area.TOOLS, true);
     add("/wsdl", "CDC WSDL Test Server", Area.TOOLS, false);
     add("/CatchServlet", "Message Catcher", Area.TOOLS, false);
-
+    
+    add("/SchoolRosterServlet", "Upload School Roster", Area.SCHOOL_ROSTER, true);
+    
     add("/smm", "Message Mover", Area.ADMIN, true);
   }
 

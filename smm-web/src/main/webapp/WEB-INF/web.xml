@@ -175,6 +175,11 @@
     <servlet-name>ConnectServlet</servlet-name>
     <servlet-class>org.immregistries.smm.tester.ConnectServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>SchoolRosterServlet</servlet-name>
+    <servlet-class>org.immregistries.smm.roster.SchoolRosterServlet</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>CreateTestCaseServlet</servlet-name>
     <url-pattern>/CreateTestCaseServlet</url-pattern>
@@ -267,6 +272,11 @@
   <servlet-name>WSDLDemoServlet</servlet-name>
     <url-pattern>/wsdl-demo/*</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SchoolRosterServlet</servlet-name>
+    <url-pattern>/SchoolRosterServlet</url-pattern>
+  </servlet-mapping>
+  
   <welcome-file-list>
     <welcome-file>HomeServlet</welcome-file>
   </welcome-file-list>
