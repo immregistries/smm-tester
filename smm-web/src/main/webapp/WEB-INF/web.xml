@@ -39,6 +39,38 @@
     <param-name>smm.admin.emails</param-name>
     <param-value></param-value>
   </context-param>
+  <!-- Limits for the public HL7 validation API (/api/*) and MCP server (/mcp) -->
+  <context-param>
+    <description>Most requests one client may make to /api and /mcp in a minute</description>
+    <param-name>smm.api.requests.per.minute</param-name>
+    <param-value>60</param-value>
+  </context-param>
+  <context-param>
+    <description>Most messages one client (or signed-in user) may validate in a minute</description>
+    <param-name>smm.validation.messages.per.minute</param-name>
+    <param-value>30</param-value>
+  </context-param>
+  <context-param>
+    <description>Most messages all clients together may validate in a minute</description>
+    <param-name>smm.validation.messages.total.per.minute</param-name>
+    <param-value>300</param-value>
+  </context-param>
+  <context-param>
+    <description>Most messages in one validation request</description>
+    <param-name>smm.validation.max.messages</param-name>
+    <param-value>20</param-value>
+  </context-param>
+  <context-param>
+    <description>Most characters of HL7 in one validation request</description>
+    <param-name>smm.validation.max.bytes</param-name>
+    <param-value>262144</param-value>
+  </context-param>
+  <context-param>
+    <description>true when SMM is behind a reverse proxy that sets X-Forwarded-For, so rate
+      limits apply to the real client address instead of the proxy's</description>
+    <param-name>smm.trust.forwarded.for</param-name>
+    <param-value>false</param-value>
+  </context-param>
 
   <filter>
     <filter-name>AuthenticationFilter</filter-name>
@@ -47,6 +79,15 @@
   <filter-mapping>
     <filter-name>AuthenticationFilter</filter-name>
     <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>PublicApiFilter</filter-name>
+    <filter-class>org.immregistries.smm.web.validation.PublicApiFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>PublicApiFilter</filter-name>
+    <url-pattern>/api/*</url-pattern>
+    <url-pattern>/mcp</url-pattern>
   </filter-mapping>
 
   <servlet>
@@ -179,6 +220,18 @@
     <servlet-name>SchoolRosterServlet</servlet-name>
     <servlet-class>org.immregistries.smm.roster.SchoolRosterServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>ValidateMessageServlet</servlet-name>
+    <servlet-class>org.immregistries.smm.web.validation.ValidateMessageServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>ValidationApiServlet</servlet-name>
+    <servlet-class>org.immregistries.smm.web.validation.ValidationApiServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>McpServlet</servlet-name>
+    <servlet-class>org.immregistries.smm.web.validation.McpServlet</servlet-class>
+  </servlet>
   
   <servlet-mapping>
     <servlet-name>CreateTestCaseServlet</servlet-name>
@@ -275,6 +328,18 @@
   <servlet-mapping>
     <servlet-name>SchoolRosterServlet</servlet-name>
     <url-pattern>/SchoolRosterServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ValidateMessageServlet</servlet-name>
+    <url-pattern>/ValidateMessageServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ValidationApiServlet</servlet-name>
+    <url-pattern>/api/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>McpServlet</servlet-name>
+    <url-pattern>/mcp</url-pattern>
   </servlet-mapping>
   
   <welcome-file-list>
