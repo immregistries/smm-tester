@@ -19,6 +19,13 @@ public class SmmWebConfig {
   public static final String APP_CODE = "smm.app.code";
   public static final String WORKSPACE_DIR = "smm.workspace.dir";
   public static final String ADMIN_EMAILS = "smm.admin.emails";
+  public static final String API_REQUESTS_PER_MINUTE = "smm.api.requests.per.minute";
+  public static final String VALIDATION_MESSAGES_PER_MINUTE = "smm.validation.messages.per.minute";
+  public static final String VALIDATION_MESSAGES_TOTAL_PER_MINUTE =
+      "smm.validation.messages.total.per.minute";
+  public static final String VALIDATION_MAX_MESSAGES = "smm.validation.max.messages";
+  public static final String VALIDATION_MAX_BYTES = "smm.validation.max.bytes";
+  public static final String TRUST_FORWARDED_FOR = "smm.trust.forwarded.for";
 
   private static final String DEFAULT_HUB_URL = "http://localhost:8080/hub";
   private static final String DEFAULT_APP_CODE = "smm";
@@ -29,6 +36,12 @@ public class SmmWebConfig {
   private final String appCode;
   private final String workspaceDir;
   private final Set<String> adminEmails;
+  private final int apiRequestsPerMinute;
+  private final int validationMessagesPerMinute;
+  private final int validationMessagesTotalPerMinute;
+  private final int validationMaxMessages;
+  private final int validationMaxBytes;
+  private final boolean trustForwardedFor;
 
   private SmmWebConfig(ServletContext context) {
     hubUrl = read(context, HUB_URL, DEFAULT_HUB_URL);
@@ -39,6 +52,12 @@ public class SmmWebConfig {
     adminEmails = admins.isEmpty() ? Collections.emptySet()
         : Arrays.stream(admins.split("[,;\\s]+")).map(s -> s.trim().toLowerCase(Locale.ROOT))
             .filter(s -> !s.isEmpty()).collect(Collectors.toUnmodifiableSet());
+    apiRequestsPerMinute = readInt(context, API_REQUESTS_PER_MINUTE, 60);
+    validationMessagesPerMinute = readInt(context, VALIDATION_MESSAGES_PER_MINUTE, 30);
+    validationMessagesTotalPerMinute = readInt(context, VALIDATION_MESSAGES_TOTAL_PER_MINUTE, 300);
+    validationMaxMessages = readInt(context, VALIDATION_MAX_MESSAGES, 20);
+    validationMaxBytes = readInt(context, VALIDATION_MAX_BYTES, 256 * 1024);
+    trustForwardedFor = Boolean.parseBoolean(read(context, TRUST_FORWARDED_FOR, "false"));
   }
 
   public static SmmWebConfig get(ServletContext context) {
@@ -60,6 +79,15 @@ public class SmmWebConfig {
       value = context.getInitParameter(name);
     }
     return isBlank(value) ? defaultValue : value.trim();
+  }
+
+  private static int readInt(ServletContext context, String name, int defaultValue) {
+    String value = read(context, name, "");
+    try {
+      return value.isEmpty() ? defaultValue : Integer.parseInt(value);
+    } catch (NumberFormatException e) {
+      return defaultValue;
+    }
   }
 
   private static boolean isBlank(String value) {
@@ -93,6 +121,49 @@ public class SmmWebConfig {
    */
   public String getWorkspaceDir() {
     return workspaceDir;
+  }
+
+  /**
+   * @return the most requests one client may make to the public API and MCP endpoints in a minute
+   */
+  public int getApiRequestsPerMinute() {
+    return apiRequestsPerMinute;
+  }
+
+  /**
+   * @return the most messages one client may validate in a minute
+   */
+  public int getValidationMessagesPerMinute() {
+    return validationMessagesPerMinute;
+  }
+
+  /**
+   * @return the most messages all clients together may validate in a minute
+   */
+  public int getValidationMessagesTotalPerMinute() {
+    return validationMessagesTotalPerMinute;
+  }
+
+  /**
+   * @return the most messages one validation request may hold
+   */
+  public int getValidationMaxMessages() {
+    return validationMaxMessages;
+  }
+
+  /**
+   * @return the largest validation request body accepted, in bytes
+   */
+  public int getValidationMaxBytes() {
+    return validationMaxBytes;
+  }
+
+  /**
+   * @return true if SMM runs behind a reverse proxy that sets X-Forwarded-For, so the client
+   *         address for rate limiting is read from that header
+   */
+  public boolean isTrustForwardedFor() {
+    return trustForwardedFor;
   }
 
   public boolean isAdmin(String email) {

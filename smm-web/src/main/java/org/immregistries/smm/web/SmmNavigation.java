@@ -106,6 +106,7 @@ public final class SmmNavigation {
     add("/TestCaseMessageViewerServlet", "Test Case Message", Area.TEST_CASES, false);
 
     add("/ModifyMessageServlet", "Modify Message", Area.TOOLS, true);
+    add("/ValidateMessageServlet", "Validate Message", Area.TOOLS, true);
     add("/MessageViewerServlet", "Message Viewer", Area.TOOLS, true);
     add("/GenerateDataServlet", "Generate Data", Area.TOOLS, true);
     add("/GenerateExamplesServlet", "Generate Examples", Area.TOOLS, true);

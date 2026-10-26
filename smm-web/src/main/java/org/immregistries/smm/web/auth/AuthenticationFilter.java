@@ -12,8 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Requires a signed-in user for every page except the sign-in and sign-out endpoints, the
- * endpoints that other systems call (the CDC WSDL test services and the message catcher), and
- * static files.
+ * endpoints that other systems call (the CDC WSDL test services, the message catcher, and the
+ * HL7 validation API and MCP server), and static files.
  */
 public class AuthenticationFilter implements Filter {
 
@@ -52,7 +52,8 @@ public class AuthenticationFilter implements Filter {
   static boolean isPublicPath(String path) {
     return path.equals("/login") || path.equals("/logout") || path.equals("/CatchServlet")
         || path.equals("/wsdl") || path.startsWith("/wsdl/") || path.equals("/wsdl-demo")
-        || path.startsWith("/wsdl-demo/") || path.endsWith(".css") || path.endsWith(".png")
+        || path.startsWith("/wsdl-demo/") || path.startsWith("/api/") || path.equals("/mcp")
+        || path.endsWith(".css") || path.endsWith(".png")
         || path.endsWith(".ico");
   }
 

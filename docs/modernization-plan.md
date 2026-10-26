@@ -70,6 +70,10 @@ This layer is built around SMM's existing HL7 workflow:
 - The usual destination is the updated **IIS Sandbox**. IIS endpoints stay configurable, so authorized STChealth developers can point a suitable test setup at their own endpoint.
 - Define who is allowed to change destinations in the shared environment.
 
+### Also on this line: HL7 v2 validation
+
+This is a general SMM capability, not part of the roster layer. SMM validates messages against the national immunization profiles through the Valitheus Immunization Test Suite. It's available on a signed-in page, a public REST API, and a public MCP server for AI assistants. See [hl7-validation.md](hl7-validation.md). The roster layer can use it to check the HL7 it generates.
+
 ### Related work outside this repo
 
 These pieces belong to the same overall demonstration but are not SMM code:
