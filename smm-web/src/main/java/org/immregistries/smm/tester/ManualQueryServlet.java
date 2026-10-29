@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.immregistries.smm.tester.manager.query.PatientIdType;
 import org.immregistries.smm.tester.manager.query.QueryConverter;
+import org.immregistries.smm.tester.manager.query.QueryConverterQBPZ45;
 import org.immregistries.smm.tester.manager.query.QueryRequest;
 import org.immregistries.smm.tester.manager.query.QueryType;
 import org.immregistries.smm.transform.ScenarioManager;
@@ -53,6 +54,7 @@ public class ManualQueryServlet extends ClientServlet {
 
 
   public static final String PARAM_QUERY_TYPE = "queryType";
+  public static final String PARAM_CONDITIONS = "conditions";
 
 
 
@@ -95,7 +97,7 @@ public class ManualQueryServlet extends ClientServlet {
 
         if (queryRequest.getQueryType() != null) {
           QueryConverter queryConverter =
-              QueryConverter.getQueryConverter(queryRequest.getQueryType());
+              createQueryConverter(queryRequest);
           if (queryConverter != null) {
             TestCaseMessage queryTestCaseMessage = new TestCaseMessage();
             queryTestCaseMessage
@@ -114,8 +116,18 @@ public class ManualQueryServlet extends ClientServlet {
   }
 
 
+  public static QueryConverter createQueryConverter(QueryRequest queryRequest) {
+    QueryConverter queryConverter = QueryConverter.getQueryConverter(queryRequest.getQueryType());
+    if (queryConverter instanceof QueryConverterQBPZ45) {
+      ((QueryConverterQBPZ45) queryConverter).setConditions(queryRequest.getConditions());
+    }
+    return queryConverter;
+  }
+
   public String readQueryRequest(HttpServletRequest request, String problem,
       QueryRequest queryRequest) {
+    String conditionsParam = request.getParameter(PARAM_CONDITIONS);
+    queryRequest.setConditions(conditionsParam == null ? "" : conditionsParam);
     queryRequest.setIdNumber(request.getParameter(PARAM_ID_NUMBER));
     queryRequest.setIdAuthority(request.getParameter(PARAM_ID_AUTHORITY));
     queryRequest.setIdType(PatientIdType.valueOf(request.getParameter(PARAM_ID_TYPE)));
@@ -326,13 +338,19 @@ public class ManualQueryServlet extends ClientServlet {
             + (qt == queryRequest.getQueryType() ? " selected" : "") + ">" + qt + "</option>");
       }
       out.println("      </select>");
+      out.println("      <label class=\"aira-label\" for=\"" + PARAM_CONDITIONS
+          + "\">Z45 conditions (99CDS code=value, e.g. 007=Y,170=20260701)</label>");
+      out.println("      <input class=\"aira-input\" type=\"text\" size=\"40\" id=\"" + PARAM_CONDITIONS
+          + "\" name=\"" + PARAM_CONDITIONS + "\" value=\""
+          + escapeHtml(queryRequest.getConditions() == null ? "" : queryRequest.getConditions())
+          + "\"/>");
       out.println("      <button class=\"aira-button aira-button--primary\" type=\"submit\" name=\""
           + PARAM_ACTION + "\" value=\"" + ACTION_QUERY + "\">" + ACTION_QUERY + "</button>");
       out.println("    </div>");
 
       if (queryRequest.getQueryType() != null) {
         QueryConverter queryConverter =
-            QueryConverter.getQueryConverter(queryRequest.getQueryType());
+            createQueryConverter(queryRequest);
         if (queryConverter != null) {
           out.println("    <pre class=\"smm-hl7\">"
               + escapeHtml(queryConverter.convert(testCaseMessage.getMessageText())) + "</pre>");

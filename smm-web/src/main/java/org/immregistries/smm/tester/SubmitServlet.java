@@ -20,6 +20,7 @@ import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.tester.manager.HL7Reader;
 import org.immregistries.smm.tester.manager.TestCaseMessageManager;
 import org.immregistries.smm.tester.manager.query.QueryConverter;
+import org.immregistries.smm.tester.manager.query.QueryConverterQBPZ45;
 import org.immregistries.smm.tester.manager.query.QueryType;
 import org.immregistries.smm.tester.run.TestRunner;
 import org.immregistries.smm.transform.TestCaseMessage;
@@ -325,11 +326,19 @@ public class SubmitServlet extends ClientServlet {
             + " above.</p>");
         Object[][] queries = {{QueryType.QBP_Z34, "QBP Z34 query"},
             {QueryType.QBP_Z34_Z44, "QBP Z34 query with Z44 request"},
-            {QueryType.QBP_Z44, "QBP Z44 query"}, {QueryType.VXQ, "VXQ query"}};
+            {QueryType.QBP_Z44, "QBP Z44 query"},
+            {QueryType.QBP_Z45, "QBP Z45 risk-based query (edit the OBX contextual conditions"
+                + " in the message, or use a conditions= request parameter)"},
+            {QueryType.VXQ, "VXQ query"}};
         int queryCount = 0;
         for (Object[] query : queries) {
           queryCount++;
           QueryConverter queryConverter = QueryConverter.getQueryConverter((QueryType) query[0]);
+          if (queryConverter instanceof QueryConverterQBPZ45) {
+            String conditions = request.getParameter("conditions");
+            ((QueryConverterQBPZ45) queryConverter)
+                .setConditions(conditions != null ? conditions : "007=Y,170=20260701");
+          }
           String queryMessage = queryConverter.convert(message);
           out.println("    <details class=\"smm-disclosure\">");
           out.println("      <summary>" + query[1] + "</summary>");
