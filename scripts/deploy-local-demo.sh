@@ -19,6 +19,12 @@ if [ "$1" != "off" ]; then
   <Parameter name="smm.dev.login" value="true" override="false"/>
   <!-- The tomcat10 service is ProtectSystem=strict: only webapps, logs and conf/Catalina are writable. -->
   <Parameter name="smm.workspace.dir" value="/var/log/tomcat10/smm-workspaces" override="false"/>
+  <!-- Preconfigured connection for the dev-login user (demo credentials of the local IIS Sandbox). -->
+  <Parameter name="smm.dev.login.iis.url" value="http://localhost:8080/iis-sandbox/soap" override="false"/>
+  <Parameter name="smm.dev.login.iis.label" value="Local IIS" override="false"/>
+  <Parameter name="smm.dev.login.iis.user" value="rbdemo" override="false"/>
+  <Parameter name="smm.dev.login.iis.password" value="rbdemo" override="false"/>
+  <Parameter name="smm.dev.login.iis.facility" value="RBDEMO" override="false"/>
 </Context>
 EOF
   (cd "$TMP" && python3 -c "import zipfile;z=zipfile.ZipFile('smm.war','a');z.write('META-INF/context.xml');z.close()")

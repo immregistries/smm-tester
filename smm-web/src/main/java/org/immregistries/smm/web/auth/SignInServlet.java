@@ -55,6 +55,9 @@ public class SignInServlet extends HttpServlet {
     }
     boolean admin = SmmWebConfig.get(getServletContext()).isAdmin(identity.getEmail());
     SmmSession.signIn(request, new SmmUser(identity, workspace, admin));
+    if (provider instanceof DevLoginAuthenticationProvider) {
+      DevLoginConnections.seed(getServletContext(), request.getSession(true));
+    }
     LOG.info("Signed in " + identity.getEmail() + " through " + identity.getProvider()
         + " with workspace " + workspace.getId() + (admin ? " (admin)" : ""));
     response.sendRedirect(result.getRedirectTarget());
