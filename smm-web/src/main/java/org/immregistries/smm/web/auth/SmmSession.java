@@ -60,8 +60,9 @@ public final class SmmSession {
     if (provider instanceof AuthenticationProvider) {
       return (AuthenticationProvider) provider;
     }
-    AuthenticationProvider newProvider =
-        new InteropHubAuthenticationProvider(SmmWebConfig.get(context));
+    SmmWebConfig config = SmmWebConfig.get(context);
+    AuthenticationProvider newProvider = config.isDevLogin() ? new DevLoginAuthenticationProvider()
+        : new InteropHubAuthenticationProvider(config);
     context.setAttribute(CONTEXT_PROVIDER, newProvider);
     return newProvider;
   }

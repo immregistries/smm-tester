@@ -19,6 +19,8 @@ public class SmmWebConfig {
   public static final String APP_CODE = "smm.app.code";
   public static final String WORKSPACE_DIR = "smm.workspace.dir";
   public static final String ADMIN_EMAILS = "smm.admin.emails";
+  /** DEVELOPMENT ONLY: sign everyone in as a local demo user. Off unless set to true. */
+  public static final String DEV_LOGIN = "smm.dev.login";
 
   private static final String DEFAULT_HUB_URL = "http://localhost:8080/hub";
   private static final String DEFAULT_APP_CODE = "smm";
@@ -29,12 +31,14 @@ public class SmmWebConfig {
   private final String appCode;
   private final String workspaceDir;
   private final Set<String> adminEmails;
+  private final boolean devLogin;
 
   private SmmWebConfig(ServletContext context) {
     hubUrl = read(context, HUB_URL, DEFAULT_HUB_URL);
     externalUrl = read(context, EXTERNAL_URL, "");
     appCode = read(context, APP_CODE, DEFAULT_APP_CODE);
     workspaceDir = read(context, WORKSPACE_DIR, "");
+    devLogin = "true".equalsIgnoreCase(read(context, DEV_LOGIN, "false"));
     String admins = read(context, ADMIN_EMAILS, "");
     adminEmails = admins.isEmpty() ? Collections.emptySet()
         : Arrays.stream(admins.split("[,;\\s]+")).map(s -> s.trim().toLowerCase(Locale.ROOT))
@@ -93,6 +97,14 @@ public class SmmWebConfig {
    */
   public String getWorkspaceDir() {
     return workspaceDir;
+  }
+
+  /**
+   * @return true only when the development login bypass was explicitly switched on with
+   *         <code>smm.dev.login=true</code> (or env SMM_DEV_LOGIN=true). Default is false.
+   */
+  public boolean isDevLogin() {
+    return devLogin;
   }
 
   public boolean isAdmin(String email) {
