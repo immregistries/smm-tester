@@ -15,6 +15,8 @@ public abstract class QueryConverter {
         return new QueryConverterQBPZ34();
       case QBP_Z34_Z44:
         return new QueryConverterQBPZ34Z44();
+      case QBP_Z45:
+        return new QueryConverterQBPZ45();
       case QBP_Z44:
       case QBP:
         return new QueryConverterQBPZ44();

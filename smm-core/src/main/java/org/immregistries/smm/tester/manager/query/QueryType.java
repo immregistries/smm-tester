@@ -5,6 +5,7 @@ public enum QueryType {
   QBP_Z34("QBP-Z34", "QBP Z34"),
   QBP_Z34_Z44("QBP-Z34-Z44", "QBP Z44+H44"),
   QBP_Z44("QBP-Z44", "QBP Z44"),
+  QBP_Z45("QBP-Z45", "QBP Z45"),
   QBP("QBP"),
   VXQ("VXQ");
 
