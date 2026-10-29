@@ -17,6 +17,8 @@ if [ "$1" != "off" ]; then
 <Context>
   <!-- DEV ONLY: auto sign-in as demo@localhost. Remove this file (or redeploy with "off") to disable. -->
   <Parameter name="smm.dev.login" value="true" override="false"/>
+  <!-- The tomcat10 service is ProtectSystem=strict: only webapps, logs and conf/Catalina are writable. -->
+  <Parameter name="smm.workspace.dir" value="/var/log/tomcat10/smm-workspaces" override="false"/>
 </Context>
 EOF
   (cd "$TMP" && python3 -c "import zipfile;z=zipfile.ZipFile('smm.war','a');z.write('META-INF/context.xml');z.close()")
