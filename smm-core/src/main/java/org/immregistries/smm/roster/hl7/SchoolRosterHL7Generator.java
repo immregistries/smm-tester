@@ -82,10 +82,10 @@ RXA|0|1|20261026||998^No vaccine administered^CVX|999||||||||||||||NA|A
       MSH-22={{MSH-22}}
       PID-3.1={{PID-3.1}}
       PID-3.4={{PID-3.4}}
-      PID-3.1#2={{PID-3.1#2}}
-      PID-5.1#2={{PID-5.1#2}}
-      PID-5.2#2={{PID-5.2#2}}
-      PID-5.3#2={{PID-5.3#2}}
+      PID-3.1={{PID-3.1}}
+      PID-5.1={{PID-5.1}}
+      PID-5.2={{PID-5.2}}
+      PID-5.3={{PID-5.3}}
     """
       //TODO hook these up to configurable properties
       .replace("{{MSH-3}}", "SMM")
@@ -94,10 +94,10 @@ RXA|0|1|20261026||998^No vaccine administered^CVX|999||||||||||||||NA|A
       .replace("{{MSH-21}}", "Z22^CDCPHINVS")
       .replace("{{PID-3.1}}", "SMM-000001")
       .replace("{{PID-3.4}}", "EXAMPLE-SCHOOL-HEALTH")
-      .replace("{{PID-3.1#2}}", student.getId())
-      .replace("{{PID-5.1#2}}", student.getLastName())
-      .replace("{{PID-5.2#2}}", student.getFirstName())
-      .replace("{{PID-5.3#2}}", student.getMiddleName());
+      .replace("{{PID-3.1}}", student.getId())
+      .replace("{{PID-5.1}}", student.getLastName())
+      .replace("{{PID-5.2}}", student.getFirstName())
+      .replace("{{PID-5.3}}", student.getMiddleName());
     
     if (profile.isIncludesOBX()) {
       transforms +=
