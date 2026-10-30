@@ -2,13 +2,18 @@ package org.immregistries.smm.roster;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.immregistries.smm.roster.hl7.SchoolRosterHL7Generator;
+import org.immregistries.smm.roster.hl7.SchoolRosterHL7Generator.MessageProfile;
 import org.immregistries.smm.roster.loader.SchoolRosterCsvLoader;
 import org.immregistries.smm.roster.loader.SchoolRosterLoader;
 import org.immregistries.smm.roster.model.LineDetails;
 import org.immregistries.smm.roster.model.LoadDetails;
+import org.immregistries.smm.roster.model.Student;
+import org.immregistries.smm.roster.model.StudentLoad;
 import org.immregistries.smm.tester.ClientServlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -21,6 +26,7 @@ public class SchoolRosterServlet extends ClientServlet {
   private static final long serialVersionUID = 1L;
   
   private static final String PARAM_FILE = "file";
+  private static final String PARAM_MESSAGE_PROFILE = "messageProfile";
   private static final String ATTRIBUTE_LOAD_DETAILS = "loadDetails";
   
   protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -54,6 +60,14 @@ public class SchoolRosterServlet extends ClientServlet {
                   name="PARAM_FILE"
                   accept=".csv,text/csv">
                 <br><br>
+                <label for="messageProfile">
+                  Message profile:
+                </label>
+                <br><br>
+                <select id="messageProfile" name="PARAM_MESSAGE_PROFILE">
+                  MESSAGE_PROFILE_OPTIONS
+                </select>
+                <br><br>
                 <input
                   type="submit"
                   value="Upload">
@@ -62,7 +76,18 @@ public class SchoolRosterServlet extends ClientServlet {
           </section>
         </div>
       """
-        .replace("PARAM_FILE", PARAM_FILE));
+        .replace("PARAM_FILE", PARAM_FILE)
+        .replace("PARAM_MESSAGE_PROFILE", PARAM_MESSAGE_PROFILE)
+        .replace(
+          "MESSAGE_PROFILE_OPTIONS",
+          Arrays.stream(MessageProfile.values())
+            .map(profile ->
+              "<option value=\"" + profile.name() + "\""
+              + (profile.name().equals(request.getParameter(PARAM_MESSAGE_PROFILE)) ? " selected" : "")
+              + ">"
+              + profile.getFriendly()
+              + "</option>")
+            .collect(Collectors.joining())));
       
       LoadDetails details = (LoadDetails) request.getAttribute(ATTRIBUTE_LOAD_DETAILS);
       if (details != null) {
@@ -138,6 +163,19 @@ public class SchoolRosterServlet extends ClientServlet {
       return;
     }
     
+    MessageProfile profile = MessageProfile.COMPATIBLE_BASELINE;
+    String selectedProfile = request.getParameter(PARAM_MESSAGE_PROFILE);
+    if (selectedProfile != null && !selectedProfile.isBlank()) {
+      try {
+        profile = MessageProfile.valueOf(selectedProfile);
+      } catch (IllegalArgumentException e) {
+        request.setAttribute(
+          ATTRIBUTE_LOAD_DETAILS,
+          new LoadDetails("Invalid message profile selected."));
+        return;
+      }
+    }
+    
     System.out.println("greg filename = " + filename);
     
     SchoolRosterLoader loader = new SchoolRosterCsvLoader();
@@ -145,6 +183,11 @@ public class SchoolRosterServlet extends ClientServlet {
     
     System.out.println("greg student count = " + details.getStudents().size());
     System.out.println("greg details = " + details);
+    
+    for (Student student : details.getStudents()) {
+      StudentLoad load = SchoolRosterHL7Generator.generate(student, profile);
+      System.out.println("Selected profile: " + profile.getFriendly() + "\n" + load.getVxu());
+    }
     
     request.setAttribute(ATTRIBUTE_LOAD_DETAILS, details);
   }

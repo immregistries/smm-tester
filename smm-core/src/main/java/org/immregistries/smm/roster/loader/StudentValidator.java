@@ -21,11 +21,15 @@ public class StudentValidator {
       errors.add("Student ID is missing.");
     }
     
-    if (StringUtils.isBlank(student.getName())) {
-      errors.add("Student Name is missing.");
+    if (StringUtils.isBlank(student.getFirstName())) {
+      errors.add("Student First name is missing.");
     }
     
-    if (StringUtils.isBlank(student.getGrade())) {
+    if (StringUtils.isBlank(student.getLastName())) {
+      errors.add("Student Last name is missing.");
+    }
+    
+    if (student.getGrade() == null) {
       errors.add("Student Grade is missing.");
     }
     

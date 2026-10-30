@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.immregistries.smm.roster.model.LineDetails;
 import org.immregistries.smm.roster.model.LoadDetails;
 import org.immregistries.smm.roster.model.Student;
@@ -29,14 +30,22 @@ public class SchoolRosterCsvLoader implements SchoolRosterLoader {
       List<String> headerErrors = new ArrayList<>();
       
       int idColumn = CsvReader.findPosition(COLUMN_ID, headers);
-      int nameColumn = CsvReader.findPosition(COLUMN_NAME, headers);
+      int firstNameColumn = CsvReader.findPosition(COLUMN_FIRST_NAME, headers);
+      int middleNameColumn = CsvReader.findPosition(COLUMN_MIDDLE_NAME, headers);
+      int lastNameColumn = CsvReader.findPosition(COLUMN_LAST_NAME, headers);
       int gradeColumn = CsvReader.findPosition(COLUMN_GRADE, headers);
       
       if (idColumn == -1) {
         headerErrors.add("Header line missing 'ID' column.");
       }
-      if (nameColumn == -1) {
-        headerErrors.add("Header line missing 'Name' column.");
+      if (firstNameColumn == -1) {
+        headerErrors.add("Header line missing 'First' column.");
+      }
+      if (middleNameColumn == -1) {
+        headerErrors.add("Header line missing 'Middle' column.");
+      }
+      if (lastNameColumn == -1) {
+        headerErrors.add("Header line missing 'Last' column.");
       }
       if (gradeColumn == -1) {
         headerErrors.add("Header line missing 'Grade' column.");
@@ -54,8 +63,10 @@ public class SchoolRosterCsvLoader implements SchoolRosterLoader {
         List<String> values = CsvReader.readValuesFromCsv(line);
         Student student = new Student();
         student.setId(CsvReader.readValue(idColumn, values));
-        student.setName(CsvReader.readValue(nameColumn, values));
-        student.setGrade(CsvReader.readValue(gradeColumn, values));
+        student.setFirstName(CsvReader.readValue(firstNameColumn, values));
+        student.setMiddleName(CsvReader.readValue(middleNameColumn, values));
+        student.setLastName(CsvReader.readValue(lastNameColumn, values));
+        student.setGrade(GradeDeterminer.determine(CsvReader.readValue(gradeColumn, values)));
         
         List<String> lineErrors = StudentValidator.validate(student);
         if (lineErrors == null || lineErrors.isEmpty()) {
@@ -64,7 +75,10 @@ public class SchoolRosterCsvLoader implements SchoolRosterLoader {
             lineNumber,
             new LineDetails(
               "Student read successfully - "
-              + student.getName()
+              + student.getFirstName()
+              + " "
+              + (StringUtils.isNotBlank(student.getMiddleName()) ? (student.getMiddleName() + " ") : "")
+              + student.getLastName()
               + " ["
               + student.getId()
               + ", Grade: "
