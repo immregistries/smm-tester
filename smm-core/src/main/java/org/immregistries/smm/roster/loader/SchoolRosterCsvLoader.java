@@ -15,15 +15,14 @@ import org.immregistries.smm.tester.manager.CsvReader;
 public class SchoolRosterCsvLoader implements SchoolRosterLoader {
 
   @Override
-  public LoadDetails load(InputStream inputStream) throws IOException {
-    LoadDetails details = new LoadDetails();
+  public void load(LoadDetails details, InputStream inputStream) throws IOException {
     
     try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
       String line = br.readLine();
       
       if (line == null) {
         details.setOverallErrors(List.of("File is empty."));
-        return details;
+        return;
       }
       
       List<String> headers = CsvReader.readValuesFromCsv(line);
@@ -52,7 +51,7 @@ public class SchoolRosterCsvLoader implements SchoolRosterLoader {
       }
       if (!headerErrors.isEmpty()) {
         details.setOverallErrors(headerErrors);
-        return details;
+        return;
       }
       
       List<Student> students = new ArrayList<>();
@@ -67,11 +66,12 @@ public class SchoolRosterCsvLoader implements SchoolRosterLoader {
         student.setMiddleName(CsvReader.readValue(middleNameColumn, values));
         student.setLastName(CsvReader.readValue(lastNameColumn, values));
         student.setGrade(GradeDeterminer.determine(CsvReader.readValue(gradeColumn, values)));
+        student.setLoadLine(lineNumber);
         
         List<String> lineErrors = StudentValidator.validate(student);
         if (lineErrors == null || lineErrors.isEmpty()) {
           students.add(student);
-          details.getLineDetails().put(
+          details.getFileLoadDetails().put(
             lineNumber,
             new LineDetails(
               "Student read successfully - "
@@ -85,13 +85,11 @@ public class SchoolRosterCsvLoader implements SchoolRosterLoader {
               + student.getGrade()
               + "]."));
         } else {
-          details.getLineDetails().put(lineNumber, new LineDetails(lineErrors));
+          details.getFileLoadDetails().put(lineNumber, new LineDetails(lineErrors));
         }
       }
       
       details.setStudents(students);
     }
-    
-    return details;
   }
 }

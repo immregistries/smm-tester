@@ -1,7 +1,6 @@
 package org.immregistries.smm.mover;
 
 import static org.immregistries.smm.web.SmmPage.escapeHtml;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.immregistries.smm.tester.ClientServlet;
@@ -45,7 +44,7 @@ public class ManagerServlet extends ClientServlet {
       return;
     }
     connectionManager = new ConnectionManager();
-    connectionManager.setScanStartFolders(getInitParameter(INIT_PARAM_SCAN_START_FOLDERS));
+    connectionManager.setScanStartFolders(resolveScanStartFolders());
     System.out.println("SMM Initializing Manager Servlet");
     String checkIntervalInSeconds = getInitParameter("checkIntervalInSeconds");
     if (checkIntervalInSeconds != null) {
@@ -74,6 +73,31 @@ public class ManagerServlet extends ClientServlet {
     ShutdownInterceptor shutdownInterceptor = new ShutdownInterceptor();
     Runtime.getRuntime().addShutdownHook(shutdownInterceptor);
     connectionManager.init();
+  }
+
+  private String resolveScanStartFolders() {
+    StringBuilder folders = new StringBuilder();
+    String configured = getInitParameter(INIT_PARAM_SCAN_START_FOLDERS);
+    if (configured != null) {
+      configured = configured.replace("${SMM_SCAN_START_FOLDERS}", "").trim();
+      if (!configured.isEmpty()) {
+        folders.append(configured);
+      }
+    }
+
+    String extraFolders = System.getProperty(INIT_PARAM_SCAN_START_FOLDERS);
+    if (extraFolders == null || extraFolders.trim().isEmpty()) {
+      extraFolders = System.getenv("SMM_SCAN_START_FOLDERS");
+    }
+    if (extraFolders != null && !extraFolders.trim().isEmpty()) {
+      extraFolders = extraFolders.trim();
+      if (!folders.isEmpty() && folders.charAt(folders.length() - 1) != ';') {
+        folders.append(';');
+      }
+      folders.append(extraFolders);
+    }
+
+    return !folders.isEmpty() ? folders.toString() : null;
   }
 
   @Override

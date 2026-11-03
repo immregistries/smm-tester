@@ -12,5 +12,5 @@ public interface SchoolRosterLoader {
   static final String COLUMN_LAST_NAME = "Last";
   static final String COLUMN_GRADE = "Grade";
   
-  public LoadDetails load(InputStream inputStream) throws IOException;
+  public void load(LoadDetails loadDetails, InputStream inputStream) throws IOException;
 }

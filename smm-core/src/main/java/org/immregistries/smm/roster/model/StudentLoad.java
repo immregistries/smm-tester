@@ -1,15 +1,44 @@
 package org.immregistries.smm.roster.model;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class StudentLoad {
-  
+
   private Student student;
   private String vxu;
   private String ack;
   private String id;
   private LocalDateTime created;
   private LocalDateTime sent;
+  private boolean ackPositive;
+  
+  @Override
+  public int hashCode() {
+    return Objects.hash(ack, Boolean.valueOf(ackPositive), created, id, sent, student, vxu);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    StudentLoad other = (StudentLoad) obj;
+    return
+      Objects.equals(ack, other.ack)
+      && ackPositive == other.ackPositive
+      && Objects.equals(created, other.created)
+      && Objects.equals(id, other.id)
+      && Objects.equals(sent, other.sent)
+      && Objects.equals(student, other.student)
+      && Objects.equals(vxu, other.vxu);
+  }
   
   public Student getStudent() {
     return student;
@@ -57,5 +86,13 @@ public class StudentLoad {
   
   public void setSent(LocalDateTime sent) {
     this.sent = sent;
+  }
+  
+  public boolean isAckPositive() {
+    return ackPositive;
+  }
+  
+  public void setAckPositive(boolean ackPositive) {
+    this.ackPositive = ackPositive;
   }
 }

@@ -9,6 +9,7 @@ public class Student {
   private String middleName;
   private String lastName;
   private Grade grade;
+  private int loadLine;
   
   @Override
   public String toString() {
@@ -18,7 +19,7 @@ public class Student {
   
   @Override
   public int hashCode() {
-    return Objects.hash(grade, id, firstName, middleName, lastName);
+    return Objects.hash(grade, id, firstName, middleName, lastName, loadLine);
   }
   
   @Override
@@ -37,7 +38,8 @@ public class Student {
       && Objects.equals(id, other.id)
       && Objects.equals(firstName, other.firstName)
       && Objects.equals(middleName, other.middleName)
-      && Objects.equals(lastName, other.lastName);
+      && Objects.equals(lastName, other.lastName)
+      && Objects.equals(loadLine, other.loadLine);
   }
   
   public String getId() {
@@ -60,6 +62,10 @@ public class Student {
     return grade;
   }
   
+  public int getLoadLine() {
+    return loadLine;
+  }
+  
   public void setId(String id) {
     this.id = id;
   }
@@ -78,5 +84,9 @@ public class Student {
   
   public void setGrade(Grade grade) {
     this.grade = grade;
+  }
+  
+  public void setLoadLine(int loadLine) {
+    this.loadLine = loadLine;
   }
 }

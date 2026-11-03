@@ -250,7 +250,7 @@ public class ConnectionManager {
             System.out.println("SMM Looking for folder " + scanStartFolderName);
             File scanStartFile = new File(scanStartFolderName);
             if (scanStartFile.exists() && scanStartFile.isDirectory()) {
-              System.out.println("SMM fold exists, adding to scan directory");
+              System.out.println("SMM folder exists, adding to scan directory");
               foldersToScan.add(scanStartFile);
             }
           }

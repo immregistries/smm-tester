@@ -1,12 +1,35 @@
 package org.immregistries.smm.roster.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 public class LineDetails {
   
   private boolean error;
   private List<String> messages;
+  
+  public LineDetails() {
+    this.error = false;
+    this.messages = new ArrayList<>();
+  }
+  
+  public LineDetails(List<String> errors) {
+    this.error = true;
+    this.messages = errors;
+  }
+  
+  public LineDetails(String message) {
+    this.error = false;
+    this.messages = new ArrayList<>(List.of(message));
+  }
+  
+  public void addMessage(String message) {
+    if (StringUtils.isNotBlank(message)) {
+      this.messages.add(message);
+    }
+  }
   
   @Override
   public String toString() {
@@ -31,16 +54,6 @@ public class LineDetails {
     }
     LineDetails other = (LineDetails) obj;
     return error == other.error && Objects.equals(messages, other.messages);
-  }
-  
-  public LineDetails(List<String> errors) {
-    this.error = true;
-    this.messages = errors;
-  }
-  
-  public LineDetails(String message) {
-    this.error = false;
-    this.messages = List.of(message);
   }
   
   public boolean isError() {
