@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import org.immregistries.smm.tester.manager.query.PatientIdType;
 import org.immregistries.smm.tester.manager.query.QueryConverter;
@@ -55,6 +56,64 @@ public class ManualQueryServlet extends ClientServlet {
 
   public static final String PARAM_QUERY_TYPE = "queryType";
   public static final String PARAM_CONDITIONS = "conditions";
+  /** Name of the quick-pick buttons that load one of the RB demo scenarios. */
+  public static final String PARAM_SCENARIO = "scenario";
+
+  /**
+   * RB demo scenarios: key, button label, id, first name, last name, sex, birth date (MM/dd/yyyy),
+   * conditions. The patients are the ones the IIS Sandbox demo VXUs create (MRN authority RBDEMO).
+   */
+  private static final String[][] DEMO_SCENARIOS = {
+      {"pregnancy-tdap", "Pregnancy / Tdap", "MP1001", "Maria", "DemoPreg", "F", "04/12/1995",
+          "007=Y,170={PREG_ONSET}"},
+      {"rsv-infant", "RSV infant", "MP1002", "Baby", "DemoRsv", "M", "09/15/2026", "278=Y"},
+      {"healthcare-worker", "Healthcare worker", "MP1003", "Harold", "DemoHcw", "M", "02/15/1988",
+          "055=Y"},
+      {"unknown-code", "Unknown code (ERR)", "MP1004", "Una", "DemoUnk", "F", "07/07/1990",
+          "055=Y,999=Y"}};
+
+  /** Onset of pregnancy for the demo, 30 weeks before today so the Tdap window is open. */
+  static String pregnancyOnset() {
+    Calendar c = Calendar.getInstance();
+    c.add(Calendar.DAY_OF_MONTH, -210);
+    return new SimpleDateFormat("yyyyMMdd").format(c.getTime());
+  }
+
+  /** Loads a demo scenario (patient, query type Z45 and conditions) into the query request. */
+  static boolean applyDemoScenario(String key, QueryRequest queryRequest) {
+    for (String[] sc : DEMO_SCENARIOS) {
+      if (sc[0].equals(key)) {
+        queryRequest.setIdNumber(sc[2]);
+        queryRequest.setIdAuthority("RBDEMO");
+        queryRequest.setIdType(PatientIdType.MR);
+        queryRequest.setNameFirst(sc[3]);
+        queryRequest.setNameMiddle("");
+        queryRequest.setNameLast(sc[4]);
+        queryRequest.setMotherNameMaiden("DemoMom");
+        queryRequest.setMotherNameFirst("Mother");
+        queryRequest.setMotherNameMiddle("");
+        queryRequest.setMotherNameLast("DemoMom");
+        try {
+          queryRequest.setBirthDate(new SimpleDateFormat("MM/dd/yyyy").parse(sc[6]));
+        } catch (ParseException e) {
+          return false;
+        }
+        queryRequest.setSex(sc[5]);
+        queryRequest.setAddressStreet1("123 Demo St");
+        queryRequest.setAddressStreet2("");
+        queryRequest.setAddressCity("Madison");
+        queryRequest.setAddressState("WI");
+        queryRequest.setAddressZip("53703");
+        queryRequest.setAddressCountry("USA");
+        queryRequest.setPhoneArea("608");
+        queryRequest.setPhoneLocal("5551234");
+        queryRequest.setQueryType(QueryType.QBP_Z45);
+        queryRequest.setConditions(sc[7].replace("{PREG_ONSET}", pregnancyOnset()));
+        return true;
+      }
+    }
+    return false;
+  }
 
 
 
@@ -84,7 +143,14 @@ public class ManualQueryServlet extends ClientServlet {
     }
     QueryRequest queryRequest = new QueryRequest();
     problem = readQueryRequest(request, problem, queryRequest);
+    String scenario = request.getParameter(PARAM_SCENARIO);
+    if (scenario != null && !applyDemoScenario(scenario, queryRequest)) {
+      problem = "Unknown demo scenario '" + scenario + "'";
+    }
     session.setAttribute("queryRequest", queryRequest);
+    if (scenario != null) {
+      action = null;
+    }
     if (action != null) {
       if (action.equals(ACTION_UPDATE)) {
         TestCaseMessage testCaseMessage = createTestCaseMessage(queryRequest);
@@ -128,6 +194,10 @@ public class ManualQueryServlet extends ClientServlet {
       QueryRequest queryRequest) {
     String conditionsParam = request.getParameter(PARAM_CONDITIONS);
     queryRequest.setConditions(conditionsParam == null ? "" : conditionsParam);
+    QueryType selectedQueryType = QueryType.getValue(request.getParameter(PARAM_QUERY_TYPE));
+    if (selectedQueryType != null) {
+      queryRequest.setQueryType(selectedQueryType);
+    }
     queryRequest.setIdNumber(request.getParameter(PARAM_ID_NUMBER));
     queryRequest.setIdAuthority(request.getParameter(PARAM_ID_AUTHORITY));
     queryRequest.setIdType(PatientIdType.valueOf(request.getParameter(PARAM_ID_TYPE)));
@@ -199,6 +269,14 @@ public class ManualQueryServlet extends ClientServlet {
       if (queryRequest == null) {
         queryRequest = new QueryRequest();
         session.setAttribute("queryRequest", queryRequest);
+      }
+      String conditionsParam = request.getParameter(PARAM_CONDITIONS);
+      if (conditionsParam != null) {
+        queryRequest.setConditions(conditionsParam);
+      }
+      String scenarioParam = request.getParameter(PARAM_SCENARIO);
+      if (scenarioParam != null) {
+        applyDemoScenario(scenarioParam, queryRequest);
       }
       doGet(request, response, session, null, queryRequest);
     }
@@ -338,12 +416,31 @@ public class ManualQueryServlet extends ClientServlet {
             + (qt == queryRequest.getQueryType() ? " selected" : "") + ">" + qt + "</option>");
       }
       out.println("      </select>");
-      out.println("      <label class=\"aira-label\" for=\"" + PARAM_CONDITIONS
-          + "\">Z45 conditions (99CDS code=value, e.g. 007=Y,170=20260701)</label>");
-      out.println("      <input class=\"aira-input\" type=\"text\" size=\"40\" id=\"" + PARAM_CONDITIONS
+      out.println("    </div>");
+      out.println("    <div class=\"aira-field\">");
+      out.println("      <label for=\"" + PARAM_CONDITIONS
+          + "\">Z45 contextual conditions (used when Query Type is QBP_Z45)</label>");
+      out.println("      <input class=\"aira-input\" type=\"text\" id=\"" + PARAM_CONDITIONS
           + "\" name=\"" + PARAM_CONDITIONS + "\" value=\""
           + escapeHtml(queryRequest.getConditions() == null ? "" : queryRequest.getConditions())
-          + "\"/>");
+          + "\" placeholder=\"007=Y,170=20260701\"/>");
+      out.println("      <p class=\"aira-muted\">Comma separated <code>code=value</code> pairs from"
+          + " the 99CDS table. A value of Y or N is sent as an ID, an 8 digit date (YYYYMMDD) as a"
+          + " DT. Example: <code>007=Y,170=20260701</code> (pregnant, onset 2026-07-01). One OBX"
+          + " is added per pair, after the QPD.</p>");
+      out.println("    </div>");
+      out.println("    <div class=\"aira-field\">");
+      out.println("      <span class=\"aira-label\">RB demo scenarios (fills in the patient, Query"
+          + " Type QBP_Z45 and the conditions)</span>");
+      out.println("      <div class=\"aira-form-actions\">");
+      for (String[] sc : DEMO_SCENARIOS) {
+        out.println("        <button class=\"aira-button aira-button--secondary\" type=\"submit\""
+            + " name=\"" + PARAM_SCENARIO + "\" value=\"" + sc[0] + "\">" + escapeHtml(sc[1])
+            + "</button>");
+      }
+      out.println("      </div>");
+      out.println("    </div>");
+      out.println("    <div class=\"aira-form-actions\">");
       out.println("      <button class=\"aira-button aira-button--primary\" type=\"submit\" name=\""
           + PARAM_ACTION + "\" value=\"" + ACTION_QUERY + "\">" + ACTION_QUERY + "</button>");
       out.println("    </div>");

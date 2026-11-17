@@ -136,6 +136,10 @@
     <servlet-class>org.immregistries.smm.tester.StressTestServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>RbDemoServlet</servlet-name>
+    <servlet-class>org.immregistries.smm.tester.RbDemoServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>ManualQueryServlet</servlet-name>
     <servlet-class>org.immregistries.smm.tester.ManualQueryServlet</servlet-class>
   </servlet>
@@ -206,6 +210,10 @@
   <servlet-mapping>
     <servlet-name>StressTestServlet</servlet-name>
     <url-pattern>/StressTestServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RbDemoServlet</servlet-name>
+    <url-pattern>/RbDemoServlet</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ManualQueryServlet</servlet-name>

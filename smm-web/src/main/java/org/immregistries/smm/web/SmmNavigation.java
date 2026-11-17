@@ -97,6 +97,7 @@ public final class SmmNavigation {
 
     add("/SubmitServlet", "Send Message", Area.SEND, true);
     add("/ManualQueryServlet", "Query IIS", Area.SEND, true);
+    add("/RbDemoServlet", "RB Demo", Area.SEND, true);
     add("/BulkQueryServlet", "Bulk Query", Area.SEND, true, true);
 
     add("/SetupServlet", "Manage Test Cases", Area.TEST_CASES, true);

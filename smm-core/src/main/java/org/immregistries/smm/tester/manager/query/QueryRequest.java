@@ -3,7 +3,8 @@ package org.immregistries.smm.tester.manager.query;
 public class QueryRequest extends Patient {
   private QueryType queryType = QueryType.QBP_Z34;
   
-  private String conditions = "";
+  /** Default Z45 conditions: pregnant, onset 30 weeks before today. */
+  private String conditions = "007=Y,170=" + java.time.LocalDate.now().minusDays(210).format(java.time.format.DateTimeFormatter.BASIC_ISO_DATE);
 
   /** Contextual conditions for a Z45 query, for example 007=Y,170=20260701 */
   public String getConditions() {
