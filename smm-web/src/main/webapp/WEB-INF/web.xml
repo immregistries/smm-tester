@@ -342,6 +342,10 @@
     <url-pattern>/mcp</url-pattern>
   </servlet-mapping>
   
+  <listener>
+    <listener-class>org.immregistries.smm.web.auth.SmmSessionListener</listener-class>
+  </listener>
+
   <welcome-file-list>
     <welcome-file>HomeServlet</welcome-file>
   </welcome-file-list>
