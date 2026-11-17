@@ -20,6 +20,7 @@ public class LoadDetails {
   private Map<Integer, LineDetails> hl7Details = new TreeMap<>();
   private List<String> overallErrors = new ArrayList<>();
   private List<StudentLoad> studentLoads = new ArrayList<>();
+  private LogDetails logDetails = new LogDetails();
   
   public LoadDetails(String user) {
     this.user = user;
@@ -137,5 +138,13 @@ public class LoadDetails {
   
   public void setHl7Details(Map<Integer, LineDetails> hl7Details) {
     this.hl7Details = hl7Details;
+  }
+  
+  public LogDetails getLogDetails() {
+    return logDetails;
+  }
+  
+  public void setLogDetails(LogDetails logDetails) {
+    this.logDetails = logDetails;
   }
 }

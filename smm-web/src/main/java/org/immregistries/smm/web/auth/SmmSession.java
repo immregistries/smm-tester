@@ -1,6 +1,7 @@
 package org.immregistries.smm.web.auth;
 
 import java.io.IOException;
+import org.immregistries.smm.roster.SchoolRosterScanner;
 import org.immregistries.smm.web.SmmWebConfig;
 import org.immregistries.smm.workspace.WorkspaceStore;
 import jakarta.servlet.ServletContext;
@@ -50,6 +51,10 @@ public final class SmmSession {
   public static void signOut(HttpServletRequest request) {
     HttpSession session = request.getSession(false);
     if (session != null) {
+      Object user = session.getAttribute(ATTRIBUTE_USER);
+      if (user instanceof SmmUser) {
+        SchoolRosterScanner.remove((SmmUser) user);
+      }
       session.invalidate();
     }
   }

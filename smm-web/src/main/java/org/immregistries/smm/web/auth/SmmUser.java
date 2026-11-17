@@ -2,6 +2,7 @@ package org.immregistries.smm.web.auth;
 
 import java.io.Serializable;
 import org.immregistries.smm.mover.SendData;
+import org.immregistries.smm.tester.connectors.Connector;
 import org.immregistries.smm.workspace.Workspace;
 
 /**
@@ -16,6 +17,9 @@ public class SmmUser implements Serializable {
   private final transient Workspace workspace;
   private final boolean admin;
   private transient SendData sendData = null;
+  
+  private boolean schoolRosterScanning = false;
+  private Connector schoolRosterScanningConnector = null;
 
   public SmmUser(AuthenticatedIdentity identity, Workspace workspace, boolean admin) {
     this.identity = identity;
@@ -71,5 +75,21 @@ public class SmmUser implements Serializable {
 
   public void setSendData(SendData sendData) {
     this.sendData = sendData;
+  }
+
+  public boolean isSchoolRosterScanning() {
+    return schoolRosterScanning;
+  }
+
+  public void setSchoolRosterScanning(boolean schoolRosterScanning) {
+    this.schoolRosterScanning = schoolRosterScanning;
+  }
+  
+  public Connector getSchoolRosterScanningConnector() {
+    return schoolRosterScanningConnector;
+  }
+  
+  public void setSchoolRosterScanningConnector(Connector schoolRosterScanningConnector) {
+    this.schoolRosterScanningConnector = schoolRosterScanningConnector;
   }
 }

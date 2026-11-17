@@ -3,27 +3,19 @@ package org.immregistries.smm.roster;
 import static org.immregistries.smm.web.SmmPage.escapeHtml;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
-import org.immregistries.smm.mover.AckAnalyzer;
-import org.immregistries.smm.roster.hl7.SchoolRosterHL7Generator;
 import org.immregistries.smm.roster.hl7.SchoolRosterHL7Generator.MessageProfile;
-import org.immregistries.smm.roster.loader.SchoolRosterCsvLoader;
-import org.immregistries.smm.roster.loader.SchoolRosterLoader;
-import org.immregistries.smm.roster.model.LineDetails;
 import org.immregistries.smm.roster.model.LoadDetails;
-import org.immregistries.smm.roster.model.Student;
-import org.immregistries.smm.roster.model.StudentLoad;
 import org.immregistries.smm.tester.ClientServlet;
 import org.immregistries.smm.tester.ConnectServlet;
 import org.immregistries.smm.tester.connectors.Connector;
-import org.immregistries.smm.tester.manager.HL7Reader;
+import org.immregistries.smm.web.auth.SmmSession;
+import org.immregistries.smm.web.auth.SmmUser;
+import org.immregistries.smm.workspace.Workspace;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,12 +40,12 @@ public class SchoolRosterServlet extends ClientServlet {
       HttpSession session = request.getSession(true);
       
       printHtmlHead(out, MENU_HEADER_HOME, request);
-      
+
       printPageHeader(
         out,
         "School Roster Upload",
         "Upload a school roster file and convert to HL7.");
-      
+
       List<Connector> connectors = ConnectServlet.getConnectors(session);
       if (connectors.isEmpty()) {
         out.println("<div class='aira-stack'>");
@@ -61,9 +53,41 @@ public class SchoolRosterServlet extends ClientServlet {
         out.println("</div>");
         return;
       }
-      
+
       int connectionId = getConnectionId(connectors, request, session);
-      
+
+      if (connectors.size() == 1) {
+        SmmUser user = SmmSession.getUser(request);
+        boolean enableWorkspaceScanning = user != null && user.isSchoolRosterScanning();
+        out.println(
+        """
+          <div class="aira-stack">
+            <section class="aira-panel">
+              <div class="aira-panel__body">
+                <form class="aira-form" method="post">
+                  <div class="aira-field">
+                    <label class="aira-checkbox">
+                      <input
+                        type="checkbox"
+                        name="enableWorkspaceScanning"
+                        value="true"
+                        CHECKED
+                        onchange="this.form.submit()" />
+                      <span>Enable Workspace Scanning</span>
+                    </label>
+                    SCANNING_HELP
+                  </div>
+                  <input type="hidden" name="connectionId" value="1" />
+                  <input type="hidden" name="formType" value="workspaceScanning" />
+                </form>
+              </div>
+            </section>
+          </div>
+        """
+          .replace("CHECKED", enableWorkspaceScanning ? " checked" : "")
+          .replace("SCANNING_HELP", "<p class=\"aira-field-help\">Place compatible roster files in your workspace's <code>school-roster</code> directory.</p>"));
+      }
+
       out.println(
       """
         <div class="aira-stack">
@@ -72,7 +96,7 @@ public class SchoolRosterServlet extends ClientServlet {
               <form class="aira-form" method="post" enctype="multipart/form-data">
                 <div class="aira-field">
       """);
-      
+
       if (connectors.size() == 1) {
         out.println(
         """
@@ -223,8 +247,44 @@ public class SchoolRosterServlet extends ClientServlet {
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     
+    String formType = request.getParameter("formType");
+    if ("workspaceScanning".equals(formType)) {
+      SmmUser user = SmmSession.getUser(request);
+      
+      if (user != null && StringUtils.isNotBlank(request.getParameter("connectionId"))) {
+        try {
+          int connectionId = Integer.parseInt(request.getParameter("connectionId"));
+          
+          boolean enabled = Boolean.parseBoolean(request.getParameter("enableWorkspaceScanning"));
+          user.setSchoolRosterScanning(enabled);
+          
+          if (enabled) {
+            SchoolRosterFileHandler.createSchoolRosterDirectory(user.getWorkspace());
+            user.setSchoolRosterScanningConnector(
+              getConnector(connectionId, request.getSession(true)));
+          }
+          
+          SchoolRosterScanner scanner = SchoolRosterScanner.getOrCreate(user);
+          if (scanner != null) {
+            scanner.setEnabled(enabled);
+          }
+        } catch (NumberFormatException e) {
+          e.printStackTrace();
+          //TODO print something for user
+        } catch (IOException e) {
+          e.printStackTrace();
+          //TODO print something for user
+        }
+      } else {
+        //TODO print something for user
+      }
+      
+      processRequest(request, response);
+      return;
+    }
+
     handleUpload(request);
-    
+
     processRequest(request, response);
   }
   
@@ -232,39 +292,9 @@ public class SchoolRosterServlet extends ClientServlet {
     HttpSession session = request.getSession(true);
     String username = (String) session.getAttribute("username");
     
-    LoadDetails details = new LoadDetails(username);
-    
     if (StringUtils.isBlank(request.getParameter("connectionId"))) {
+      LoadDetails details = new LoadDetails(username);
       details.addOverallError("Please select a Connection.");
-      request.setAttribute(ATTRIBUTE_LOAD_DETAILS, details);
-      return;
-    }
-    
-    int connectionId = Integer.parseInt(request.getParameter("connectionId"));
-    
-    Connector connector = getConnector(connectionId, session);
-    
-    if (connector == null) {
-      details.addOverallError("Please select a Connection.");
-      request.setAttribute(ATTRIBUTE_LOAD_DETAILS, details);
-      return;
-    }
-    
-    // Retrieve the uploaded file from the request
-    Part file = request.getPart(PARAM_FILE);
-    String filename = getSubmittedFileName(file);
-    details.setFilename(filename);
-    
-    String submittedName = getSubmittedFileName(file);
-    
-    if (file == null || file.getSize() == 0 || submittedName == null) {
-      details.addOverallError("Please upload a CSV file.");
-      request.setAttribute(ATTRIBUTE_LOAD_DETAILS, details);
-      return;
-    }
-    
-    if (!submittedName.toLowerCase(Locale.ROOT).endsWith(".csv")) {
-      details.addOverallError("Only CSV files are allowed.");
       request.setAttribute(ATTRIBUTE_LOAD_DETAILS, details);
       return;
     }
@@ -275,57 +305,33 @@ public class SchoolRosterServlet extends ClientServlet {
       try {
         profile = MessageProfile.valueOf(selectedProfile);
       } catch (IllegalArgumentException e) {
+        LoadDetails details = new LoadDetails(username);
         details.addOverallError("Invalid message profile selected.");
         request.setAttribute(ATTRIBUTE_LOAD_DETAILS, details);
         return;
       }
     }
     
-    SchoolRosterLoader loader = new SchoolRosterCsvLoader();
-    loader.load(details, file.getInputStream());
+    SmmUser user = SmmSession.getUser(request);
     
-    for (Student student : details.getStudents()) {
-      StudentLoad load;
-      LineDetails lineDetails = new LineDetails();
-      try {
-        load = SchoolRosterHL7Generator.generate(student, profile);
-        load.setSent(LocalDateTime.now());
-        
-        String response = connector.submitMessage(load.getVxu(), false);
-        load.setAck(response);
-        
-        AckAnalyzer ackAnalyzer = new AckAnalyzer(load.getAck(), connector.getAckType());
-        load.setAckPositive(ackAnalyzer.isPositive());
-        
-        boolean hasWarning = messageHasWarningErrSegment(load.getAck());
-        
-        if (load.isAckPositive()) {
-          lineDetails.addMessage(
-            "HL7 sent and ACK was accepted"
-            + (hasWarning ? " with warnings." : "."));
-        } else {
-          lineDetails.setError(true);
-          lineDetails.addMessage(
-            "HL7 sent but ACK was rejected"
-            + (hasWarning ? " with warning. " : ". ")
-            + ackAnalyzer.getSetupProblemDescription());
-        }
-        
-        details.getStudentLoads().add(load);
-      } catch (Exception e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        lineDetails.setError(true);
-        lineDetails.addMessage(sw.toString());
-      }
-      
-      details.getHl7Details().put(student.getLoadLine(), lineDetails);
-    }
+    Workspace workspace = user != null ? user.getWorkspace() : null;
     
-    details.setEndTime(LocalDateTime.now());
+    SchoolRosterFileHandler fileHandler =
+      new SchoolRosterFileHandler(
+        username,
+        getConnector(
+          Integer.parseInt(request.getParameter("connectionId")),
+          session),
+        workspace,
+        profile);
+    
+    Part file = request.getPart(PARAM_FILE);
+    String filename = getSubmittedFileName(file);
+    LoadDetails details = fileHandler.handle(file.getInputStream(), filename);
+    
     request.setAttribute(ATTRIBUTE_LOAD_DETAILS, details);
   }
-  
+
   private String getSubmittedFileName(Part part) {
     if (part == null) {
       return null;
@@ -368,16 +374,5 @@ public class SchoolRosterServlet extends ClientServlet {
     }
     
     return null;
-  }
-  
-  private static boolean messageHasWarningErrSegment(String ack) {
-    boolean foundError = false;
-    HL7Reader hl7Reader = new HL7Reader(ack);
-    while (hl7Reader.advanceToSegment("ERR")) {
-      if ("W".equals(hl7Reader.getValue(4))) {
-        foundError = true;
-      }
-    }
-    return foundError;
   }
 }
